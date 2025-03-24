@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Umožní sdílet soubory z getExternalFilesDir(null) -->
+    <external-files-path
+        name="my_images"
+        path="." />
+</paths>
