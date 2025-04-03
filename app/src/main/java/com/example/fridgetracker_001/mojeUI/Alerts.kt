@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -51,45 +52,68 @@ fun ViewTypeDialog(
     smallListChange: () -> Unit,
     gridChange: () -> Unit,
     localViewType: String
-){
+) {
     AlertDialog(
         onDismissRequest = { viewTypeDialogVisible() },
         title = { Text(text = "Zvolte zobrazení položek") },
         text = {
             Column {
-                Text(
-                    text = "Seznam",
+                // Seznam
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             listChange()
                             viewTypeDialogVisible()
                         }
-                        .border(if (localViewType == "LIST") 2.dp else 0.dp, Color.Black)
-                        .padding(8.dp)
-                )
-                Text(
-                    text = "Kompaktní Seznam",
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = localViewType == "LIST",
+                        onClick = null // nechceme duplikovat klikání
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Seznam")
+                }
+
+                // Kompaktní seznam
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             smallListChange()
                             viewTypeDialogVisible()
                         }
-                        .border(if (localViewType == "SMALL_LIST") 2.dp else 0.dp, Color.Black)
-                        .padding(8.dp)
-                )
-                Text(
-                    text = "Dlaždice",
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = localViewType == "SMALL_LIST",
+                        onClick = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Kompaktní Seznam")
+                }
+
+                // Dlaždice
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             gridChange()
                             viewTypeDialogVisible()
                         }
-                        .border(if (localViewType == "GRID") 2.dp else 0.dp, Color.Black)
-                        .padding(8.dp)
-                )
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = localViewType == "GRID",
+                        onClick = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Dlaždice")
+                }
             }
         },
         confirmButton = {
@@ -100,6 +124,7 @@ fun ViewTypeDialog(
     )
 }
 
+
 @Composable
 fun SortDialog(
     sortDialogVisible: () -> Unit,
@@ -108,16 +133,17 @@ fun SortDialog(
     dateAddedChange: () -> Unit,
     alphabetChange: () -> Unit,
     defaultChange: () -> Unit,
-    countChange: () -> Unit
+    countChange: () -> Unit,
+
 ){
     AlertDialog(
         onDismissRequest = { sortDialogVisible() },
-        title = { Text(text = "Zvolte serazeni") },
+        title = { Text(text = "Zvolte seřazení") },
         text = {
             Column {
-                Text("Potraviny", fontSize = 20.sp)
+                Text("Seřazení potravin", fontSize = 20.sp)
                 Text(
-                    text = "Jméno",
+                    text = "Název",
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
@@ -127,7 +153,7 @@ fun SortDialog(
                         .padding(8.dp)
                 )
                 Text(
-                    text = "Dny do data spotřeby",
+                    text = "Datum spotřeby",
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
@@ -147,9 +173,11 @@ fun SortDialog(
                         .padding(8.dp)
                 )
 
-                Text("Kategorie", fontSize = 20.sp)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text("Seřazení kategorií", fontSize = 20.sp)
                 Text(
-                    text = "Abeceda",
+                    text = "Abecedně",
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
@@ -159,7 +187,7 @@ fun SortDialog(
                         .padding(8.dp)
                 )
                 Text(
-                    text = "defaultne",
+                    text = "Výchozí stav",
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
@@ -169,7 +197,7 @@ fun SortDialog(
                         .padding(8.dp)
                 )
                 Text(
-                    text = "Podle mnozstvi potravin v kategorii",
+                    text = "Počet v kategorii",
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
