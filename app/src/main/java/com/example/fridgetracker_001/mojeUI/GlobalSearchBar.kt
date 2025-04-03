@@ -29,6 +29,7 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarDefaults.colors
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -84,10 +85,9 @@ fun GlobalSearchBar(
 
     // Barvy pro SearchBar
     val customColors = colors(
-        containerColor = cardPozadi, // pozadí hlavního search baru
+        containerColor = Color(0xFF5FA1E0), // pozadí hlavního search baru
         dividerColor = Color.Black
     )
-
     SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
@@ -100,7 +100,7 @@ fun GlobalSearchBar(
                 expanded = active,
                 onExpandedChange = onActiveChange,
                 enabled = true,
-                placeholder = { Text("název, druh, nebo čárový kod", fontSize = 15.sp) },
+                placeholder = { Text("Zadej název, kategorii nebo čárový kod", fontSize = 15.sp) },
                 leadingIcon = {
                     if (!active) {
                         // Normální režim: zobrazíme ikonu lupy
@@ -111,7 +111,10 @@ fun GlobalSearchBar(
                             // Nastaví active na false => "zavře" se
                             onActiveChange(false)
                         }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zpět")
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Zpět"
+                            )
                         }
                     }
                 },
@@ -145,14 +148,14 @@ fun GlobalSearchBar(
                     unfocusedTextColor = Color.Black,
                     cursorColor = Color.Black,
                     focusedLeadingIconColor = Color.Black,
-                    unfocusedLeadingIconColor= Color.Black,
-                    disabledLeadingIconColor= Color.Black,
-                    focusedTrailingIconColor= Color.Black,
-                    unfocusedTrailingIconColor= Color.Black,
-                    disabledTrailingIconColor= Color.Black,
-                    focusedPlaceholderColor= Color.Black,
-                    unfocusedPlaceholderColor= Color.Black,
-                    disabledPlaceholderColor= Color.Black,
+                    unfocusedLeadingIconColor = Color.Black,
+                    disabledLeadingIconColor = Color.Black,
+                    focusedTrailingIconColor = Color.Black,
+                    unfocusedTrailingIconColor = Color.Black,
+                    disabledTrailingIconColor = Color.Black,
+                    focusedPlaceholderColor = Color.Black,
+                    unfocusedPlaceholderColor = Color.Black,
+                    disabledPlaceholderColor = Color.Black,
                 )
             )
         },
@@ -161,14 +164,14 @@ fun GlobalSearchBar(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth(),
-        shape = if (active) RoundedCornerShape(24.dp) else RoundedCornerShape(12.dp),
+        shape = if (active) RoundedCornerShape(2.dp) else RoundedCornerShape(12.dp),
         colors = customColors,
-        tonalElevation = SearchBarDefaults.TonalElevation,
-        shadowElevation = SearchBarDefaults.ShadowElevation,
+        tonalElevation = 8.dp,
+        shadowElevation = 8.dp,
         windowInsets = SearchBarDefaults.windowInsets,
         content = {
             // Výsledky hledání (nebo návrhy) – zobrazujeme jen to, co přijde přes filteredItems
-            LazyColumn (modifier = Modifier.fillMaxWidth().padding(3.dp)) {
+            LazyColumn(modifier = Modifier.fillMaxWidth().padding(3.dp)) {
                 items(filteredItems) { potravina ->
                     val skladNazev = getSkladName(potravina.skladId)
                     val daysLeft = getDaysLeft(potravina)

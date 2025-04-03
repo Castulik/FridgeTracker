@@ -58,7 +58,7 @@ fun MojePotravinyObrazovka(
         }
     }
 
-    // --- OBRAZOVKA S TOP BAR (GlobalSearchBar) A OBSAHEM ---
+
     Scaffold(
         topBar = {
             GlobalSearchBar(
