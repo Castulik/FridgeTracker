@@ -469,7 +469,8 @@ fun SkladObrazovka2(
                 gridChange = {
                     localViewType = ViewType.GRID
                     skladViewModel.nastavViewType(skladId, ViewType.GRID.name)
-                }
+                },
+                localViewType = localViewType.name
             )
         }
 

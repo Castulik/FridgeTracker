@@ -49,41 +49,45 @@ fun ViewTypeDialog(
     viewTypeDialogVisible: () -> Unit,
     listChange: () -> Unit,
     smallListChange: () -> Unit,
-    gridChange: () -> Unit
+    gridChange: () -> Unit,
+    localViewType: String
 ){
     AlertDialog(
         onDismissRequest = { viewTypeDialogVisible() },
-        title = { Text(text = "Zvolte vzhled") },
+        title = { Text(text = "Zvolte zobrazení položek") },
         text = {
             Column {
                 Text(
-                    text = "List",
+                    text = "Seznam",
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             listChange()
                             viewTypeDialogVisible()
                         }
+                        .border(if (localViewType == "LIST") 2.dp else 0.dp, Color.Black)
                         .padding(8.dp)
                 )
                 Text(
-                    text = "Menší list",
+                    text = "Kompaktní Seznam",
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             smallListChange()
                             viewTypeDialogVisible()
                         }
+                        .border(if (localViewType == "SMALL_LIST") 2.dp else 0.dp, Color.Black)
                         .padding(8.dp)
                 )
                 Text(
-                    text = "Grid",
+                    text = "Dlaždice",
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             gridChange()
                             viewTypeDialogVisible()
                         }
+                        .border(if (localViewType == "GRID") 2.dp else 0.dp, Color.Black)
                         .padding(8.dp)
                 )
             }
