@@ -62,9 +62,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -72,11 +74,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.DEFAULT_CATEGORY_STATE
 import com.example.fridgetracker_001.data.entities.NakupEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.mojeUI.MujTextField
+import com.example.fridgetracker_001.mojeUI.NavigationIcon
 import com.example.fridgetracker_001.mojeUI.SeznamTopBar
 import com.example.fridgetracker_001.ui.theme.cardGradient1
 import com.example.fridgetracker_001.ui.theme.cardGradient22
@@ -333,7 +337,7 @@ fun SeznamObrazovka2(
                             enabled = item.checked
                         ) {
                             Icon(
-                                imageVector = Icons.Default.ShoppingCart,
+                                painter = painterResource(id = R.drawable.lednicenakup),
                                 contentDescription = null,
                                 tint = if (item.checked) Color.Black else Color.Gray
                             )
