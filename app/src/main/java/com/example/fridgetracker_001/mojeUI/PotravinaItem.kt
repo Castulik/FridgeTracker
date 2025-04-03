@@ -534,7 +534,7 @@ fun getBackgroundColorForDaysLeft(daysLeft: Long): Color {
 // Funkce pro formátovaný text
 fun formatDaysLeft(days: Long?): String {
     return if (days == null) {
-        "Není"
+        "?"
     } else
         "$days"
 }

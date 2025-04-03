@@ -498,7 +498,9 @@ fun SkladObrazovka2(
                 dateAddedChange = { skladViewModel.nastavSortPotraviny(skladId, "DATE_ADDED") },
                 alphabetChange = { skladViewModel.nastavSortKategorie(skladId, "ALPHABETICAL") },
                 defaultChange = { skladViewModel.nastavSortKategorie(skladId, "DEFAULT") },
-                countChange = { skladViewModel.nastavSortKategorie(skladId, "COUNT") }
+                countChange = { skladViewModel.nastavSortKategorie(skladId, "COUNT") },
+                kategorie = sklad?.sortKategorie,
+                potraviny = sklad?.sortPotraviny
             )
         }
 

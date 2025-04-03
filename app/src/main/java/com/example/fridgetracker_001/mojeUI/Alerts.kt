@@ -35,12 +35,14 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.ui.theme.backgroundAlers
 import com.example.fridgetracker_001.ui.theme.buttoncolor
+import com.example.fridgetracker_001.ui.theme.cardGradient2
 import com.example.fridgetracker_001.ui.theme.cardGradient22
 import com.example.fridgetracker_001.ui.theme.errorLight
 import com.example.fridgetracker_001.ui.theme.onTertiaryContainerLight
@@ -134,78 +136,127 @@ fun SortDialog(
     alphabetChange: () -> Unit,
     defaultChange: () -> Unit,
     countChange: () -> Unit,
-
-){
+    kategorie: String?,
+    potraviny: String?,
+) {
     AlertDialog(
         onDismissRequest = { sortDialogVisible() },
         title = { Text(text = "Zvolte seřazení") },
         text = {
             Column {
                 Text("Seřazení potravin", fontSize = 20.sp)
-                Text(
-                    text = "Název",
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             nameChange()
                             sortDialogVisible()
                         }
-                        .padding(8.dp)
-                )
-                Text(
-                    text = "Datum spotřeby",
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = potraviny == "NAME",
+                        onClick = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Název")
+                }
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             dateExpiryChange()
                             sortDialogVisible()
                         }
-                        .padding(8.dp)
-                )
-                Text(
-                    text = "Datum přidání",
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = potraviny == "DATE_EXPIRY",
+                        onClick = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Datum spotřeby")
+                }
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             dateAddedChange()
                             sortDialogVisible()
                         }
-                        .padding(8.dp)
-                )
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = potraviny == "DATE_ADDED",
+                        onClick = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Datum přidání")
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text("Seřazení kategorií", fontSize = 20.sp)
-                Text(
-                    text = "Abecedně",
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             alphabetChange()
                             sortDialogVisible()
                         }
-                        .padding(8.dp)
-                )
-                Text(
-                    text = "Výchozí stav",
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = kategorie == "ALPHABETICAL",
+                        onClick = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Abecedně")
+                }
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             defaultChange()
                             sortDialogVisible()
                         }
-                        .padding(8.dp)
-                )
-                Text(
-                    text = "Počet v kategorii",
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = kategorie == "DEFAULT",
+                        onClick = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Výchozí stav")
+                }
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             countChange()
                             sortDialogVisible()
                         }
-                        .padding(8.dp)
-                )
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = kategorie == "COUNT",
+                        onClick = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Počet v kategorii")
+                }
             }
         },
         confirmButton = {
@@ -215,6 +266,7 @@ fun SortDialog(
         }
     )
 }
+
 
 @Composable
 fun NastaveniDialog(
@@ -240,7 +292,7 @@ fun NastaveniDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "Nastavení") },
+        title = { Text(text = "Nastavení upozornění") },
         text = {
             Column {
                 Row(
@@ -402,18 +454,12 @@ fun NastaveniDialog(
                 }
             }
         },
-        // Např. pokud chceš zachovat původní containerColor
-        containerColor = backgroundAlers,
         confirmButton = {
             TextButton(
                 onClick = {
                     // Zavoláme callback onSave s novými hodnotami
                     onSave(expirace1.ifBlank { "7" }, expirace2.ifBlank { "3" })
                 },
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = onTertiaryContainerLight,
-                    contentColor = Color.White
-                )
             ) {
                 Text("Potvrdit změny")
             }
@@ -421,10 +467,6 @@ fun NastaveniDialog(
         dismissButton = {
             TextButton(
                 onClick = onDismiss,
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = errorLight,
-                    contentColor = Color.White
-                )
             ) {
                 Text("Zavřít")
             }
@@ -444,62 +486,168 @@ fun AiPromptDialog(
     onCopy: (String) -> Unit,
     aiDialogVisible: () -> Unit,
 ) {
+    val isError = false
+
     AlertDialog(
         onDismissRequest = aiDialogVisible,
         title = { Text("AI Prompt Builder") },
         text = {
+
             Column {
-                // TextField #1
-                TextField(
-                    value = aiPromptTitle,
-                    onValueChange = { aiPromptTitleChange(it) },
-                    label = { Text("Znění promptu") }
-                )
-
-                // TextField #2
-                TextField(
-                    value = aiPotravinyText,
-                    onValueChange = { aiPotravinyTextChange(it) },
-                    label = { Text("Vybrané potraviny") }
-                )
-
-                Spacer(Modifier.height(8.dp))
+                Text("Obsah promptu: ", fontSize = 18.sp)
+                Spacer(Modifier.height(10.dp))
 
                 Row {
-                    // Tlačítko: "14 dní expirace"
-                    Button(onClick = {
-                        val potraviny14 = potravinaList.filter {
-                            val daysLeftVal = getDaysLeft(it)
-                            daysLeftVal != null && daysLeftVal <= 14
-                        }
-                        // Naplníme text
-                        aiPotravinyTextChange(potraviny14.joinToString(", ") { it.nazev })
-                    }) {
-                        Text("14 dní expirace")
+                    val focusManager = LocalFocusManager.current
+                    val keyboardController = LocalSoftwareKeyboardController.current
+                    MujTextField(
+                        value = aiPromptTitle,
+                        onValueChange = { aiPromptTitleChange(it) },
+                        placeholder = "Zadej znění promptu",
+                        isError = isError,
+                        errorMessage = "",
+                        maxLength = 1000,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            }
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.small)
+                            .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = cardGradient2,
+                            unfocusedContainerColor = cardGradient2,
+                            disabledContainerColor = cardGradient2,
+                            errorContainerColor = cardGradient2,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            cursorColor = Color.Black,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
+                        )
+                    )
+                }
+
+                Spacer(Modifier.height(8.dp))
+                Text("Vybrané potraviny: ", fontSize = 18.sp)
+                Spacer(Modifier.height(10.dp))
+
+                Row{
+                    val focusManager = LocalFocusManager.current
+                    val keyboardController = LocalSoftwareKeyboardController.current
+                    MujTextField(
+                        value = aiPotravinyText,
+                        onValueChange = { aiPotravinyTextChange(it) },
+                        placeholder = "",
+                        isError = isError,
+                        errorMessage = "",
+                        maxLength = 1000,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            }
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.small)
+                            .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = cardGradient2,
+                            unfocusedContainerColor = cardGradient2,
+                            disabledContainerColor = cardGradient2,
+                            errorContainerColor = cardGradient2,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            cursorColor = Color.Black,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                            errorTextColor = Color.Red
+                        )
+                    )
+                }
+
+                Spacer(Modifier.height(8.dp))
+                Text("Vyber potraviny pomocí tlačítek: ", fontSize = 18.sp)
+                Spacer(Modifier.height(5.dp))
+
+                Row {
+                    // Tlačítko: Potraviny s expirací do 14 dnů
+                    Button(
+                        modifier = Modifier
+                            .weight(1f)
+                            .border(width = 2.dp, color = Color(0xFF87F4FF), shape = MaterialTheme.shapes.small),
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
+                        onClick = {
+                            val potraviny14 = potravinaList.filter {
+                                val daysLeftVal = getDaysLeft(it)
+                                daysLeftVal != null && daysLeftVal <= 14
+                            }
+                            aiPotravinyTextChange(potraviny14.joinToString(", ") { it.nazev })
+                        },
+                        shape = MaterialTheme.shapes.small,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF026FB6), // tmavší zelená
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(
+                            text = "Potraviny s expirací do 14 dnů",
+                            textAlign = TextAlign.Center
+                        )
                     }
 
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(16.dp))
 
-                    Button(onClick = {
-                        onManualSelect()
-                    }) {
-                        Text("Vyber ručně")
+                    // Tlačítko: Vybrat potraviny ručně
+                    Button(
+                        modifier = Modifier
+                            .weight(1f)
+                            .border(width = 2.dp, color = Color(0xFF87F4FF), shape = MaterialTheme.shapes.small),
+                        onClick = { onManualSelect() },
+                        shape = MaterialTheme.shapes.small,
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF026FB6), // tmavší zelená
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(
+                            text = "Vybrat potraviny ručně",
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
         },
         confirmButton = {
-            Button(onClick = {
-                val clipboardText = aiPromptTitle + "\n" + aiPotravinyText
-                onCopy(clipboardText)
-                aiDialogVisible()
-            }) {
-                Text("Kopírovat a Zavřít")
+            TextButton(
+                onClick = {
+                    val clipboardText = aiPromptTitle + "\n" + aiPotravinyText
+                    onCopy(clipboardText)
+                    aiDialogVisible()
+                },
+            ) {
+                Text("Kopírovat do schránky")
             }
         },
         dismissButton = {
-            Button(onClick = { aiDialogVisible() }) {
-                Text("Zrušit")
+            TextButton(
+                onClick = {
+                    aiDialogVisible()
+                },
+            ) {
+                Text("Zavřít")
             }
         }
     )
