@@ -100,7 +100,12 @@ fun GlobalSearchBar(
                 expanded = active,
                 onExpandedChange = onActiveChange,
                 enabled = true,
-                placeholder = { Text("Zadej název, kategorii nebo čárový kod", fontSize = 15.sp) },
+                placeholder = { Text(
+                    text = "Zadej název, kategorii nebo čárový kod",
+                    fontSize = 15.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                ) },
                 leadingIcon = {
                     if (!active) {
                         // Normální režim: zobrazíme ikonu lupy
