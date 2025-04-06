@@ -70,15 +70,14 @@ fun SeznamPolozkyObrazovka(
     val itemEdit by polozkyViewModel.edit.collectAsState()
     val currentNakup by nakupViewModel.currentNakup.collectAsState()
 
-
-
     val allSeznamItems by seznamViewModel.seznamyFlow.collectAsState(initial = emptyList())
     // Vyfiltrujeme jen ty položky, které patří k currentNakup (podle .nakupId)
-    val listForCurrentNakup = remember(allSeznamItems, currentNakup) {
+    val aktualniNakupItems = remember(allSeznamItems, currentNakup) {
         currentNakup?.let { nakup ->
             allSeznamItems.filter { it.nakupId == nakup.id }
         } ?: emptyList()
     }
+
     val polozkyList by polozkyViewModel.polozkyFlow.collectAsState()
     // 2) Seskupíme podle kategorie
     val polozkyByCategory = remember(polozkyList) {
@@ -124,7 +123,7 @@ fun SeznamPolozkyObrazovka(
                 // Samotné položky v dané kategorii
                 items(polozkyVKategorii) { polozka ->
 
-                    val isInCurrentNakup = listForCurrentNakup.any {
+                    val isInCurrentNakup = aktualniNakupItems.any {
                         it.nazev == polozka.nazev && it.kategorie == polozka.kategorie
                     }
                     val rowColor = if (isInCurrentNakup) Color(0xFFE5FFCC) else Color.White
@@ -136,7 +135,7 @@ fun SeznamPolozkyObrazovka(
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
-                        val existingItem = listForCurrentNakup.find {
+                        val existingItem = aktualniNakupItems.find {
                             it.nazev == polozka.nazev && it.kategorie == polozka.kategorie
                         }
                         Text(
@@ -145,12 +144,8 @@ fun SeznamPolozkyObrazovka(
                         )
                         // Plus tlačítko -> přidat do "SeznamEntity"
                         IconButton(onClick = {
-                            // Zjistíme aktivní nakupId
-                            /*
                             val currentId = nakupViewModel.currentNakup.value?.id ?: 1
-                            seznamViewModel.pridatNeboZvysitPolozku(polozka, currentId)
-
-                             */
+                            seznamViewModel.pridatZKatalogu(polozka, currentId)
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Add,
@@ -158,13 +153,8 @@ fun SeznamPolozkyObrazovka(
                             )
                         }
                         IconButton(onClick = {
-                            /*
                             val currentId = nakupViewModel.currentNakup.value?.id ?: 1
-                            if (existingItem != null) {
-                                seznamViewModel.odebratNeboSnizitPolozku(polozka, currentId)
-                            }
-
-                             */
+                            seznamViewModel.odebratZKatalogu(polozka, currentId)
                         }) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.minus),

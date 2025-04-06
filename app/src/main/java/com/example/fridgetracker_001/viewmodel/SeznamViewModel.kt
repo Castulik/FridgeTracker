@@ -50,7 +50,6 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
         viewModelScope.launch {
 
             //rucne - podivat na seznam jestli neexistuje polozka s jmenem a kategorii - existuje? vyskoci error. Neexistuje muzu pridat na nakup
-
             val existujici = repository.getSeznamEntity(nazev, kategorie, nakupId)
 
             if (existujici != null) {
@@ -72,18 +71,29 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
         }
     }
 
-
-    // Smazání položky
-    fun smazatPolozku(item: SeznamEntity) {
+    fun pridatZKatalogu(polozka: PolozkyEntity, nakupId: Int){
         viewModelScope.launch {
-            repository.smazatPolozku(item)
+            val existujici = repository.getSeznamEntity(polozka.nazev, polozka.kategorie, nakupId)
+
+            if (existujici != null) {
+                val updatedItem = existujici.copy(quantity = existujici.quantity + 1)
+                repository.updatePolozku(updatedItem)
+            } else {
+                val nova = SeznamEntity(
+                    nazev = polozka.nazev,
+                    kategorie = polozka.kategorie,
+                    nakupId = nakupId,
+                    quantity = 1
+                )
+                repository.pridatPolozku(nova)
+            }
         }
     }
-    /*
 
-    fun odebratNeboSnizitPolozku(nazev: String, kategorie: String, nakupId: Int) {
+    fun odebratZKatalogu(polozka: PolozkyEntity, nakupId: Int){
         viewModelScope.launch {
-            val existujici = repository.getByPolozkaIdKaAndNakupId(polozka.id, nakupId)
+            val existujici = repository.getSeznamEntity(polozka.nazev, polozka.kategorie, nakupId)
+
             if (existujici != null) {
                 val newQuantity = existujici.quantity - 1
                 if (newQuantity <= 0) {
@@ -96,7 +106,12 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
         }
     }
 
-     */
+    // Smazání položky
+    fun smazatPolozku(item: SeznamEntity) {
+        viewModelScope.launch {
+            repository.smazatPolozku(item)
+        }
+    }
 
     private val _edit = MutableStateFlow<SeznamEntity?>(null)
     val edit: StateFlow<SeznamEntity?> = _edit
