@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.mojeUI.AiPromptDialog
@@ -61,6 +62,7 @@ import com.example.fridgetracker_001.mojeUI.NastaveniDialog
 import com.example.fridgetracker_001.mojeUI.SortDialog
 import com.example.fridgetracker_001.mojeUI.ViewTypeDialog
 import com.example.fridgetracker_001.ui.theme.topmenu12
+import com.example.fridgetracker_001.viewmodel.NakupViewModel
 import com.example.fridgetracker_001.viewmodel.PotravinaViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
@@ -108,7 +110,8 @@ fun SkladObrazovka2(
     skladViewModel: SkladViewModel,
     navController: NavController,
     potravinaViewModel: PotravinaViewModel,
-    seznamViewModel: SeznamViewModel
+    seznamViewModel: SeznamViewModel,
+    nakupViewModel: NakupViewModel
 ) {
     LaunchedEffect(skladId) {
         skladViewModel.nactiSkladPodleId(skladId)
@@ -263,8 +266,12 @@ fun SkladObrazovka2(
                         },
                         pridejNaSeznam = {
                             selectedPotraviny.forEach{
-                                val newItem = SeznamEntity(nazev = it.nazev, kategorie = it.druh, nakupId = 0)
-                                seznamViewModel.pridatPolozku(newItem)
+                                /*
+                                val polozka = PolozkyEntity(nazev = it.nazev, kategorie = it.druh)
+                                val currentId = nakupViewModel.currentNakup.value?.id ?: 1
+                                seznamViewModel.pridatNeboZvysitPolozku(polozka, nakupId = currentId)
+                                seznamViewModel.onDialogClose()
+                                 */
                             }
                         },
                         ai = selectPotravinyForAi,
@@ -414,8 +421,13 @@ fun SkladObrazovka2(
                                     potravinaViewModel.smazatPotravinu(potravina)
                                 },
                                 pridejNaSeznam = {
-                                    val newItem = SeznamEntity(nazev = potravina.nazev, kategorie = potravina.druh, nakupId = 0)
-                                    seznamViewModel.pridatPolozku(newItem)
+                                    /*
+                                    val polozka = PolozkyEntity(nazev = potravina.nazev, kategorie = potravina.druh)
+                                    val currentId = nakupViewModel.currentNakup.value?.id ?: 1
+                                    seznamViewModel.pridatNeboZvysitPolozku(polozka, nakupId = currentId)
+                                    seznamViewModel.onDialogClose()
+
+                                     */
                                 },
                                 editPotravina = {
                                     navController.navigate("editPotravinu/${potravina.id}")

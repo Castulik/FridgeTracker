@@ -4,8 +4,10 @@ import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,13 +20,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,9 +46,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
+import com.example.fridgetracker_001.mojeUI.AddItemDialog
 import com.example.fridgetracker_001.mojeUI.BottomBarPolozky
 import com.example.fridgetracker_001.mojeUI.SeznamTopBar
+import com.example.fridgetracker_001.mojeUI.SmazatAlert
 import com.example.fridgetracker_001.ui.theme.buttonPodtvrdit
 import com.example.fridgetracker_001.viewmodel.NakupViewModel
 import com.example.fridgetracker_001.viewmodel.PolozkyViewModel
@@ -57,20 +66,19 @@ fun SeznamPolozkyObrazovka(
     nakupViewModel: NakupViewModel,
     polozkyViewModel: PolozkyViewModel,
 ) {
-
-    var polozkyDialog by remember { mutableStateOf(false) }
-
+    val isOnNakup by polozkyViewModel.errorMsg.collectAsState()
+    val itemEdit by polozkyViewModel.edit.collectAsState()
     val currentNakup by nakupViewModel.currentNakup.collectAsState()
 
-    val allSeznamItems by seznamViewModel.seznamyFlow.collectAsState(initial = emptyList())
 
+
+    val allSeznamItems by seznamViewModel.seznamyFlow.collectAsState(initial = emptyList())
     // Vyfiltrujeme jen ty položky, které patří k currentNakup (podle .nakupId)
     val listForCurrentNakup = remember(allSeznamItems, currentNakup) {
         currentNakup?.let { nakup ->
             allSeznamItems.filter { it.nakupId == nakup.id }
         } ?: emptyList()
     }
-
     val polozkyList by polozkyViewModel.polozkyFlow.collectAsState()
     // 2) Seskupíme podle kategorie
     val polozkyByCategory = remember(polozkyList) {
@@ -87,7 +95,7 @@ fun SeznamPolozkyObrazovka(
         },
         bottomBar = {
             BottomBarPolozky(
-                addKatalog = { polozkyDialog = true },
+                addKatalog = { polozkyViewModel.onDialogOpen() },
                 onDone = { navController.navigate("seznam") }
             )
         }
@@ -132,14 +140,17 @@ fun SeznamPolozkyObrazovka(
                             it.nazev == polozka.nazev && it.kategorie == polozka.kategorie
                         }
                         Text(
-                            text = "${polozka.nazev} (x${existingItem?.quantity})",
+                            text = if (existingItem?.quantity == null) "${polozka.nazev} (-)" else "${polozka.nazev} (x${existingItem.quantity})",
                             modifier = Modifier.weight(1f)
                         )
                         // Plus tlačítko -> přidat do "SeznamEntity"
                         IconButton(onClick = {
                             // Zjistíme aktivní nakupId
+                            /*
                             val currentId = nakupViewModel.currentNakup.value?.id ?: 1
-                            seznamViewModel.pridatNeboZvysitPolozku(nazev = polozka.nazev, kategorie = polozka.kategorie, nakupId = currentId)
+                            seznamViewModel.pridatNeboZvysitPolozku(polozka, currentId)
+
+                             */
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Add,
@@ -147,10 +158,13 @@ fun SeznamPolozkyObrazovka(
                             )
                         }
                         IconButton(onClick = {
+                            /*
                             val currentId = nakupViewModel.currentNakup.value?.id ?: 1
                             if (existingItem != null) {
-                                seznamViewModel.odebratNeboSnizitPolozku(nazev = polozka.nazev, kategorie = polozka.kategorie, nakupId = currentId)
+                                seznamViewModel.odebratNeboSnizitPolozku(polozka, currentId)
                             }
+
+                             */
                         }) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.minus),
@@ -160,24 +174,61 @@ fun SeznamPolozkyObrazovka(
                         }
 
                         IconButton(onClick = {
-                            // Smazat z katalogu
-                            polozkyViewModel.smazatPolozkaZKatalogu(polozka)
+                            polozkyViewModel.setEditItem(polozka)
                         }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete from katalog")
+                            Icon(Icons.Default.Edit, contentDescription = "edit")
                         }
                     }
                 }
             }
         }
 
-        if (polozkyDialog) {
+        if (polozkyViewModel.showAddDialog) {
             AddItemDialog(
-                onDismiss = { polozkyDialog = false },
-                onConfirm = { newItemNazev, kategorie ->
+                onDismiss = {
+                    polozkyViewModel.clearErrorMsg()
+                    polozkyViewModel.onDialogClose()
+                },
+                onConfirm2 = { newItemNazev, kategorie ->
                     polozkyViewModel.pridatPolozkaDoKatalogu(newItemNazev, kategorie)
-                    polozkyDialog = false
-                }
+                },
+                isEdit = false,
+                isOnNakup = isOnNakup,
             )
+        }
+
+        if (itemEdit != null) {
+
+            var smazatAlert by remember { mutableStateOf(false) }
+            AddItemDialog(
+                onDismiss = {
+                    polozkyViewModel.clearErrorMsg()
+                    polozkyViewModel.setEditItem(null)
+                },
+                onConfirm2 = { newNazev, kategorie ->
+                    val updatedPolozka = itemEdit!!.copy(nazev = newNazev, kategorie = kategorie)
+                    polozkyViewModel.updatePolozka(updatedPolozka)
+                },
+                isEdit = true,
+                isDelete = true,
+                isOnNakup = isOnNakup,
+                onDelete = { smazatAlert = true },
+                nazev = itemEdit!!.nazev,
+                kategorie = itemEdit!!.kategorie
+            )
+
+            if (smazatAlert) {
+                SmazatAlert(
+                    onDelete = {
+                        polozkyViewModel.smazatPolozkaZKatalogu(itemEdit!!)
+                        polozkyViewModel.setEditItem(null)
+                        smazatAlert = false
+                    },
+                    change = {
+                        smazatAlert = false
+                    }
+                )
+            }
         }
     }
 }

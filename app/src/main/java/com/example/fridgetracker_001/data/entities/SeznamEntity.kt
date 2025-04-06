@@ -21,6 +21,7 @@ import com.example.fridgetracker_001.data.DEFAULT_CATEGORY_STATE
 data class SeznamEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val nazev: String,
+    val polozkaId: Int? = null,
     val kategorie: String,
     val checked: Boolean = false,
     // Nově: cizí klíč, odkazující na sloupec NakupEntity.id

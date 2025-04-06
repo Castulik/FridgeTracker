@@ -20,9 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.mojeUI.PotravinaFormBoxWithConstraints
 import com.example.fridgetracker_001.viewmodel.CodeViewModel
+import com.example.fridgetracker_001.viewmodel.NakupViewModel
 import com.example.fridgetracker_001.viewmodel.PotravinaViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 import kotlinx.coroutines.launch
@@ -124,7 +126,8 @@ fun EditPotravinaObrazovka2(
     barcodePolozky: String = "",
     potravinaViewModel: PotravinaViewModel,
     seznamViewModel: SeznamViewModel,
-    navController: NavController
+    navController: NavController,
+    nakupViewModel: NakupViewModel
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -203,8 +206,13 @@ fun EditPotravinaObrazovka2(
                 navController.navigate("SkladObrazovka/${potravinaState.skladId}")
             },
             pridejNaSeznam = {
-                val newItem = SeznamEntity(nazev = potravinaState.nazev, kategorie = potravinaState.druh, nakupId = 0)
-                seznamViewModel.pridatPolozku(newItem)
+                /*
+                val polozka = PolozkyEntity(nazev = potravinaState.nazev, kategorie = potravinaState.druh)
+                val currentId = nakupViewModel.currentNakup.value?.id ?: 1
+                seznamViewModel.pridatNeboZvysitPolozku(polozka, nakupId = currentId)
+                seznamViewModel.onDialogClose()
+
+                 */
             },
             onScanBarcodeClick = {
                 // Navigujeme na skener

@@ -1,6 +1,7 @@
 package com.example.fridgetracker_001.repository
 
 import com.example.fridgetracker_001.data.dao.SeznamDao
+import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -21,8 +22,7 @@ class SeznamRepository(private val seznamDao: SeznamDao) {
         seznamDao.updatePolozku(item)
     }
 
-    suspend fun getItemByNazevKategorie(nazev: String, kategorie: String, nakupId: Int): SeznamEntity? {
-        return seznamDao.getItemByNazevKategorie(nazev, kategorie, nakupId)
+    suspend fun getSeznamEntity(nazev: String, kategorie: String, nakupId: Int): SeznamEntity? {
+        return seznamDao.getSeznamEntity(nazev, kategorie, nakupId)
     }
-
 }

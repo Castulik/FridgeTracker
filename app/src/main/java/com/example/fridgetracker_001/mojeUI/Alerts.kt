@@ -15,6 +15,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -46,6 +47,7 @@ import com.example.fridgetracker_001.ui.theme.cardGradient2
 import com.example.fridgetracker_001.ui.theme.cardGradient22
 import com.example.fridgetracker_001.ui.theme.errorLight
 import com.example.fridgetracker_001.ui.theme.onTertiaryContainerLight
+import com.example.fridgetracker_001.ui.theme.primaryLight
 
 @Composable
 fun ViewTypeDialog(
@@ -56,8 +58,9 @@ fun ViewTypeDialog(
     localViewType: String
 ) {
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = { viewTypeDialogVisible() },
-        title = { Text(text = "Zvolte zobrazení položek") },
+        title = { Text(text = "Zvolte zobrazení položek", color = Color.Black) },
         text = {
             Column {
                 // Seznam
@@ -76,7 +79,7 @@ fun ViewTypeDialog(
                         onClick = null // nechceme duplikovat klikání
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Seznam")
+                    Text("Seznam", color = Color.Black)
                 }
 
                 // Kompaktní seznam
@@ -95,7 +98,7 @@ fun ViewTypeDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Kompaktní Seznam")
+                    Text("Kompaktní Seznam", color = Color.Black)
                 }
 
                 // Dlaždice
@@ -114,13 +117,13 @@ fun ViewTypeDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Dlaždice")
+                    Text("Dlaždice", color = Color.Black)
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = { viewTypeDialogVisible() }) {
-                Text("Zavřít")
+                Text("Zavřít", color = primaryLight)
             }
         }
     )
@@ -140,11 +143,12 @@ fun SortDialog(
     potraviny: String?,
 ) {
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = { sortDialogVisible() },
-        title = { Text(text = "Zvolte seřazení") },
+        title = { Text(text = "Zvolte seřazení", color = Color.Black) },
         text = {
             Column {
-                Text("Seřazení potravin", fontSize = 20.sp)
+                Text("Seřazení potravin", fontSize = 20.sp, color = Color.Black)
 
                 Row(
                     modifier = Modifier
@@ -161,7 +165,7 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Název")
+                    Text("Název", color = Color.Black)
                 }
 
                 Row(
@@ -179,7 +183,7 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Datum spotřeby")
+                    Text("Datum spotřeby", color = Color.Black)
                 }
 
                 Row(
@@ -197,12 +201,12 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Datum přidání")
+                    Text("Datum přidání", color = Color.Black)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Seřazení kategorií", fontSize = 20.sp)
+                Text("Seřazení kategorií", fontSize = 20.sp, color = Color.Black)
 
                 Row(
                     modifier = Modifier
@@ -219,7 +223,7 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Abecedně")
+                    Text("Abecedně", color = Color.Black)
                 }
 
                 Row(
@@ -237,7 +241,7 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Výchozí stav")
+                    Text("Výchozí stav", color = Color.Black)
                 }
 
                 Row(
@@ -255,13 +259,13 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Počet v kategorii")
+                    Text("Počet v kategorii", color = Color.Black)
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = { sortDialogVisible() }) {
-                Text("Zavřít")
+                Text("Zavřít", color = primaryLight)
             }
         }
     )
@@ -291,8 +295,9 @@ fun NastaveniDialog(
     val disabledRed = baseRed.copy(alpha = 0.5f)
 
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = onDismiss,
-        title = { Text(text = "Nastavení upozornění") },
+        title = { Text(text = "Nastavení upozornění", color = Color.Black) },
         text = {
             Column {
                 Row(
@@ -461,14 +466,14 @@ fun NastaveniDialog(
                     onSave(expirace1.ifBlank { "7" }, expirace2.ifBlank { "3" })
                 },
             ) {
-                Text("Potvrdit změny")
+                Text("Potvrdit změny", color = primaryLight)
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss,
             ) {
-                Text("Zavřít")
+                Text("Zavřít", color = primaryLight)
             }
         }
     )
@@ -489,12 +494,13 @@ fun AiPromptDialog(
     val isError = false
 
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = aiDialogVisible,
-        title = { Text("AI Prompt Builder") },
+        title = { Text("AI Prompt Builder", color = Color.Black) },
         text = {
 
             Column {
-                Text("Obsah promptu: ", fontSize = 18.sp)
+                Text("Obsah promptu: ", fontSize = 18.sp, color = Color.Black)
                 Spacer(Modifier.height(10.dp))
 
                 Row {
@@ -536,7 +542,7 @@ fun AiPromptDialog(
                 }
 
                 Spacer(Modifier.height(8.dp))
-                Text("Vybrané potraviny: ", fontSize = 18.sp)
+                Text("Vybrané potraviny: ", fontSize = 18.sp, color = Color.Black)
                 Spacer(Modifier.height(10.dp))
 
                 Row{
@@ -578,7 +584,7 @@ fun AiPromptDialog(
                 }
 
                 Spacer(Modifier.height(8.dp))
-                Text("Vyber potraviny pomocí tlačítek: ", fontSize = 18.sp)
+                Text("Vyber potraviny pomocí tlačítek: ", fontSize = 18.sp, color = Color.Black)
                 Spacer(Modifier.height(5.dp))
 
                 Row {
@@ -638,7 +644,7 @@ fun AiPromptDialog(
                     aiDialogVisible()
                 },
             ) {
-                Text("Kopírovat do schránky")
+                Text("Kopírovat do schránky", color = primaryLight)
             }
         },
         dismissButton = {
@@ -647,7 +653,7 @@ fun AiPromptDialog(
                     aiDialogVisible()
                 },
             ) {
-                Text("Zavřít")
+                Text("Zavřít", color = primaryLight)
             }
         }
     )

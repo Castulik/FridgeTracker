@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -30,4 +31,10 @@ interface PolozkyDao {
     // Zjistí počet řádků v tabulce (kvůli zjištění, zda je prázdná).
     @Query("SELECT COUNT(*) FROM polozky_katalog")
     suspend fun getCount(): Int
+
+    @Query("SELECT * FROM polozky_katalog WHERE nazev = :nazev AND kategorie = :kategorie LIMIT 1")
+    suspend fun getPolozkaEntity(nazev: String, kategorie: String): PolozkyEntity?
+
+    @Update
+    suspend fun updatePolozka(polozka: PolozkyEntity)
 }

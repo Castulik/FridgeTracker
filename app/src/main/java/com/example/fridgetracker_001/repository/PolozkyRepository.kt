@@ -25,6 +25,10 @@ class PolozkyRepository(
         dao.insertPolozky(polozky)
     }
 
+    suspend fun getPolozkaEntity(nazev: String, kategorie: String): PolozkyEntity? {
+        return dao.getPolozkaEntity(nazev, kategorie)
+    }
+
     // Prvotní naplnění (seed) tabulky, pokud je prázdná.
     suspend fun initialSeedIfEmpty() {
         val count = dao.getCount()
@@ -38,9 +42,12 @@ class PolozkyRepository(
                 PolozkyEntity(nazev = "Těstoviny", kategorie = "Trvanlivé"),
                 PolozkyEntity(nazev = "Chléb", kategorie = "Pečivo"),
                 PolozkyEntity(nazev = "Vejce", kategorie = "Vejce"),
-                // ... přidej další, co chceš mít předem
             )
             dao.insertPolozky(defaultItems)
         }
+    }
+
+    suspend fun updatePolozka(polozka: PolozkyEntity) {
+        dao.updatePolozka(polozka)
     }
 }

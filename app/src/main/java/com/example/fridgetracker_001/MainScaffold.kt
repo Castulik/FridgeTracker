@@ -241,6 +241,7 @@ fun MainScaffold(
                         potravinaViewModel = potravinaViewModel,
                         navController = controler,
                         seznamViewModel = seznamViewModel,
+                        nakupViewModel = nakupViewModel
                     )
                 }
 
@@ -311,7 +312,8 @@ fun MainScaffold(
                         barcodePolozky = barcode,
                         potravinaViewModel = potravinaViewModel,
                         navController = controler,
-                        seznamViewModel = seznamViewModel
+                        seznamViewModel = seznamViewModel,
+                        nakupViewModel = nakupViewModel
                     )
                 }
 

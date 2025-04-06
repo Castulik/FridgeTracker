@@ -7,10 +7,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.obrazovky.toJsonString
 import com.example.fridgetracker_001.repository.SeznamRepository
 import com.example.fridgetracker_001.repository.SkladRepository
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SeznamViewModel(application: Application, private val repository: SeznamRepository) : AndroidViewModel(application) {
@@ -35,23 +39,35 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
         }
     }
 
-    fun pridatNeboZvysitPolozku(nazev: String, kategorie: String, nakupId: Int) {
+    private val _errorMsg = MutableStateFlow<Boolean>(false)
+    val errorMsg: StateFlow<Boolean> = _errorMsg
+
+    fun clearErrorMsg() {
+        _errorMsg.value = false
+    }
+
+    fun pridavaniRucne(nazev: String, kategorie: String, mnostvi: Int, nakupId: Int) {
         viewModelScope.launch {
-            // 1) Zkus načíst existující item (pokud máš v DAO nějakou query)
-            val existujici = repository.getItemByNazevKategorie(nazev, kategorie, nakupId)
+
+            //rucne - podivat na seznam jestli neexistuje polozka s jmenem a kategorii - existuje? vyskoci error. Neexistuje muzu pridat na nakup
+
+            val existujici = repository.getSeznamEntity(nazev, kategorie, nakupId)
+
             if (existujici != null) {
-                // 2) Zvýšit quantity
-                val updatedItem = existujici.copy(quantity = existujici.quantity + 1)
-                repository.updatePolozku(updatedItem)
+                _errorMsg.value = true
+                delay(1500)
+                _errorMsg.value = false
             } else {
-                // 3) Vložit novou
-                val newItem = SeznamEntity(
+                val newItemNakup = SeznamEntity(
+                    polozkaId = null,
                     nazev = nazev,
                     kategorie = kategorie,
                     nakupId = nakupId,
-                    quantity = 1
+                    quantity = mnostvi
                 )
-                repository.pridatPolozku(newItem)
+                repository.pridatPolozku(newItemNakup)
+                onDialogClose()
+                _errorMsg.value = false
             }
         }
     }
@@ -63,10 +79,11 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
             repository.smazatPolozku(item)
         }
     }
+    /*
 
     fun odebratNeboSnizitPolozku(nazev: String, kategorie: String, nakupId: Int) {
         viewModelScope.launch {
-            val existujici = repository.getItemByNazevKategorie(nazev, kategorie, nakupId)
+            val existujici = repository.getByPolozkaIdKaAndNakupId(polozka.id, nakupId)
             if (existujici != null) {
                 val newQuantity = existujici.quantity - 1
                 if (newQuantity <= 0) {
@@ -79,9 +96,29 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
         }
     }
 
+     */
+
+    private val _edit = MutableStateFlow<SeznamEntity?>(null)
+    val edit: StateFlow<SeznamEntity?> = _edit
+
+    fun setEditItem(item: SeznamEntity?) {
+        _edit.value = item
+    }
+
     fun updatePolozku(item: SeznamEntity) {
         viewModelScope.launch {
-            repository.updatePolozku(item)
+
+            val existujici = repository.getSeznamEntity(item.nazev, item.kategorie, item.nakupId)
+
+            if (existujici != null && existujici.id != item.id) {
+                _errorMsg.value = true
+                delay(1500)
+                _errorMsg.value = false
+            } else {
+                repository.updatePolozku(item)
+                _errorMsg.value = false
+                setEditItem(null)
+            }
         }
     }
 }

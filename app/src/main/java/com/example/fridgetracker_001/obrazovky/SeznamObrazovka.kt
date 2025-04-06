@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -47,11 +48,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -77,176 +81,26 @@ import androidx.navigation.NavController
 import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.DEFAULT_CATEGORY_STATE
 import com.example.fridgetracker_001.data.entities.NakupEntity
+import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
+import com.example.fridgetracker_001.mojeUI.AddItemDialog
 import com.example.fridgetracker_001.mojeUI.MujTextField
 import com.example.fridgetracker_001.mojeUI.NavigationIcon
 import com.example.fridgetracker_001.mojeUI.SeznamTopBar
+import com.example.fridgetracker_001.mojeUI.SkladDialog
 import com.example.fridgetracker_001.ui.theme.cardGradient1
 import com.example.fridgetracker_001.ui.theme.cardGradient22
 import com.example.fridgetracker_001.ui.theme.cardPozadi
 import com.example.fridgetracker_001.ui.theme.inversePrimaryLightMediumContrast
 import com.example.fridgetracker_001.ui.theme.onPrimaryLightMediumContrast
+import com.example.fridgetracker_001.ui.theme.primaryLight
 import com.example.fridgetracker_001.ui.theme.primaryLightMediumContrast
 import com.example.fridgetracker_001.viewmodel.NakupViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
-/*
-@Composable
-fun SeznamObrazovka(
-    seznamViewModel: SeznamViewModel,
-    skladViewModel: SkladViewModel,
-    navController: NavController,
-) {
-    val list by seznamViewModel.seznamyFlow.collectAsState(initial = emptyList())
-    var skladDialog by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf("") }
-    val skladList by skladViewModel.skladList.collectAsState()
-
-    val allCategories = listOf(
-        "Mražené", "Trvanlivé", "Ovoce a Zelenina", "Mléčné výrobky", "Maso a Ryby",
-        "Pečivo", "Vejce", "Obiloviny a luštěniny",
-        "Uzeniny a lahůdky", "Nápoje", "Hotová jídla", "Ostatní"
-    )
-    // Rozdělení potravin dle druhu
-    val mapByCategory = list.groupBy { it.kategorie }
-    val seznamEntity = list.firstOrNull()
-
-    // Případně jen: val allCategories = mapByCategory.keys.sorted()
-
-    // 5) Z "theSeznam.categoryExpansionState" uděláme Map<String, Boolean>
-    val expandedCategories = remember(seznamEntity) {
-        val initialMap: MutableMap<String, Boolean> = mutableMapOf()
-
-        if (seznamEntity != null && seznamEntity.categoryExpansionState.isNotBlank()) {
-            val parsed = seznamEntity.categoryExpansionState.toCategoryExpansionMap().toMutableMap()
-
-            // Zajistíme, že pro každou kategorii existuje záznam (default = true)
-            allCategories.forEach { category ->
-                if (!initialMap.containsKey(category)) {
-                    initialMap[category] = true
-                }
-            }
-            initialMap.putAll(parsed)
-            // Výsledek dáme do mutableStateMapOf, abychom mohli z UI přepínat
-        } else {
-            allCategories.forEach { category -> initialMap[category] = true }
-        }
-        mutableStateMapOf<String, Boolean>().apply { putAll(initialMap) }
-    }
-
-    // 6) Podobně můžeme načíst např. "viewType", "sortKategorie" apod. z theSeznam
-    //    a případně je nechat upravit. (Teď pro ukázku vynechám.)
-
-    // 7) V composable vykreslíme LazyColumn, uvnitř:
-    //    - pro každou kategorii "Header"
-    //    - pokud expandedCategories[cat] == true -> vykreslíme seznam položek
-
-    Scaffold(
-        containerColor = Color.Transparent,
-        topBar = {
-            SeznamTopBar(
-                onHistoryClick = { /*TODO*/ }
-            )
-        }
-    ) { paddingValues ->
-        Box( //Box mi reprezentuje cely screan
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = 0.dp
-                ) //content bude presne licovat se spodnim menu
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-
-                items(list) { item ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp)
-                            .background(if (item.checked) Color.Green else Color.LightGray)
-                    ) {
-
-                        Checkbox(
-                            checked = item.checked,
-                            onCheckedChange = { isChecked ->
-                                // vytvoříme nové "item" se změnou checked
-                                val updatedItem = item.copy(checked = isChecked)
-                                // zavoláme viewModel, aby uložil změnu do DB
-                                seznamViewModel.updatePolozku(updatedItem)
-                            }
-                        )
-
-                        IconButton(
-                            onClick = {
-                                skladDialog = true
-                                selectedItem = item.nazev
-                            },
-                            enabled = item.checked // false = nepůjde kliknout
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ShoppingCart,
-                                contentDescription = null,
-                                tint = if (item.checked) Color.Black else Color.Gray
-                            )
-                        }
-
-
-                        Text(
-                            text = item.nazev,
-                            modifier = Modifier.weight(1f),
-                            textDecoration = if (item.checked) TextDecoration.LineThrough else TextDecoration.None
-                        )
-
-                        IconButton(onClick = { seznamViewModel.smazatPolozku(item) }) {
-                            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                        }
-                    }
-                }
-            }
-
-            if (seznamViewModel.showAddDialog) {
-                AddItemDialog(
-                    onDismiss = { seznamViewModel.onDialogClose() },
-                    onConfirm = { newItemNazev, kategorie ->
-                        val newItem = SeznamEntity(nazev = newItemNazev, kategorie = kategorie)
-                        seznamViewModel.pridatPolozku(newItem)
-                        seznamViewModel.onDialogClose()
-                    }
-                )
-            }
-
-            if (skladDialog) {
-                SkladDialog(
-                    item = selectedItem,
-                    skladList = skladList,
-                    onDismiss = {
-                        skladDialog = false
-                        selectedItem = ""
-                    },
-                    onConfirm = { skladId ->
-                        skladDialog = false
-                        val encodedNazev = Uri.encode(selectedItem)
-                        navController.navigate("pridatPotravinu/$skladId?nazev=$encodedNazev")
-                        selectedItem = ""
-                    }
-                )
-            }
-        }
-    }
-}
-
- */
 
 @Composable
 fun SeznamObrazovka2(
@@ -259,6 +113,8 @@ fun SeznamObrazovka2(
     var nakupDialog by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("") }
     val skladList by skladViewModel.skladList.collectAsState()
+    val isOnNakup by seznamViewModel.errorMsg.collectAsState()
+    val itemEdit by seznamViewModel.edit.collectAsState()
 
     // Vezmeme si "všechny" položky, co existují
     val allSeznamItems by seznamViewModel.seznamyFlow.collectAsState(initial = emptyList())
@@ -285,7 +141,7 @@ fun SeznamObrazovka2(
                 onPridatNakup = { nakupDialog = true },
                 onNastaveni = { },
             )
-        }
+        },
     ) { paddingValues ->
 
         // 7) Vykreslení
@@ -350,6 +206,11 @@ fun SeznamObrazovka2(
                             else TextDecoration.None
                         )
 
+                        IconButton(onClick = {
+                            seznamViewModel.setEditItem(item)
+                        }) {
+                            Icon(Icons.Default.Edit, contentDescription = "edit")
+                        }
 
                         IconButton(onClick = {
                             seznamViewModel.smazatPolozku(item)
@@ -361,14 +222,14 @@ fun SeznamObrazovka2(
             }
         }
 
-        // Dialog pro přidání nové položky
+        // Dialog pro přidání nakupu
         if (nakupDialog) {
             val today = getCurrentDate()
             AlertDialog(
                 onDismissRequest = { nakupDialog = false },
-                title = { Text("Novy nakup") },
+                title = { Text("Nový nákup") },
                 text = {
-                    Text("pridej novy nakup")
+                    Text("Přidej nový nákup")
                 },
                 confirmButton = {
                     TextButton(
@@ -392,14 +253,38 @@ fun SeznamObrazovka2(
 
         if (seznamViewModel.showAddDialog) {
             AddItemDialog(
-                onDismiss = { seznamViewModel.onDialogClose() },
-                onConfirm = { newItemNazev, kategorie ->
-                    val currentId = nakupViewModel.currentNakup.value?.id ?: 1
-                    seznamViewModel.pridatNeboZvysitPolozku(nazev = newItemNazev, kategorie = kategorie, nakupId = currentId)
+                onDismiss = {
+                    seznamViewModel.clearErrorMsg()
                     seznamViewModel.onDialogClose()
                 },
+                onConfirm = { nazev, kategorie, mnozstvi ->
+                    val currentId = nakupViewModel.currentNakup.value?.id ?: 1
+                    seznamViewModel.pridavaniRucne(nazev, kategorie, mnozstvi, currentId)
+                },
                 option = true,
-                onNavigate = { navController.navigate("seznampolozky") }
+                onNavigate = { navController.navigate("seznampolozky") },
+                isEdit = false,
+                isOnNakup = isOnNakup,
+            )
+        }
+
+        if (itemEdit != null) {
+            AddItemDialog(
+                onDismiss = {
+                    seznamViewModel.setEditItem(null)
+                    seznamViewModel.clearErrorMsg()
+                },
+                onConfirm = { nazev, kategorie, mnozstvi ->
+                    val updatedSeznam = itemEdit!!.copy(nazev = nazev, kategorie = kategorie, quantity = mnozstvi)
+                    seznamViewModel.updatePolozku(updatedSeznam)
+                },
+                option = true,
+                onNavigate = { navController.navigate("seznampolozky") },
+                isEdit = true,
+                isOnNakup = isOnNakup,
+                nazev = itemEdit!!.nazev,
+                kategorie = itemEdit!!.kategorie,
+                mnozstvi = itemEdit!!.quantity
             )
         }
 
@@ -423,233 +308,6 @@ fun SeznamObrazovka2(
     }
 }
 
-
-/*
-AddItemDialog(
-                onDismiss = { seznamViewModel.onDialogClose() },
-                onConfirm = { newItemNazev, kategorie ->
-                    val newItem = SeznamEntity(nazev = newItemNazev, kategorie = kategorie)
-                    seznamViewModel.pridatPolozku(newItem)
-                    seznamViewModel.onDialogClose()
-                }
-            )
- */
-
-
-@Composable
-fun AddItemDialog(
-    onDismiss: () -> Unit,
-    onConfirm: (String, String) -> Unit,
-    onNavigate: () -> Unit = {},
-    option: Boolean = false
-) {
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    var text by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf<String?>(null) }
-    var showError by remember { mutableStateOf(false) }
-    val isError by remember { mutableStateOf(false) }
-
-    val options2 = listOf(
-        "Mražené", "Trvanlivé", "Ovoce a Zelenina", "Mléčné výrobky",
-        "Maso a Ryby", "Pečivo", "Vejce", "Obiloviny a luštěniny",
-        "Uzeniny a lahůdky", "Nápoje", "Hotová jídla", "Ostatní"
-    )
-
-    AlertDialog(
-        onDismissRequest = { onDismiss() },
-        title = { Text("Přidat položku") },
-        text = {
-            Column {
-
-                MujTextField(
-                    value = text,
-                    onValueChange = { text = it },
-                    placeholder = "Název potraviny",
-                    isError = isError,
-                    errorMessage = "",
-                    maxLength = 30,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                            keyboardController?.hide()
-                        }
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.small)
-                        .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = cardPozadi,
-                        unfocusedContainerColor = cardPozadi,
-                        disabledContainerColor = cardPozadi,
-                        errorContainerColor = cardPozadi,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color.Black,
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black,
-                        errorTextColor = Color.Red
-                    )
-                )
-
-                if(option) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(
-                        onClick = {onNavigate();onDismiss()},
-                        // Tady si nastavíte design tlačítka
-                        shape = RoundedCornerShape(12.dp),   // zaoblené rohy
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF00BCD4), // tyrkysová
-                            contentColor = Color.White          // barva textu
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp)
-                            .padding(horizontal = 2.dp, vertical = 2.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AddCircle, // Ikona ruky (můžete změnit)
-                                contentDescription = "Click Icon",
-                                modifier = Modifier.size(30.dp)
-                            )
-                            Text(text = "Přidat pomocí katalogu", fontSize = 17.sp, maxLines = 1)
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Vyber kategorii:")
-                Spacer(modifier = Modifier.height(8.dp))
-
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    items(options2) { category ->
-                        Box(
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .border(
-                                    width = if (selectedCategory == category) 2.dp else 1.dp,
-                                    color = if (selectedCategory == category) Color.Black else Color.Gray,
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .clickable {
-                                    selectedCategory = category
-                                    showError = false
-                                }
-                                .padding(8.dp)
-                                .aspectRatio(1.5f),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = category,
-                                textAlign = TextAlign.Center,
-                                fontSize = 13.sp
-                            )
-                        }
-                    }
-                }
-
-                if (showError) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Pro přidání potraviny musíte vybrat kategorii!",
-                        color = Color.Red,
-                        fontSize = 15.sp
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    if (selectedCategory != null) {
-                        onConfirm(text, selectedCategory!!)
-                    } else {
-                        showError = true
-                    }
-                }
-            ) {
-                Text("Přidat")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Zrušit")
-            }
-        }
-    )
-}
-
-
-
-@Composable
-fun SkladDialog(
-    item: String,        // typ podle toho, co máte
-    skladList: List<SkladEntity>,     // typ skladů
-    onDismiss: () -> Unit,
-    onConfirm: (Int) -> Unit    // vracíme skladId
-) {
-    var selectedSklad by remember { mutableStateOf<SkladEntity?>(null) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(text = "Přidat položku: $item")
-        },
-        text = {
-            Column {
-                Text("Vyber sklad ze seznamu:")
-                Spacer(modifier = Modifier.height(8.dp))
-                // Jednoduchý výčet skladů s RadioButton
-                skladList.forEach { sklad ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { selectedSklad = sklad }
-                            .padding(vertical = 4.dp)
-                    ) {
-                        RadioButton(
-                            selected = (sklad == selectedSklad),
-                            onClick = { selectedSklad = sklad }
-                        )
-                        Text(
-                            text = sklad.nazev,    // nebo sklad.name, podle vašeho modelu
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    // voláme onConfirm s ID vybraného skladu
-                    selectedSklad?.let { onConfirm(it.id) }
-                },
-                enabled = (selectedSklad != null)  // tlačítko je aktivní jen pokud je vybrán sklad
-            ) {
-                Text("Přidat")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Zrušit")
-            }
-        }
-    )
-}
 
 fun getCurrentDate(): String {
     val currentDate = LocalDate.now()

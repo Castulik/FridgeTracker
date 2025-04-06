@@ -415,7 +415,7 @@ fun DeleteAlert2(
 
     AlertDialog(
         onDismissRequest = { change() },
-        title = { Text("Opravdu chcete smazat tuto potravinu?") },
+        title = { Text("Opravdu chcete odstranit tuto potravinu?") },
         text = {
             Column {
                 Text("Tato akce je nevratná.")
@@ -438,7 +438,7 @@ fun DeleteAlert2(
                     change()
                 }
             ) {
-                Text("Smazat", color = Color.Red)
+                Text("odstranit", color = Color.Red)
             }
         },
         dismissButton = {

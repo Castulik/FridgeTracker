@@ -23,6 +23,6 @@ interface SeznamDao {
     fun getAll(): Flow<List<SeznamEntity>>
 
     @Query("SELECT * FROM seznam WHERE nazev = :nazev AND kategorie = :kategorie AND nakupId = :nakupId LIMIT 1")
-    suspend fun getItemByNazevKategorie(nazev: String, kategorie: String, nakupId: Int): SeznamEntity?
+    suspend fun getSeznamEntity(nazev: String, kategorie: String, nakupId: Int): SeznamEntity?
 
 }
