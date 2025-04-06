@@ -17,6 +17,4 @@ data class NakupEntity(
 
     // Třídění položek
     var sortPolozky: String = "NAME",
-
-    var updatedAt: Long = System.currentTimeMillis()
 )

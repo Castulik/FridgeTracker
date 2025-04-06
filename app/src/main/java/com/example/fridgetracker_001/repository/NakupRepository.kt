@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 class NakupRepository(private val nakupDao: NakupDao) {
 
-    suspend fun vlozitNakup(nakup: NakupEntity) {
-        nakupDao.vlozitNakup(nakup)
+    suspend fun vlozitNakup(nakup: NakupEntity): Long {
+        return nakupDao.vlozitNakup(nakup)
     }
 
     suspend fun smazatNakup(nakup: NakupEntity) {
@@ -28,9 +28,5 @@ class NakupRepository(private val nakupDao: NakupDao) {
 
     suspend fun getNakupById(nakupId: Int): NakupEntity? {
         return nakupDao.getNakupById(nakupId)
-    }
-
-    suspend fun getLastUpdatedNakup(): NakupEntity? {
-        return nakupDao.getLastUpdatedNakup()
     }
 }

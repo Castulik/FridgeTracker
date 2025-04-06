@@ -100,6 +100,7 @@ import com.example.fridgetracker_001.viewmodel.NakupViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -131,6 +132,10 @@ fun SeznamObrazovka2(
 
     val polozkyByCategory = remember(listForCurrentNakup) {
         listForCurrentNakup.groupBy { it.kategorie }
+    }
+
+    val vseOdskrtnuto by remember(listForCurrentNakup) {
+        mutableStateOf(listForCurrentNakup.isNotEmpty() && listForCurrentNakup.all { it.checked })
     }
 
     Scaffold(
@@ -234,8 +239,7 @@ fun SeznamObrazovka2(
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            val newNakup = NakupEntity(nazev = today)
-                            nakupViewModel.vlozitNakup(newNakup)
+                            nakupViewModel.vlozitNakup(today)
                             nakupDialog = false
                         }
                     ) {
@@ -310,7 +314,8 @@ fun SeznamObrazovka2(
 
 
 fun getCurrentDate(): String {
-    val currentDate = LocalDate.now()
-    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    return currentDate.format(formatter)
+    val currentDateTime = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+    return "Nákup ze dne ${currentDateTime.format(formatter)}"
 }
+

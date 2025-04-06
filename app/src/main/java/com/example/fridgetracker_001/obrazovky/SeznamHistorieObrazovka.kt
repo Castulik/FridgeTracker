@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fridgetracker_001.data.entities.SeznamEntity
+import com.example.fridgetracker_001.mojeUI.BottomBarHistorie
 import com.example.fridgetracker_001.mojeUI.SeznamTopBar
 import com.example.fridgetracker_001.mojeUI.SkladItem
 import com.example.fridgetracker_001.ui.theme.buttonPodtvrdit
@@ -50,15 +51,11 @@ fun SeznamHistorieObrazovka(
     nakupViewModel: NakupViewModel
 ) {
     val nakupyList by nakupViewModel.nakupyList.collectAsState()
+    val currentNakup by nakupViewModel.currentNakup.collectAsState()
 
     // Seřazené od nejnovějšího (dle updatedAt)
     val sortedList = remember(nakupyList) {
-        nakupyList.sortedByDescending { it.updatedAt }
-    }
-
-    // Definujeme formát pro datum a čas
-    val dateFormat = remember {
-        SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
+        nakupyList.sortedByDescending { it.nazev }
     }
 
     Scaffold(
@@ -69,6 +66,12 @@ fun SeznamHistorieObrazovka(
                 onCancel = { navController.popBackStack() }
             )
         },
+        bottomBar = {
+            BottomBarHistorie(
+                copyToNew = {},
+                delete = {},
+            )
+        }
     ) { paddingValues ->
 
         LazyColumn(
@@ -77,10 +80,6 @@ fun SeznamHistorieObrazovka(
                 .padding(paddingValues)
         ) {
             items(sortedList) { nakup ->
-                // Z `updatedAt` vyrobíme Date a formátujeme
-                val formattedDate = remember(nakup.updatedAt) {
-                    dateFormat.format(Date(nakup.updatedAt))
-                }
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -88,18 +87,117 @@ fun SeznamHistorieObrazovka(
                         .height(50.dp)
                         .fillMaxWidth()
                         .padding(4.dp)
-                        .background(Color.Gray)
+                        .background( if (nakup == currentNakup) Color.Blue else Color.Gray)
                         .clickable {
                             nakupViewModel.setAsCurrent(nakup.id)
                             navController.popBackStack()
                         }
                 ) {
                     Text(
-                        text = "${nakup.nazev} (aktualizováno: $formattedDate)",
+                        text = nakup.nazev,
                         modifier = Modifier.padding(8.dp)
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SeznamHistorieObrazovka2(
+    navController: NavController,
+    nakupViewModel: NakupViewModel
+) {
+    val nakupyList by nakupViewModel.nakupyList.collectAsState()
+    val currentNakup by nakupViewModel.currentNakup.collectAsState()
+
+    // Seřazení dle data (od nejnovějšího) - parse z nazvu
+    val sortedList = remember(nakupyList) {
+        nakupyList.sortedByDescending {
+            parseNazevAsDate(it.nazev)
+        }
+    }
+
+    // Stáhnu tam i nějaký text z TextFieldu, abych mohl vložit "nový"
+    var novyNakupText by remember { mutableStateOf("") }
+
+    Scaffold(
+        containerColor = Color.Transparent,
+        topBar = {
+            SeznamTopBar (
+                type = true,
+                onCancel = { navController.popBackStack() }
+            )
+        },
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+            // Řádek s TextFieldem a tlačítkem "Přidat"
+            item {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    androidx.compose.material3.TextField(
+                        value = novyNakupText,
+                        onValueChange = { novyNakupText = it },
+                        modifier = Modifier.weight(1f)
+                    )
+                    Button(
+                        onClick = {
+                            if (novyNakupText.isNotBlank()) {
+                                nakupViewModel.vlozitNakup(novyNakupText)
+                                novyNakupText = ""
+                            }
+                        },
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text("Přidat")
+                    }
+                }
+            }
+
+            // Výpis seznamu
+            items(sortedList) { nakup ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .clickable {
+                            // Nastavíme tento nakup jako "current"
+                            nakupViewModel.setAsCurrent(nakup.id)
+                        }
+                ) {
+                    // Zvýrazníme current
+                    val isCurrent = (nakup.id == currentNakup?.id)
+                    Text(
+                        text = if (isCurrent) ">> ${nakup.nazev} <<" else nakup.nazev,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Button(
+                        onClick = { nakupViewModel.smazatNakup(nakup) },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text("Smazat")
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Jen pomocná funkce, co zkusí `nazev` přetavit na datum.
+ */
+fun parseNazevAsDate(nazev: String): Long {
+    return try {
+        val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+        val date = sdf.parse(nazev)
+        date?.time ?: 0L
+    } catch (e: Exception) {
+        // Když to nevyjde, vrátíme 0 => šoupne se to nakonec
+        0L
     }
 }

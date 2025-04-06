@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NakupDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun vlozitNakup(nakup: NakupEntity)
+    @Insert
+    suspend fun vlozitNakup(nakup: NakupEntity): Long
 
     @Delete
     suspend fun smazatNakup(nakup: NakupEntity)
@@ -32,7 +32,4 @@ interface NakupDao {
     // Pro jednorázové získání konkrétního nákupu (např. v asynchronní akci):
     @Query("SELECT * FROM nakup_table WHERE id = :nakupId")
     suspend fun getNakupById(nakupId: Int): NakupEntity?
-
-    @Query("SELECT * FROM nakup_table ORDER BY updatedAt DESC LIMIT 1")
-    suspend fun getLastUpdatedNakup(): NakupEntity?
 }

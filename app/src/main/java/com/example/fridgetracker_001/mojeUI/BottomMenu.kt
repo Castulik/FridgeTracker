@@ -513,3 +513,66 @@ fun BottomBarPolozky(
         }
     }
 }
+
+@Composable
+fun BottomBarHistorie(
+    copyToNew: () -> Unit,
+    delete: () -> Unit
+) {
+    // Vytvoříme velké tlačítko přes celou šířku
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Transparent)
+            .padding(vertical = 4.dp, horizontal = 10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .clip(RoundedCornerShape(15.dp))
+                .border(2.dp, Color.Black, shape = RoundedCornerShape(15.dp))
+                .background(buttonPodtvrdit),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .clickable { copyToNew() }
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    ImageVector.vectorResource(id = R.drawable.plus),
+                    contentDescription = "Přidat položku",
+                    modifier = Modifier.size(50.dp)
+                )
+
+                Text("Přidat položku", fontSize = 15.sp, color = Color.Black)
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            VerticalDivider(modifier = Modifier.width(2.dp).height(65.dp), color = Color.Black, thickness = 2.dp)
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { delete() },
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.done),
+                    contentDescription = "done",
+                    modifier = Modifier.height(50.dp).width(70.dp)
+                )
+
+                Text("Hotovo", fontSize = 15.sp, color = Color.Black)
+            }
+        }
+    }
+}
