@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">FridgeTracker_0.0.1</string>
+    <string name="czech_btn">Čeština 🇨🇿</string>
+    <string name="english_btn">Angličtina 🇬🇧</string>
+    <string name="save_changes">Uložit změny</string>
+    <string name="add_storage">Přidej sklad</string>
+    <string name="order_format">Pořadí: %d</string>
+    <string name="storage_name_placeholder">Název skladu</string>
+    <string name="pick_icon">Vyber ikonu:</string>
+    <string name="delete_photo">Smazat fotku</string>
+    <string name="delete_photo_q">Opravdu chcete vymazat fotku?</string>
+    <string name="irreversible">Tato akce je nevratná.</string>
+    <string name="cancel">Zrušit</string>
+    <string name="take_your_icon">Vyfoť si vlastní ikonku, kliknutím na kameru</string>
+</resources>

@@ -2,6 +2,7 @@ package com.example.fridgetracker_001.mojeUI
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -357,7 +358,7 @@ fun SkladFormBoxWithConstraints(
                     colors = ButtonDefaults.buttonColors(buttonPodtvrdit)
                 ) {
                     Text(
-                        if (isEdit) "Uložit změny" else "Přidej sklad",
+                        text = stringResource(if (isEdit) R.string.save_changes else R.string.add_storage),
                         fontSize = 25.sp,
                         color = Color.Black
                     )
@@ -399,7 +400,12 @@ fun SkladFormBoxWithConstraints(
                         horizontalArrangement = Arrangement.Start,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Pořadí: ${sklad.poradi}", fontSize = 25.sp, color = Color.Black)
+                        Text(
+                            text = stringResource(R.string.order_format, sklad.poradi),
+                            fontSize = 25.sp,
+                            color = Color.Black
+                        )
+
                         Spacer(Modifier.width(8.dp))
 
                         // Tlačítko pro posun o -1
@@ -441,7 +447,7 @@ fun SkladFormBoxWithConstraints(
                     MujTextField(
                         value = sklad.nazev,
                         onValueChange = { onSkladChange(sklad.copy(nazev = it)) },
-                        placeholder = "Název skladu",
+                        placeholder = stringResource(R.string.storage_name_placeholder),
                         isError = isError,
                         errorMessage = "",
                         maxLength = 20,
@@ -480,7 +486,7 @@ fun SkladFormBoxWithConstraints(
                         .height(rowHeight(row3Weight))
                 ) {
                     Column {
-                        Text("Vyber ikonu:")
+                        Text(stringResource(R.string.pick_icon))
                         MojeIconVyber2(
                             iconList = iconList,
                             skladIcona = sklad.iconResourceId,
@@ -537,7 +543,7 @@ fun SkladFormBoxWithConstraints(
                                         .wrapContentWidth()
                                 ) {
                                     Text(
-                                        text = "Smazat fotku",
+                                        text = stringResource(R.string.delete_photo),
                                         color = Color.White,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
@@ -548,8 +554,8 @@ fun SkladFormBoxWithConstraints(
                             if (deleteAlert) {
                                 AlertDialog(
                                     onDismissRequest = { deleteAlert = false },
-                                    title = { Text("Opravdu chcete vymazat fotku?") },
-                                    text = { Text("Tato akce je nevratná.") },
+                                    title = { Text(stringResource(R.string.delete_photo_q)) },
+                                    text = { Text(stringResource(R.string.irreversible)) },
                                     confirmButton = {
                                         TextButton(
                                             onClick = {
@@ -558,7 +564,7 @@ fun SkladFormBoxWithConstraints(
                                             }
                                         ) {
                                             Text(
-                                                text = "Smazat fotku",
+                                                text = stringResource(R.string.delete_photo),
                                                 color = Color.Red,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
@@ -569,7 +575,7 @@ fun SkladFormBoxWithConstraints(
                                         TextButton(
                                             onClick = { deleteAlert = false }
                                         ) {
-                                            Text("Zrušit")
+                                            Text(stringResource(R.string.cancel))
                                         }
                                     }
                                 )
@@ -600,10 +606,10 @@ fun SkladFormBoxWithConstraints(
                                             color = if (sklad.preferovane) Color.Black else Color.Transparent,
                                             shape = RoundedCornerShape(8.dp)
                                         ),
-                                    contentScale = ContentScale.Crop
+                                    contentScale = ContentScale.Fit
                                 )
                             } ?: run {
-                                Text("Vyfoť si vlastní ikonku, kliknutím na kameru", color = Color.Black)
+                                Text(stringResource(R.string.take_your_icon), color = Color.Black)
                             }
                         }
                     }

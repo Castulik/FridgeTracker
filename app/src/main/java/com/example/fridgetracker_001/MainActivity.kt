@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +33,7 @@ import com.example.fridgetracker_001.viewmodel.PotravinaViewModelFactory
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModelFactory
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var skladViewModel: SkladViewModel
     private lateinit var potravinaViewModel: PotravinaViewModel

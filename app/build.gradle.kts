@@ -85,4 +85,12 @@ dependencies {
     // ML Kit – Barcode Scanning
     implementation (libs.barcode.scanning)
     implementation (libs.gson)
+
+    implementation (libs.androidx.appcompat)
+    implementation (libs.androidx.core.ktx.v190)
+    implementation (libs.androidx.activity.compose.v182)
+    implementation (libs.androidx.appcompat.v161)
+    implementation (libs.material)   // (nebo vyšší)
+    implementation (libs.androidx.core.ktx.v1120)
+
 }

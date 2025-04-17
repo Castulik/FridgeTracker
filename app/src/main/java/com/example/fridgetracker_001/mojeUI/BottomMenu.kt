@@ -407,51 +407,6 @@ fun BottomBarMultiSelect(
 }
 
 @Composable
-fun DeleteAlert2(
-    change: () -> Unit,
-    onDelete: (Boolean) -> Unit // Předáváme informaci, zda bylo políčko zaškrtnuté
-) {
-    var isChecked by remember { mutableStateOf(false) } // Stav pro zaškrtávací políčko
-
-    AlertDialog(
-        onDismissRequest = { change() },
-        title = { Text("Opravdu chcete odstranit tuto potravinu?") },
-        text = {
-            Column {
-                Text("Tato akce je nevratná.")
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = isChecked,
-                        onCheckedChange = { isChecked = it }
-                    )
-                    Text("Přidat potravinu do nákupního seznamu")
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onDelete(isChecked) // Vracíme stav zaškrtnutí
-                    change()
-                }
-            ) {
-                Text("odstranit", color = Color.Red)
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = { change() }
-            ) {
-                Text("Zrušit")
-            }
-        }
-    )
-}
-
-@Composable
 fun BottomBarPolozky(
     addKatalog: () -> Unit,
     onDone: () -> Unit

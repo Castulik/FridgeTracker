@@ -292,13 +292,6 @@ fun SkladFormTopBar(
                                 TextButton(
                                     onClick = {
                                         onDelete()
-                                        /*
-                                        skladViewModel.smazatSklad(sklad)
-                                        navController.navigate("mojepotraviny")
-                                        smazatSklad = false
-                                        onDismiss()
-
-                                         */
                                     }
                                 ) {
                                     Text("Smazat", color = Color.Red)

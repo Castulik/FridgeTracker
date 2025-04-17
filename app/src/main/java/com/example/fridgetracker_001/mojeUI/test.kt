@@ -234,6 +234,15 @@ fun PotravinaItemGrid(
 }
 
 @Composable
+fun MyButton() {
+    var text by remember { mutableStateOf("Klikni mě") }
+
+    Button(onClick = { text = "Kliknuto!" }) {
+        Text(text)
+    }
+}
+
+@Composable
 fun PotravinaItemGrid2(
     nazev: String = "Steak",
     daysLeft: Int = 56,
