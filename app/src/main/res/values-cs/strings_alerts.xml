@@ -1,0 +1,36 @@
+<resources>
+    <string name="view_type_dialog_title">Zvolte zobrazení položek</string>
+    <string name="compact_list">Kompaktní Seznam</string>
+    <string name="grid">Dlaždice</string>
+    <string name="close">Zavřít</string>
+
+    <string name="sort_dialog_title">Zvolte seřazení</string>
+    <string name="sort_food">Seřazení potravin</string>
+    <string name="name">Název</string>
+    <string name="expiry_date">Datum spotřeby</string>
+    <string name="added_date">Datum přidání</string>
+    <string name="sort_categories">Seřazení kategorií</string>
+    <string name="alphabetical">Abecedně</string>
+    <string name="defaults">Výchozí stav</string>
+    <string name="count">Počet v kategorii</string>
+
+    <string name="notification_settings">Nastavení upozornění</string>
+    <string name="check_to_enable_notifications">Zaškrni pro nastavení upozornění na datum spotřeby.</string>
+    <string name="first_warning">První varování:</string>
+    <string name="days_before_expiry">Den/Dny před expirací</string>
+    <string name="second_warning">Druhé varování:</string>
+    <string name="confirm_changes">Potvrdit změny</string>
+
+    <string name="ai_prompt_title">AI Prompt Builder</string>
+    <string name="prompt_content">Obsah promptu: </string>
+    <string name="prompt_placeholder">Zadej znění promptu</string>
+    <string name="selected_food">Vybrané potraviny: </string>
+    <string name="select_food_with_buttons">Vyber potraviny pomocí tlačítek: </string>
+    <string name="food_within_14_days">Potraviny s expirací do 14 dnů</string>
+    <string name="select_food_manually">Vybrat potraviny ručně</string>
+    <string name="copy_to_clipboard">Kopírovat do schránky</string>
+
+    <string name="confirm_delete_title">Opravdu chcete odstranit tuto potravinu?</string>
+    <string name="confirm_delete_text">Tato akce je nevratná.</string>
+    <string name="add_to_shopping_list">Přidat potravinu do nákupního seznamu</string>
+</resources>

@@ -101,23 +101,17 @@ class  SkladViewModel(application: Application, private val repository: SkladRep
         }
     }
 
-    fun updateCategoryExpansionState(skladId: Int, newState: Map<String, Boolean>) {
-        //Spouštíme novou coroutine v rámci viewModelScope. To umožňuje provádět asynchronní operace, aniž by se blokovalo hlavní vlákno.
+    fun updateCategoryExpansionState(skladId: Int, newState: Map<Int, Boolean>) {
         viewModelScope.launch {
-            // 1. Načteme aktuální sklad z databáze pomocí repository
-            //Pokud sklad s daným ID neexistuje (návratová hodnota je null), ukončíme coroutine pomocí return@launch.
             val sklad = repository.ziskejSkladPodleId(skladId) ?: return@launch
 
-            // 2. Převedeme novou mapu (newState) na JSON řetězec
-            val newStateJson = newState.toJsonString()
+            // převedeme klíče Int na String kvůli JSON
+            val newStateJson = newState.mapKeys { it.key.toString() }.toJsonString()
 
-            // 3. Vytvoříme novou kopii skladu, kde nahradíme pouze pole categoryExpansionState novým JSON řetězcem
             val updatedSklad = sklad.copy(categoryExpansionState = newStateJson)
 
-            // 4. Uložíme aktualizovaný sklad do databáze pomocí repository
             repository.aktualizovatSklad(updatedSklad)
 
-            // 5. Pokud je právě aktuálně načtený sklad ve ViewModelu stejný, aktualizujeme i lokální stav
             if (_skladState.value?.id == skladId) {
                 _skladState.value = updatedSklad
             }

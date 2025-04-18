@@ -28,7 +28,7 @@ data class PotravinaEntity(
     var vaha: String,
     var jednotky: String,
     var poznamka: String,
-    var druh: String,
+    var druh: Int?,
     var code: String,
     var skladId: Int,                                // ID skladu, cizí klíč odkazující na SkladEntity
 )

@@ -1,6 +1,7 @@
 package com.example.fridgetracker_001.data
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.example.fridgetracker_001.R
 
 object IconRegistry {
@@ -42,25 +43,22 @@ object IconRegistry {
         R.drawable.food_zmrzlina,
     )
 
-    data class KindOption(
-        val name: String,
-        @DrawableRes val imageRes: Int
-    )
+    data class KindOption(@StringRes val nameRes: Int, @DrawableRes val imageRes: Int)
 
 
     val kindOptions = listOf(
-        KindOption("Mražené", R.drawable.kind_mrazene),
-        KindOption("Trvanlivé", R.drawable.kind_trvanlive),
-        KindOption("Ovoce a Zelenina", R.drawable.kind_ovocezelenina),
-        KindOption("Mléčné výrobky", R.drawable.kind_mlecne),
-        KindOption("Maso a Ryby", R.drawable.kind_masoryba),
-        KindOption("Pečivo", R.drawable.kind_pecivo),
-        KindOption("Vejce", R.drawable.kind_vejce),
-        KindOption("Obiloviny a luštěniny", R.drawable.kind_lusteniny),
-        KindOption("Uzeniny a lahůdky", R.drawable.kind_lahudky), // přidáno dle tvého seznamu
-        KindOption("Nápoje", R.drawable.kind_napoje),
-        KindOption("Hotová jídla", R.drawable.kind_hotovajidla),
-        KindOption("Ostatní", R.drawable.kind_ostatni)
+        KindOption(R.string.kind_frozen,          R.drawable.kind_mrazene),
+        KindOption(R.string.kind_nonperishable,   R.drawable.kind_trvanlive),
+        KindOption(R.string.kind_fruit_veg,       R.drawable.kind_ovocezelenina),
+        KindOption(R.string.kind_dairy,           R.drawable.kind_mlecne),
+        KindOption(R.string.kind_meat_fish,       R.drawable.kind_masoryba),
+        KindOption(R.string.kind_bakery,          R.drawable.kind_pecivo),
+        KindOption(R.string.kind_eggs,            R.drawable.kind_vejce),
+        KindOption(R.string.kind_grains_legumes,  R.drawable.kind_lusteniny),
+        KindOption(R.string.kind_deli,            R.drawable.kind_lahudky),
+        KindOption(R.string.kind_drinks,          R.drawable.kind_napoje),
+        KindOption(R.string.kind_ready_meals,     R.drawable.kind_hotovajidla),
+        KindOption(R.string.kind_other,           R.drawable.kind_ostatni)
     )
 }
 

@@ -32,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
@@ -132,21 +134,21 @@ fun TopBar(
                     offset = DpOffset(x = (40).dp, y = 0.dp)
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Seřadit") },
+                        text = { Text(stringResource(R.string.tb_sort)) },
                         onClick = {
                             onSortClicked()
                             onMenuExpandedChange(false)
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Vzhled") },
+                        text = { Text(stringResource(R.string.tb_view)) },
                         onClick = {
                             onViewTypeClicked()
                             onMenuExpandedChange(false)
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Nastavení") },
+                        text = { Text(stringResource(R.string.tb_settings)) },
                         onClick = {
                             onSettingsClicked()
                             onMenuExpandedChange(false)
@@ -170,7 +172,7 @@ fun MultiSelectTopBar(
             containerColor = if(!ai) Color.LightGray else cardGradient3,
             titleContentColor = Color.Black,
         ),
-        title = { Text("Vybráno: $selectedCount") },
+        title = { Text(stringResource(R.string.tb_selected, selectedCount)) },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zpět z multiselectu",tint = Color.Black)
@@ -206,7 +208,7 @@ fun TopBarPotravinaForm(
         TopAppBar(
             title = {
                 Text(
-                    text = if (isEdit) "Upravit potravinu" else "Nová potravina",
+                    text = if (isEdit) stringResource(R.string.tb_edit_food) else stringResource(R.string.tb_new_food),
                     fontSize = 25.sp,
                 )
             },
@@ -264,7 +266,7 @@ fun SkladFormTopBar(
         TopAppBar(
             title = {
                 Text(
-                    text = if (isEdit) "Upravit skladiště" else "Přidat skladiště",
+                    text = if (isEdit) stringResource(R.string.tb_edit_storage) else stringResource(R.string.tb_add_storage),
                     fontSize = 25.sp,
                 )
             },
@@ -286,22 +288,22 @@ fun SkladFormTopBar(
                     if (deleteAlert) {
                         AlertDialog(
                             onDismissRequest = { deleteAlert = false },
-                            title = { Text("Opravdu chcete smazat tento sklad?") },
-                            text = { Text("Tato akce je nevratná.") },
+                            title = { Text(stringResource(R.string.dlg_delete_storage_title)) },
+                            text = { Text(stringResource(R.string.dlg_irreversible)) },
                             confirmButton = {
                                 TextButton(
                                     onClick = {
                                         onDelete()
                                     }
                                 ) {
-                                    Text("Smazat", color = Color.Red)
+                                    Text(stringResource(R.string.dlg_delete), color = Color.Red)
                                 }
                             },
                             dismissButton = {
                                 TextButton(
                                     onClick = { deleteAlert = false }
                                 ) {
-                                    Text("Zrušit")
+                                    Text(stringResource(R.string.dlg_cancel))
                                 }
                             }
                         )
@@ -321,23 +323,58 @@ fun SkladFormTopBar(
 fun SeznamTopBar(
     onPridatNakup: () -> Unit,
     onNastaveni: () -> Unit,
-    onHistoryClick: () -> Unit
+    onHistoryClick: () -> Unit,
+    menuExpanded: Boolean,
+    onMenuExpandedChange: (Boolean) -> Unit
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = cardGradient22,
             titleContentColor = Color.Black,
         ),
-        title = { Text("Nákupní seznam") },
+        title = { Text(stringResource(R.string.tb_shopping_list)) },
         actions = {
             IconButton(onClick = onPridatNakup) {
-                Icon(imageVector = ImageVector.vectorResource(id = R.drawable.addnakup), contentDescription = "Odebrat", modifier = Modifier.size(25.dp), tint = Color.Black)
+                Icon(painter = painterResource(id = R.drawable.ecommerce), contentDescription = "add", modifier = Modifier.size(30.dp), tint = Color.Black)
             }
-            IconButton(onClick = onNastaveni) {
-                Icon(imageVector = Icons.Default.Settings, contentDescription = "nastaveni",tint = Color.Black)
-            }
+
             IconButton(onClick = onHistoryClick) {
-                Icon(imageVector = Icons.Default.Info, contentDescription = "history",tint = Color.Black)
+                Icon(painter = painterResource(id = R.drawable.history), contentDescription = "history",tint = Color.Black)
+            }
+
+            IconButton(onClick = onNastaveni) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "nastaveni",
+                    tint = Color.Black,
+                    modifier = Modifier
+                        .size(40.dp)
+                )
+            }
+
+            DropdownMenu(
+                expanded = menuExpanded,
+                onDismissRequest = { onMenuExpandedChange(false) },
+                offset = DpOffset(x = (40).dp, y = 0.dp)
+            ) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.tb_sort)) },
+                    onClick = {
+                        onMenuExpandedChange(false)
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.tb_view)) },
+                    onClick = {
+                        onMenuExpandedChange(false)
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.tb_settings)) },
+                    onClick = {
+                        onMenuExpandedChange(false)
+                    }
+                )
             }
         }
     )
@@ -352,7 +389,7 @@ fun SeznamTopBar(
     TopAppBar(
         title = {
             Text(
-                text = if (type) "Historie nakupu" else "Přidej položky na nakup",
+                text = if (type) stringResource(R.string.tb_purchase_history) else stringResource(R.string.tb_add_items_purchase),
                 fontSize = 25.sp,
             )
         },

@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             val codeRepository = CodeRepository(codeDao)
             val seznamRepository = SeznamRepository(seznamDao)
             val nakupRepository = NakupRepository(nakupDao)
-            val polozkyRepository = PolozkyRepository(polozkyDao)
+            val polozkyRepository = PolozkyRepository(polozkyDao, applicationContext)
 
             // Inicializace ViewModelů
             val skladFactory = SkladViewModelFactory(application, skladRepository)

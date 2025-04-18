@@ -58,6 +58,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -121,7 +122,7 @@ fun BottomBarAddPotravinu(
                     modifier = Modifier.size(50.dp)
                 )
 
-                Text("Přidat potravinu", fontSize = 15.sp, color = Color.Black)
+                Text(stringResource(R.string.add_food), fontSize = 15.sp, color = Color.Black)
             }
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -142,7 +143,7 @@ fun BottomBarAddPotravinu(
                     modifier = Modifier.height(50.dp).width(70.dp)
                 )
 
-                Text("Přidej skenem", fontSize = 15.sp, color = Color.Black)
+                Text(stringResource(R.string.add_by_scan), fontSize = 15.sp, color = Color.Black)
             }
         }
     }
@@ -158,17 +159,17 @@ fun CustomBottomBar(
         NavigationItem(
             cesta = "seznam",
             icon = NavigationIcon.Vector(Icons.AutoMirrored.Filled.List),
-            text = "Seznam"
+            text = stringResource(R.string.list)
         ),
         NavigationItem(
             cesta = "mojepotraviny/?barcode={barcode}",
             icon = NavigationIcon.PainterIcon(painterResource(id = R.drawable.kitchen)),
-            text = "Sklad"
+            text = stringResource(R.string.storage)
         ),
         NavigationItem(
             cesta = "profil",
             icon = NavigationIcon.Vector(Icons.Filled.AccountCircle),
-            text = "Profil"
+            text = stringResource(R.string.profile)
         )
     )
 
@@ -312,7 +313,7 @@ fun BottomBarMultiSelect(
                         contentDescription = "Přesunout",
                         modifier = Modifier.size(30.dp)
                     )
-                    Text("Přesunout", fontSize = 15.sp)
+                    Text(stringResource(R.string.move), fontSize = 15.sp)
 
                     // 2) DropdownMenu pro výběr skladu, který se zobrazí, když moveMenuExpanded = true
                     DropdownMenu(
@@ -347,7 +348,7 @@ fun BottomBarMultiSelect(
                         contentDescription = "Kopírovat",
                         modifier = Modifier.size(30.dp)
                     )
-                    Text("Kopírovat", fontSize = 15.sp)
+                    Text(stringResource(R.string.copy), fontSize = 15.sp)
                 }
 
                 // Smazat
@@ -362,7 +363,7 @@ fun BottomBarMultiSelect(
                         contentDescription = "Smazat",
                         modifier = Modifier.size(30.dp)
                     )
-                    Text("Smazat", fontSize = 15.sp)
+                    Text(stringResource(R.string.delete), fontSize = 15.sp)
                 }
 
                 if (deleteAlert) {
@@ -398,7 +399,7 @@ fun BottomBarMultiSelect(
                 colors = ButtonDefaults.buttonColors(cardGradient3),
             ) {
                 Text(
-                    text = "Přidat potravinu",
+                    text = stringResource(R.string.add_food),
                     fontSize = 25.sp,
                     color = Color.Black
                 )
@@ -442,7 +443,7 @@ fun BottomBarPolozky(
                     modifier = Modifier.size(50.dp)
                 )
 
-                Text("Přidat položku", fontSize = 15.sp, color = Color.Black)
+                Text(stringResource(R.string.add_to_list), fontSize = 15.sp, color = Color.Black)
             }
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -463,7 +464,7 @@ fun BottomBarPolozky(
                     modifier = Modifier.height(50.dp).width(70.dp)
                 )
 
-                Text("Hotovo", fontSize = 15.sp, color = Color.Black)
+                Text(stringResource(R.string.done), fontSize = 15.sp, color = Color.Black)
             }
         }
     }
@@ -505,7 +506,7 @@ fun BottomBarHistorie(
                     modifier = Modifier.size(50.dp)
                 )
 
-                Text("Přidat položku", fontSize = 15.sp, color = Color.Black)
+                Text("P", fontSize = 15.sp, color = Color.Black)
             }
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -526,7 +527,7 @@ fun BottomBarHistorie(
                     modifier = Modifier.height(50.dp).width(70.dp)
                 )
 
-                Text("Hotovo", fontSize = 15.sp, color = Color.Black)
+                Text("H", fontSize = 15.sp, color = Color.Black)
             }
         }
     }

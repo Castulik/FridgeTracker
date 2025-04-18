@@ -1,0 +1,12 @@
+<resources>
+    <string name="add_food">Add food</string>
+    <string name="add_by_scan">Add by scan</string>
+    <string name="move">Move</string>
+    <string name="copy">Copy</string>
+    <string name="delete">Delete</string>
+    <string name="add_to_list">Add item</string>
+    <string name="done">Done</string>
+    <string name="list">List</string>
+    <string name="storage">Storage</string>
+    <string name="profile">Profile</string>
+</resources>

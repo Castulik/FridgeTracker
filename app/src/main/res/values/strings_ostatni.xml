@@ -1,0 +1,23 @@
+<resources>
+    <!-- PotravinaItem -->
+    <string name="ostatni_pcs">pcs</string>
+    <string name="ostatni_dateStored">Date stored: %1$s</string>
+
+    <!-- global search bar -->
+    <string name="ostatni_globalPlaceHolder">Enter name, category, or barcode</string>
+
+    <!-- scan -->
+    <string name="ostatni_scan">Barcode Scanning</string>
+
+
+    <!-- potraviny v katalogu -->
+    <string name="item_apples">Apples</string>
+    <string name="item_bananas">Bananas</string>
+    <string name="item_milk">Milk</string>
+    <string name="item_butter">Butter</string>
+    <string name="item_chicken_breast">Chicken breast</string>
+    <string name="item_pasta">Pasta</string>
+    <string name="item_bread">Bread</string>
+    <string name="item_eggs">Eggs</string>
+
+</resources>

@@ -45,7 +45,7 @@ interface PotravinaDao {
     suspend fun aktualizovatVsechnySDanymKodem(
         kod: String,
         newNazev: String,
-        newDruh: String,
+        newDruh: Int,
         newIcon: Int
     )
 }

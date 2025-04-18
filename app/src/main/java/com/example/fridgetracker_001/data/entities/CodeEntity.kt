@@ -8,6 +8,6 @@ data class CodeEntity(
     @PrimaryKey
     var code: String, // Barcode je teď primární klíč
     var nazev: String,
-    var druh: String,
+    var druh: Int?,
     var potravinaIconaId: Int
 )

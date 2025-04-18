@@ -1,6 +1,7 @@
 package com.example.fridgetracker_001.mojeUI
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -66,6 +67,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -150,7 +152,7 @@ fun PotravinaFormBoxWithConstraints(
                     colors = ButtonDefaults.buttonColors(buttonPodtvrdit)
                 ) {
                     Text(
-                        if (isEdit) "Uložit změny" else "Potvrdit",
+                        text = if (isEdit) stringResource(R.string.pf_save_changes) else stringResource(R.string.pf_confirm),
                         fontSize = 25.sp,
                         color = Color.Black
                     )
@@ -232,7 +234,7 @@ fun PotravinaFormBoxWithConstraints(
                                 MujTextField(
                                     value = potravina.nazev,
                                     onValueChange = { onPotravinaChange(potravina.copy(nazev = it)) },
-                                    placeholder = "Název Potraviny",
+                                    placeholder = stringResource(R.string.pf_name_placeholder),
                                     isError = isError,
                                     errorMessage = "",
                                     maxLength = 30,
@@ -288,7 +290,7 @@ fun PotravinaFormBoxWithConstraints(
                             MujTextField(
                                 value = potravina.code,
                                 onValueChange = { onPotravinaChange(potravina.copy(code = it)) },
-                                placeholder = "BarCode",
+                                placeholder = stringResource(R.string.pf_barcode_placeholder),
                                 isError = isError,
                                 errorMessage = "",
                                 maxLength = 20,
@@ -411,7 +413,7 @@ fun PotravinaFormBoxWithConstraints(
                         DatePickerField(
                             dateValue = potravina.datumSpotreby,
                             onDateChange = { onPotravinaChange(potravina.copy(datumSpotreby = it)) },
-                            label = "Datum Spotřeby",
+                            label = stringResource(R.string.pf_exp_date),
                             dateFormatter = dateFormatter,
                         )
                     }
@@ -425,7 +427,7 @@ fun PotravinaFormBoxWithConstraints(
                         DatePickerField(
                             dateValue = potravina.datumPridani,
                             onDateChange = { onPotravinaChange(potravina.copy(datumPridani = it)) },
-                            label = "Datum přidání potraviny",
+                            label = stringResource(R.string.pf_added_date),
                             dateFormatter = dateFormatter,
                             initialDateMillis = today.toEpochDay() * 24 * 60 * 60 * 1000
                         )
@@ -443,7 +445,7 @@ fun PotravinaFormBoxWithConstraints(
                             value = potravina.poznamka,
                             onValueChange = { onPotravinaChange(potravina.copy(poznamka = it)) },
                             placeholder = {
-                                Text("Zadejte poznámku...", fontSize = 20.sp, color = Color.Black)
+                                Text(stringResource(R.string.pf_note_placeholder), fontSize = 20.sp, color = Color.Black)
                             },
                             modifier = Modifier
                                 .fillMaxSize(),
@@ -598,12 +600,12 @@ fun DatePickerField(
                         showDatePicker = false
                     }
                 ) {
-                    Text("OK")
+                    Text(stringResource(R.string.pf_confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Zrušit")
+                    Text(stringResource(R.string.dlg_cancel))
                 }
             }
         ) {
@@ -644,7 +646,7 @@ fun HmotnostVyber(
                         onVahaChange(standardizedValue)
                     }
                 },
-                placeholder = "Hmotnost",
+                placeholder = stringResource(R.string.pf_weight_placeholder),
                 isError = !isValidDecimal(vaha),
                 errorMessage = "",
                 maxLength = 4,
@@ -795,7 +797,7 @@ fun MnozstviVyber(
             onValueChange = { newValue ->
                 onMnozstviChange(newValue.filter { it.isDigit() }) // Povolit pouze číslice
             },
-            placeholder = "Množství",
+            placeholder = stringResource(R.string.pf_amount_placeholder),
             isError = isError,
             errorMessage = "",
             maxLength = 4,
@@ -894,7 +896,7 @@ fun VyberObrazku(
                     .padding(10.dp)
             ) {
                 Column {
-                    Text("Vyberte obrázek:", style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(R.string.pf_imageChoice), style = MaterialTheme.typography.bodyMedium)
                     Spacer(modifier = Modifier.height(10.dp))
 
                     /*
@@ -948,7 +950,7 @@ fun VyberObrazku(
                         modifier = Modifier.align(Alignment.End),
                         colors = ButtonDefaults.buttonColors(errorLight)
                     ) {
-                        Text("Zrušit")
+                        Text(stringResource(R.string.dlg_cancel))
                     }
                 }
             }
@@ -958,8 +960,8 @@ fun VyberObrazku(
 
 @Composable
 fun UnderlinedTextSelector(
-    selectedOption: String,
-    onOptionSelected: (String) -> Unit,
+    @StringRes selectedOption: Int?,
+    onOptionSelected: (Int) -> Unit,
     dialogChange: Boolean,
     onDialogChange: (Boolean) -> Unit
 ) {
@@ -976,7 +978,7 @@ fun UnderlinedTextSelector(
             .clickable { onDialogChange(true) }
     ) {
         Text(
-            text = selectedOption,
+            text = selectedOption?.let { stringResource(it) } ?: "",
             fontSize = 25.sp,
             color = Color.Black,
             modifier = Modifier
@@ -995,26 +997,26 @@ fun UnderlinedTextSelector(
     if (dialogChange) {
         AlertDialog(
             onDismissRequest = {},
-            title = { Text("Vyber druh potraviny") },
+            title = { Text(stringResource(R.string.pf_kindChoice)) },
             text = {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        items(kindOptions.size) { index ->
-                            val option = kindOptions[index]
+                        items(kindOptions) { option ->
+                            val optionSelected  = option.nameRes == selectedOption
 
                             Column(
                                 modifier = Modifier
                                     .padding(2.dp)
                                     .border(
                                         width = 2.dp,
-                                        color = if (option.name == selectedOption) Color.Black else Color.Transparent,
+                                        color = if (optionSelected) Color.Black else Color.Transparent,
                                         shape = RoundedCornerShape(16.dp)
                                     )
                                     .clickable {
-                                        onOptionSelected(option.name)
+                                        onOptionSelected(option.nameRes)
                                         onDialogChange(false)
                                     }
                                     // 1) Celá buňka má daný poměr stran (šířka : výška = 1 : 0.8)
@@ -1030,7 +1032,7 @@ fun UnderlinedTextSelector(
                                 ) {
                                     Image(
                                         painter = painterResource(id = option.imageRes),
-                                        contentDescription = option.name,
+                                        contentDescription = stringResource(option.nameRes),
                                         contentScale = ContentScale.Fit,
                                         modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp))
                                     )
@@ -1042,7 +1044,7 @@ fun UnderlinedTextSelector(
                                         .fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = option.name,
+                                        text = stringResource(option.nameRes),
                                         textAlign = TextAlign.Center,
                                         fontSize = 14.sp,
                                         minLines = 2,                       // dovolíme až 2 řádky

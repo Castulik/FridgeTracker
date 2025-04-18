@@ -46,7 +46,7 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
         _errorMsg.value = false
     }
 
-    fun pridavaniRucne(nazev: String, kategorie: String, mnostvi: Int, nakupId: Int) {
+    fun pridavaniRucne(nazev: String, kategorie: Int, mnostvi: Int, nakupId: Int) {
         viewModelScope.launch {
 
             //rucne - podivat na seznam jestli neexistuje polozka s jmenem a kategorii - existuje? vyskoci error. Neexistuje muzu pridat na nakup
@@ -73,7 +73,7 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
 
     fun pridatZKatalogu(polozka: PolozkyEntity, nakupId: Int){
         viewModelScope.launch {
-            val existujici = repository.getSeznamEntity(polozka.nazev, polozka.kategorie, nakupId)
+            val existujici = polozka.kategorie?.let { repository.getSeznamEntity(polozka.nazev, it, nakupId) }
 
             if (existujici != null) {
                 val updatedItem = existujici.copy(quantity = existujici.quantity + 1)
@@ -92,7 +92,7 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
 
     fun odebratZKatalogu(polozka: PolozkyEntity, nakupId: Int){
         viewModelScope.launch {
-            val existujici = repository.getSeznamEntity(polozka.nazev, polozka.kategorie, nakupId)
+            val existujici = polozka.kategorie?.let { repository.getSeznamEntity(polozka.nazev, it, nakupId) }
 
             if (existujici != null) {
                 val newQuantity = existujici.quantity - 1
@@ -123,7 +123,7 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
     fun updatePolozku(item: SeznamEntity) {
         viewModelScope.launch {
 
-            val existujici = repository.getSeznamEntity(item.nazev, item.kategorie, item.nakupId)
+            val existujici = item.kategorie?.let { repository.getSeznamEntity(item.nazev, it, item.nakupId) }
 
             if (existujici != null && existujici.id != item.id) {
                 _errorMsg.value = true

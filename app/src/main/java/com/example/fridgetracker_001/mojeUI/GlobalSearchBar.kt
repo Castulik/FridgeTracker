@@ -48,6 +48,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -101,7 +102,7 @@ fun GlobalSearchBar(
                 onExpandedChange = onActiveChange,
                 enabled = true,
                 placeholder = { Text(
-                    text = "Zadej název, kategorii nebo čárový kod",
+                    text = stringResource(R.string.ostatni_globalPlaceHolder),
                     fontSize = 15.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

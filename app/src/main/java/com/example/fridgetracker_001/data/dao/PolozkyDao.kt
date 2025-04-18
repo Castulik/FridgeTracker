@@ -33,7 +33,7 @@ interface PolozkyDao {
     suspend fun getCount(): Int
 
     @Query("SELECT * FROM polozky_katalog WHERE nazev = :nazev AND kategorie = :kategorie LIMIT 1")
-    suspend fun getPolozkaEntity(nazev: String, kategorie: String): PolozkyEntity?
+    suspend fun getPolozkaEntity(nazev: String, kategorie: Int): PolozkyEntity?
 
     @Update
     suspend fun updatePolozka(polozka: PolozkyEntity)

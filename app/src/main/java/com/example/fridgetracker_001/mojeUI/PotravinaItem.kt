@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -139,7 +140,7 @@ fun PotravinaItem(
                                 modifier = Modifier.weight(1f),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                text = "Uskladněno: ${potravina.datumPridani}",
+                                text = stringResource(R.string.ostatni_dateStored, potravina.datumPridani),
                                 style = MaterialTheme.typography.bodyLarge
                             )
 
@@ -169,7 +170,7 @@ fun PotravinaItem(
                                             style = MaterialTheme.typography.bodyMedium,
                                         )
                                         Text(
-                                            text = " ks",
+                                            text = stringResource(R.string.ostatni_pcs),
                                             style = MaterialTheme.typography.bodyMedium
                                         )
                                     }
@@ -440,7 +441,7 @@ fun PotravinaItem(
                                 contentDescription = "obrazek potraviny",
                                 modifier = Modifier
                                     .size(60.dp),
-                                contentScale = ContentScale.Fit
+                                contentScale = ContentScale.Crop
                             )
                         }
                         // Oddělující čára
@@ -485,7 +486,7 @@ fun PotravinaItem(
                                 Color.Gray // Když se nepovede datum parse-ovat
                         )
                         .border(1.dp, Color.Black, dayBubbleShape)
-                        .padding(horizontal = 8.dp, vertical = 3.dp),
+                        .padding(horizontal = 5.dp, vertical = 3.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

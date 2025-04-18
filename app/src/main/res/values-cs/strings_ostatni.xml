@@ -1,0 +1,23 @@
+<resources>
+    <!-- PotravinaItem -->
+    <string name="ostatni_pcs">ks</string>
+    <string name="ostatni_dateStored">Datum uskladnění: %1$s</string>
+
+    <!-- global search bar -->
+    <string name="ostatni_globalPlaceHolder">Zadejte název, kategorii nebo čárový kód</string>
+
+    <!-- scan -->
+    <string name="ostatni_scan">Skenování čárového kódu</string>
+
+    <!-- potraviny v katalogu -->
+    <string name="item_apples">Jablka</string>
+    <string name="item_bananas">Banány</string>
+    <string name="item_milk">Mléko</string>
+    <string name="item_butter">Máslo</string>
+    <string name="item_chicken_breast">Kuřecí prsa</string>
+    <string name="item_pasta">Těstoviny</string>
+    <string name="item_bread">Chléb</string>
+    <string name="item_eggs">Vejce</string>
+
+
+</resources>

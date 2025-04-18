@@ -33,12 +33,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.ui.theme.backgroundAlers
@@ -60,7 +62,7 @@ fun ViewTypeDialog(
     AlertDialog(
         containerColor = Color.White,
         onDismissRequest = { viewTypeDialogVisible() },
-        title = { Text(text = "Zvolte zobrazení položek", color = Color.Black) },
+        title = { Text(text = stringResource(R.string.view_type_dialog_title), color = Color.Black) },
         text = {
             Column {
                 // Seznam
@@ -79,7 +81,7 @@ fun ViewTypeDialog(
                         onClick = null // nechceme duplikovat klikání
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Seznam", color = Color.Black)
+                    Text(stringResource(R.string.list), color = Color.Black)
                 }
 
                 // Kompaktní seznam
@@ -98,7 +100,7 @@ fun ViewTypeDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Kompaktní Seznam", color = Color.Black)
+                    Text(stringResource(R.string.compact_list), color = Color.Black)
                 }
 
                 // Dlaždice
@@ -117,13 +119,13 @@ fun ViewTypeDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Dlaždice", color = Color.Black)
+                    Text(stringResource(R.string.grid), color = Color.Black)
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = { viewTypeDialogVisible() }) {
-                Text("Zavřít", color = primaryLight)
+                Text(stringResource(R.string.close), color = primaryLight)
             }
         }
     )
@@ -145,10 +147,10 @@ fun SortDialog(
     AlertDialog(
         containerColor = Color.White,
         onDismissRequest = { sortDialogVisible() },
-        title = { Text(text = "Zvolte seřazení", color = Color.Black) },
+        title = { Text(text = stringResource(R.string.sort_dialog_title), color = Color.Black) },
         text = {
             Column {
-                Text("Seřazení potravin", fontSize = 20.sp, color = Color.Black)
+                Text(stringResource(R.string.sort_food), fontSize = 20.sp, color = Color.Black)
 
                 Row(
                     modifier = Modifier
@@ -165,7 +167,7 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Název", color = Color.Black)
+                    Text(stringResource(R.string.name), color = Color.Black)
                 }
 
                 Row(
@@ -183,7 +185,7 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Datum spotřeby", color = Color.Black)
+                    Text(stringResource(R.string.expiry_date), color = Color.Black)
                 }
 
                 Row(
@@ -201,12 +203,12 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Datum přidání", color = Color.Black)
+                    Text(stringResource(R.string.added_date), color = Color.Black)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Seřazení kategorií", fontSize = 20.sp, color = Color.Black)
+                Text(stringResource(R.string.sort_categories), fontSize = 20.sp, color = Color.Black)
 
                 Row(
                     modifier = Modifier
@@ -223,7 +225,7 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Abecedně", color = Color.Black)
+                    Text(stringResource(R.string.alphabetical), color = Color.Black)
                 }
 
                 Row(
@@ -241,7 +243,7 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Výchozí stav", color = Color.Black)
+                    Text(stringResource(R.string.defaults), color = Color.Black)
                 }
 
                 Row(
@@ -259,13 +261,13 @@ fun SortDialog(
                         onClick = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Počet v kategorii", color = Color.Black)
+                    Text(stringResource(R.string.count), color = Color.Black)
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = { sortDialogVisible() }) {
-                Text("Zavřít", color = primaryLight)
+                Text(stringResource(R.string.close), color = primaryLight)
             }
         }
     )
@@ -297,7 +299,7 @@ fun NastaveniDialog(
     AlertDialog(
         containerColor = Color.White,
         onDismissRequest = onDismiss,
-        title = { Text(text = "Nastavení upozornění", color = Color.Black) },
+        title = { Text(text = stringResource(R.string.notification_settings), color = Color.Black) },
         text = {
             Column {
                 Row(
@@ -309,7 +311,7 @@ fun NastaveniDialog(
                         onCheckedChange = { upozorneniZapnuto = it }
                     )
                     Text(
-                        text = "Zaškrni pro nastavení upozornění na datum spotřeby.",
+                        text = stringResource(R.string.check_to_enable_notifications),
                         color = Color.Black,
                         fontSize = 15.sp
                     )
@@ -318,7 +320,7 @@ fun NastaveniDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "První varování:",
+                    text = stringResource(R.string.first_warning),
                     modifier = Modifier.fillMaxWidth(),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -378,7 +380,7 @@ fun NastaveniDialog(
                         )
                     )
                     Text(
-                        text = "Den/Dny před expirací",
+                        text = stringResource(R.string.days_before_expiry),
                         modifier = Modifier
                             .padding(8.dp)
                             .weight(0.7f),
@@ -390,7 +392,7 @@ fun NastaveniDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Druhé varování:",
+                    text = stringResource(R.string.second_warning),
                     modifier = Modifier.fillMaxWidth(),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -449,7 +451,7 @@ fun NastaveniDialog(
                         )
                     )
                     Text(
-                        text = "Den/Dny před expirací",
+                        text = stringResource(R.string.days_before_expiry),
                         modifier = Modifier
                             .padding(8.dp)
                             .weight(0.7f),
@@ -466,14 +468,14 @@ fun NastaveniDialog(
                     onSave(expirace1.ifBlank { "7" }, expirace2.ifBlank { "3" })
                 },
             ) {
-                Text("Potvrdit změny", color = primaryLight)
+                Text(stringResource(R.string.confirm_changes), color = primaryLight)
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss,
             ) {
-                Text("Zavřít", color = primaryLight)
+                Text(stringResource(R.string.close), color = primaryLight)
             }
         }
     )
@@ -496,11 +498,11 @@ fun AiPromptDialog(
     AlertDialog(
         containerColor = Color.White,
         onDismissRequest = aiDialogVisible,
-        title = { Text("AI Prompt Builder", color = Color.Black) },
+        title = { Text(stringResource(R.string.ai_prompt_title), color = Color.Black) },
         text = {
 
             Column {
-                Text("Obsah promptu: ", fontSize = 18.sp, color = Color.Black)
+                Text(stringResource(R.string.prompt_content), fontSize = 18.sp, color = Color.Black)
                 Spacer(Modifier.height(10.dp))
 
                 Row {
@@ -509,7 +511,7 @@ fun AiPromptDialog(
                     MujTextField(
                         value = aiPromptTitle,
                         onValueChange = { aiPromptTitleChange(it) },
-                        placeholder = "Zadej znění promptu",
+                        placeholder = stringResource(R.string.prompt_placeholder),
                         isError = isError,
                         errorMessage = "",
                         maxLength = 1000,
@@ -542,7 +544,7 @@ fun AiPromptDialog(
                 }
 
                 Spacer(Modifier.height(8.dp))
-                Text("Vybrané potraviny: ", fontSize = 18.sp, color = Color.Black)
+                Text(stringResource(R.string.selected_food), fontSize = 18.sp, color = Color.Black)
                 Spacer(Modifier.height(10.dp))
 
                 Row{
@@ -584,7 +586,7 @@ fun AiPromptDialog(
                 }
 
                 Spacer(Modifier.height(8.dp))
-                Text("Vyber potraviny pomocí tlačítek: ", fontSize = 18.sp, color = Color.Black)
+                Text(stringResource(R.string.select_food_with_buttons), fontSize = 18.sp, color = Color.Black)
                 Spacer(Modifier.height(5.dp))
 
                 Row {
@@ -608,7 +610,7 @@ fun AiPromptDialog(
                         )
                     ) {
                         Text(
-                            text = "Potraviny s expirací do 14 dnů",
+                            text = stringResource(R.string.food_within_14_days),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -629,7 +631,7 @@ fun AiPromptDialog(
                         )
                     ) {
                         Text(
-                            text = "Vybrat potraviny ručně",
+                            text = stringResource(R.string.select_food_manually),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -644,7 +646,7 @@ fun AiPromptDialog(
                     aiDialogVisible()
                 },
             ) {
-                Text("Kopírovat do schránky", color = primaryLight)
+                Text(stringResource(R.string.copy_to_clipboard), color = primaryLight)
             }
         },
         dismissButton = {
@@ -653,7 +655,7 @@ fun AiPromptDialog(
                     aiDialogVisible()
                 },
             ) {
-                Text("Zavřít", color = primaryLight)
+                Text(stringResource(R.string.close), color = primaryLight)
             }
         }
     )
@@ -668,10 +670,10 @@ fun DeleteAlert2(
 
     AlertDialog(
         onDismissRequest = { change() },
-        title = { Text("Opravdu chcete odstranit tuto potravinu?") },
+        title = { Text(stringResource(R.string.confirm_delete_title)) },
         text = {
             Column {
-                Text("Tato akce je nevratná.")
+                Text(stringResource(R.string.confirm_delete_text))
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -680,7 +682,7 @@ fun DeleteAlert2(
                         checked = isChecked,
                         onCheckedChange = { isChecked = it }
                     )
-                    Text("Přidat potravinu do nákupního seznamu")
+                    Text(stringResource(R.string.add_to_shopping_list))
                 }
             }
         },
@@ -691,14 +693,14 @@ fun DeleteAlert2(
                     change()
                 }
             ) {
-                Text("odstranit", color = Color.Red)
+                Text(stringResource(R.string.delete), color = Color.Red)
             }
         },
         dismissButton = {
             TextButton(
                 onClick = { change() }
             ) {
-                Text("Zrušit")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

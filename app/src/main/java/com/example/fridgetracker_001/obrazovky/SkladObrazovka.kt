@@ -46,9 +46,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
@@ -143,48 +145,49 @@ fun SkladObrazovka2(
         ViewType.GRID -> 4
     }
 
-    // Všechny možné kategorie
+    // Všechny možné kategorie (Int resource ID)
     val allCategories = listOf(
-        "Mražené", "Trvanlivé", "Ovoce a Zelenina", "Mléčné výrobky", "Maso a Ryby",
-        "Pečivo", "Vejce", "Obiloviny a luštěniny",
-        "Uzeniny a lahůdky", "Nápoje", "Hotová jídla", "Ostatní"
+        R.string.kind_frozen,
+        R.string.kind_nonperishable,
+        R.string.kind_fruit_veg,
+        R.string.kind_dairy,
+        R.string.kind_meat_fish,
+        R.string.kind_bakery,
+        R.string.kind_eggs,
+        R.string.kind_grains_legumes,
+        R.string.kind_deli,
+        R.string.kind_drinks,
+        R.string.kind_ready_meals,
+        R.string.kind_other
     )
 
-    // Rozdělení potravin dle druhu
+// Rozdělení potravin dle druhu (teď už přímo dle resource ID)
     val mapByCategory = potravinaList.groupBy { it.druh }
 
-    // Tento kód definuje stav rozbalení/skrytí kategorií, kde výchozí stav je "rozbaleno" (true) pro všechny kategorie.
-    // Hodnota se načítá z entity "sklad" – pokud existuje a obsahuje ne-prázdný JSON, ten se převede na mapu.
+// Upravený stav rozbalení kategorií, kde klíčem je Int (resId), nikoli String
     val expandedCategories = remember(sklad) {
-        // Vytvoříme dočasnou prázdnou mutable mapu, kam uložíme výchozí nebo načtené hodnoty pro každou kategorii.
-        val initialMap: MutableMap<String, Boolean> = mutableMapOf()
+        val initialMap: MutableMap<Int, Boolean> = mutableMapOf()
 
-        // Podmínka: Pokud máme platný objekt 'sklad' a pole 'categoryExpansionState' není prázdné...
         if (sklad != null && sklad.categoryExpansionState.isNotBlank()) {
-            // Převedeme JSON uložený v 'categoryExpansionState' na mapu (String -> Boolean) a uděláme z ní mutable kopii.
-            val parsed = sklad.categoryExpansionState.toCategoryExpansionMap().toMutableMap()
+            val parsed = sklad.categoryExpansionState.toCategoryExpansionMap().mapKeys {
+                it.key.toIntOrNull() ?: 0
+            }.toMutableMap()
 
-            // Pro každou kategorii ze seznamu 'allCategories' (referenční seznam všech kategorií, které by měly být zobrazeny)
-            allCategories.forEach { category ->
-                // Pokud načtená mapa "parsed" neobsahuje záznam pro danou kategorii,
-                // nastavíme výchozí hodnotu true (tj. kategorie bude rozbalená).
-                if (!parsed.containsKey(category)) {
-                    parsed[category] = true
+            allCategories.forEach { categoryResId ->
+                if (!parsed.containsKey(categoryResId)) {
+                    parsed[categoryResId] = true
                 }
             }
-            // Do naší dočasné mapy "initialMap" vložíme všechny položky z mapy "parsed".
             initialMap.putAll(parsed)
         } else {
-            // Pokud není objekt 'sklad' dostupný nebo je pole 'categoryExpansionState' prázdné,
-            // pro každou kategorii ve 'allCategories' nastavíme výchozí hodnotu true.
-            allCategories.forEach { category ->
-                initialMap[category] = true
+            allCategories.forEach { categoryResId ->
+                initialMap[categoryResId] = true
             }
         }
-        // Vytvoříme speciální mutable mapu pro Compose (mutableStateMapOf), která dokáže sledovat změny a způsobovat překreslení UI.
-        // Do této mapy vložíme všechny položky z naší dočasné mapy 'initialMap'.
-        mutableStateMapOf<String, Boolean>().apply { putAll(initialMap) }
+
+        mutableStateMapOf<Int, Boolean>().apply { putAll(initialMap) }
     }
+
 
     // Stav a vybraná položka pro zobrazení akcí v dolním panelu
     var multiSelectMode by remember { mutableStateOf(false) }
@@ -374,7 +377,7 @@ fun SkladObrazovka2(
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(2.dp),
-                                    text = "$category (${itemsInThisCategory.size})",
+                                    text = "${stringResource(category)} (${itemsInThisCategory.size})",
                                     style = MaterialTheme.typography.bodyLarge,
                                 )
                                 IconButton(

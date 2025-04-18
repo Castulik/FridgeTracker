@@ -79,40 +79,6 @@ class PotravinaViewModel(
     // 2) CRUD metody: Uložit, přidat, aktualizovat, smazat...
     // -----------------------------------------
 
-    fun ulozitPotravinuSCode(potravina: PotravinaEntity) {
-        val skladId = _currentSkladId.value
-        viewModelScope.launch {
-            // 1) Rozhodneme, zda je potravina nová (id == 0) nebo update
-            if (potravina.id == 0) {
-                repository.pridatPotravinu(potravina)
-            } else {
-                repository.aktualizovatPotravinu(potravina)
-            }
-
-            // 2) Uložit/aktualizovat do code_table (pokud code není prázdný)
-            if (potravina.code.isNotEmpty()) {
-                val codeEntity = CodeEntity(
-                    code = potravina.code,
-                    nazev = potravina.nazev,
-                    druh = potravina.druh,
-                    potravinaIconaId = potravina.potravinaIconaId
-                )
-                codeRepository.vlozitAktualizovatCode(codeEntity)
-
-                // A hromadně update potravina_table (všech potravin se stejným code)
-                repository.aktualizovatVsechnySDanymKodem(
-                    kod = potravina.code,
-                    newNazev = potravina.nazev,
-                    newDruh = potravina.druh,
-                    newIcon = potravina.potravinaIconaId
-                )
-            }
-
-            // 3) Refresh seznam potravin pro daný sklad
-            nactiPotravinyPodleIdSkladu(skladId)
-        }
-    }
-
     fun pridatPotravinu(potravina: PotravinaEntity) {
         val skladId = _currentSkladId.value
         viewModelScope.launch {
@@ -194,7 +160,7 @@ class PotravinaViewModel(
             jednotky = "g",
             skladId = 0,
             poznamka = "",
-            druh = "",
+            druh = null,
             code = ""
         )
     }
@@ -255,7 +221,7 @@ class PotravinaViewModel(
                 closeDruhDialog()
             } else {
                 _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nenalezen, vyplňte ručně."))
-                if (pridavanaPotravina.druh.isBlank())
+                if (pridavanaPotravina.druh == null)
                     openDruhDialog()
             }
         }
@@ -337,12 +303,14 @@ class PotravinaViewModel(
                 codeRepository.vlozitAktualizovatCode(codeEntity)
 
                 // + update všech potravin se stejným code
-                repository.aktualizovatVsechnySDanymKodem(
-                    kod = potravina.code,
-                    newNazev = potravina.nazev,
-                    newDruh = potravina.druh,
-                    newIcon = potravina.potravinaIconaId
-                )
+                potravina.druh?.let {
+                    repository.aktualizovatVsechnySDanymKodem(
+                        kod = potravina.code,
+                        newNazev = potravina.nazev,
+                        newDruh = it,
+                        newIcon = potravina.potravinaIconaId
+                    )
+                }
             }
 
             // 3) Přečteme seznam potravin pro daný sklad
@@ -413,7 +381,7 @@ class PotravinaViewModel(
                 _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nalezen – parametry doplněny."))
             } else {
                 _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nenalezen, vyplňte ručně."))
-                if (editedPotravina?.druh?.isBlank() == true)
+                if (editedPotravina?.druh == null)
                     openDruhDialog()
             }
         }
@@ -484,12 +452,14 @@ class PotravinaViewModel(
                 codeRepository.vlozitAktualizovatCode(codeEntity)
 
                 // A hromadně update potravin se stejným code
-                repository.aktualizovatVsechnySDanymKodem(
-                    kod = potravinaToUpdate.code,
-                    newNazev = potravinaToUpdate.nazev,
-                    newDruh = potravinaToUpdate.druh,
-                    newIcon = potravinaToUpdate.potravinaIconaId
-                )
+                potravinaToUpdate.druh?.let {
+                    repository.aktualizovatVsechnySDanymKodem(
+                        kod = potravinaToUpdate.code,
+                        newNazev = potravinaToUpdate.nazev,
+                        newDruh = it,
+                        newIcon = potravinaToUpdate.potravinaIconaId
+                    )
+                }
             }
             // 3) Možná bude lepší i refresh potravinaList (pokud se jedná o stejný sklad)
             nactiPotravinyPodleIdSkladu(skladId)

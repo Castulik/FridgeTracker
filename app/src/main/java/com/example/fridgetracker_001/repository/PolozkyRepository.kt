@@ -1,11 +1,16 @@
 package com.example.fridgetracker_001.repository
 
+import android.content.Context
+import androidx.compose.ui.res.stringResource
+import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.IconRegistry.KindOption
 import com.example.fridgetracker_001.data.dao.PolozkyDao
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import kotlinx.coroutines.flow.Flow
 
 class PolozkyRepository(
-    private val dao: PolozkyDao
+    private val dao: PolozkyDao,
+    private val context: Context
 ) {
     // Flow – v Compose můžeme používat collectAsState
     val polozkyFlow: Flow<List<PolozkyEntity>> = dao.getAllPolozkyFlow()
@@ -25,7 +30,7 @@ class PolozkyRepository(
         dao.insertPolozky(polozky)
     }
 
-    suspend fun getPolozkaEntity(nazev: String, kategorie: String): PolozkyEntity? {
+    suspend fun getPolozkaEntity(nazev: String, kategorie: Int): PolozkyEntity? {
         return dao.getPolozkaEntity(nazev, kategorie)
     }
 
@@ -34,14 +39,10 @@ class PolozkyRepository(
         val count = dao.getCount()
         if (count == 0) {
             val defaultItems = listOf(
-                PolozkyEntity(nazev = "Jablka", kategorie = "Ovoce a Zelenina"),
-                PolozkyEntity(nazev = "Banány", kategorie = "Ovoce a Zelenina"),
-                PolozkyEntity(nazev = "Mléko", kategorie = "Mléčné výrobky"),
-                PolozkyEntity(nazev = "Máslo", kategorie = "Mléčné výrobky"),
-                PolozkyEntity(nazev = "Kuřecí prsa", kategorie = "Maso a Ryby"),
-                PolozkyEntity(nazev = "Těstoviny", kategorie = "Trvanlivé"),
-                PolozkyEntity(nazev = "Chléb", kategorie = "Pečivo"),
-                PolozkyEntity(nazev = "Vejce", kategorie = "Vejce"),
+                PolozkyEntity(nazev = context.getString(R.string.item_apples), kategorie = R.string.kind_fruit_veg),
+                PolozkyEntity(nazev = context.getString(R.string.item_milk), kategorie = R.string.kind_dairy),
+                PolozkyEntity(nazev = context.getString(R.string.item_chicken_breast), kategorie = R.string.kind_meat_fish),
+                PolozkyEntity(nazev = context.getString(R.string.item_eggs), kategorie = R.string.kind_eggs),
             )
             dao.insertPolozky(defaultItems)
         }

@@ -44,10 +44,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.ui.theme.cardGradient3
@@ -57,8 +59,8 @@ import com.example.fridgetracker_001.ui.theme.primaryLight
 @Composable
 fun AddItemDialog(
     onDismiss: () -> Unit,
-    onConfirm: (String, String, Int) -> Unit = { _, _, _ -> },
-    onConfirm2: (String, String) -> Unit = { _, _ -> },
+    onConfirm: (String, Int, Int) -> Unit = { _, _, _ -> },
+    onConfirm2: (String, Int) -> Unit = { _, _ -> },
     onNavigate: () -> Unit = {},
     option: Boolean = false,
     isEdit: Boolean = false,
@@ -66,7 +68,7 @@ fun AddItemDialog(
     isDelete: Boolean = false,
     onDelete: () -> Unit = {},
     nazev: String = "",
-    kategorie: String? = null,
+    kategorie: Int? = null,
     mnozstvi: Int = 1,
 ) {
     var text by remember { mutableStateOf(nazev) }
@@ -74,16 +76,32 @@ fun AddItemDialog(
     var quantity by remember { mutableIntStateOf(mnozstvi) }
     var showError by remember { mutableStateOf(false) }
     val isError by remember { mutableStateOf(false) }
-
+/*
     val options2 = listOf(
         "Mražené", "Trvanlivé", "Ovoce a Zelenina", "Mléčné výrobky",
         "Maso a Ryby", "Pečivo", "Vejce", "Obiloviny a luštěniny",
         "Uzeniny a lahůdky", "Nápoje", "Hotová jídla", "Ostatní"
     )
+ */
+
+    val options2 = listOf(
+        R.string.kind_frozen,
+        R.string.kind_nonperishable,
+        R.string.kind_fruit_veg,
+        R.string.kind_dairy,
+        R.string.kind_meat_fish,
+        R.string.kind_bakery,
+        R.string.kind_eggs,
+        R.string.kind_grains_legumes,
+        R.string.kind_deli,
+        R.string.kind_drinks,
+        R.string.kind_ready_meals,
+        R.string.kind_other
+    )
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text(text = if (isEdit) "Upravit položku" else "Přidat položku", color = Color.Black) },
+        title = {  Text(text = stringResource(id = if (isEdit) R.string.as_dialog_title_edit else R.string.as_dialog_title_add)) },
         containerColor = Color.White,
         text = {
             Column {
@@ -93,7 +111,7 @@ fun AddItemDialog(
                     MujTextField(
                         value = text,
                         onValueChange = { text = it },
-                        placeholder = "Zadej název potraviny",
+                        placeholder = stringResource(R.string.as_placeholder_item_name),
                         isError = isError,
                         errorMessage = "",
                         maxLength = 40,
@@ -193,7 +211,7 @@ fun AddItemDialog(
                                     modifier = Modifier.size(30.dp)
                                 )
                                 Text(
-                                    text = if (isEdit) "Upravit pomocí katalogu" else "Přidat pomocí katalogu",
+                                    text = if (isEdit) stringResource(R.string.as_button_edit_from_catalog) else stringResource(R.string.as_button_add_from_catalog),
                                     fontSize = 17.sp,
                                     maxLines = 1
                                 )
@@ -204,7 +222,7 @@ fun AddItemDialog(
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = if (isEdit) "Změnit kategorii potraviny:" else "Vyber kategorii potraviny:", color = Color.Black)
+                Text(text = if (isEdit) stringResource(R.string.as_dialog_category_edit) else stringResource(R.string.as_dialog_category_select), color = Color.Black)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 LazyVerticalGrid(
@@ -230,7 +248,7 @@ fun AddItemDialog(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = category,
+                                text = stringResource(id = category),
                                 textAlign = TextAlign.Center,
                                 fontSize = 13.sp,
                                 color = Color.Black
@@ -242,7 +260,7 @@ fun AddItemDialog(
                 if (showError) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Pro přidání potraviny musíte vybrat kategorii!",
+                        text = stringResource(R.string.as_dialog_error_no_category),
                         color = Color.Red,
                         fontSize = 15.sp
                     )
@@ -251,7 +269,7 @@ fun AddItemDialog(
                 if (isOnNakup) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Tato položka už je v seznamu obsažena.",
+                        text = stringResource(R.string.as_dialog_already_in_list),
                         color = Color.Red,
                         fontSize = 15.sp
                     )
@@ -271,12 +289,12 @@ fun AddItemDialog(
                     }
                 }
             ) {
-                Text(if (isEdit) "Uložit" else "Přidat", color = primaryLight)
+                Text(if (isEdit) stringResource(R.string.as_button_save) else stringResource(R.string.as_button_add), color = primaryLight)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Zrušit", color = primaryLight)
+                Text(stringResource(R.string.cancel), color = primaryLight)
             }
         }
     )
@@ -296,11 +314,11 @@ fun SkladDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = "Přidat položku: $item")
+            Text(text = stringResource(R.string.as_dialog_add_item_to_sklad, item))
         },
         text = {
             Column {
-                Text("Vyber sklad ze seznamu:")
+                Text(stringResource(R.string.as_select_storage))
                 Spacer(modifier = Modifier.height(8.dp))
                 // Jednoduchý výčet skladů s RadioButton
                 skladList.forEach { sklad ->
@@ -331,12 +349,12 @@ fun SkladDialog(
                 },
                 enabled = (selectedSklad != null)  // tlačítko je aktivní jen pokud je vybrán sklad
             ) {
-                Text("Přidat")
+                Text(stringResource(R.string.as_button_add))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Zrušit")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
@@ -350,10 +368,10 @@ fun SmazatAlert(
 
     AlertDialog(
         onDismissRequest = { change() },
-        title = { Text("Opravdu chcete odstranit tuto položku z katalogu?") },
+        title = { Text(stringResource(R.string.as_alert_delete_title)) },
         text = {
             Column {
-                Text("Tato akce je nevratná.")
+                Text(stringResource(R.string.as_alert_delete_text))
                 Spacer(modifier = Modifier.height(16.dp))
             }
         },
@@ -364,14 +382,44 @@ fun SmazatAlert(
                     change()
                 }
             ) {
-                Text("Odstranit", color = Color.Red)
+                Text(stringResource(R.string.as_button_delete), color = Color.Red)
             }
         },
         dismissButton = {
             TextButton(
                 onClick = { change() }
             ) {
-                Text("Zrušit")
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+fun NakupAlert(
+    onAdd: () -> Unit,
+    onDismiss: () -> Unit
+){
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(stringResource(R.string.as_alert_new_nakup_title)) },
+        text = {
+            Text(stringResource(R.string.as_alert_new_nakup_text))
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onAdd()
+                    onDismiss()
+                }
+            ) {
+                Text(stringResource(R.string.as_button_add))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = {onDismiss()}
+            ) {
+                Text(stringResource(R.string.cancel))
             }
         }
     )

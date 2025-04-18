@@ -48,7 +48,7 @@ class PotravinaRepository(private val potravinaDao: PotravinaDao) {
     suspend fun aktualizovatVsechnySDanymKodem(
         kod: String,
         newNazev: String,
-        newDruh: String,
+        newDruh: Int,
         newIcon: Int
     ) {
         potravinaDao.aktualizovatVsechnySDanymKodem(kod, newNazev, newDruh, newIcon)

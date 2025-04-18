@@ -12,4 +12,6 @@
     <string name="irreversible">This action is irreversible.</string>
     <string name="cancel">Cancel</string>
     <string name="take_your_icon">Take your own icon by tapping the camera</string>
+
+
 </resources>

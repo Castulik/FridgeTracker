@@ -71,6 +71,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -86,6 +87,7 @@ import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.mojeUI.AddItemDialog
 import com.example.fridgetracker_001.mojeUI.MujTextField
+import com.example.fridgetracker_001.mojeUI.NakupAlert
 import com.example.fridgetracker_001.mojeUI.NavigationIcon
 import com.example.fridgetracker_001.mojeUI.SeznamTopBar
 import com.example.fridgetracker_001.mojeUI.SkladDialog
@@ -145,6 +147,8 @@ fun SeznamObrazovka2(
                 onHistoryClick = { navController.navigate("seznamhistorie") },
                 onPridatNakup = { nakupDialog = true },
                 onNastaveni = { },
+                menuExpanded = false,
+                onMenuExpandedChange = { },
             )
         },
     ) { paddingValues ->
@@ -160,7 +164,7 @@ fun SeznamObrazovka2(
                 // Heading kategorie
                 item {
                     Text(
-                        text = kategorie,
+                        text = kategorie?.let { stringResource(it) } ?: "",
                         fontSize = 20.sp,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -230,28 +234,9 @@ fun SeznamObrazovka2(
         // Dialog pro přidání nakupu
         if (nakupDialog) {
             val today = getCurrentDate()
-            AlertDialog(
-                onDismissRequest = { nakupDialog = false },
-                title = { Text("Nový nákup") },
-                text = {
-                    Text("Přidej nový nákup")
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            nakupViewModel.vlozitNakup(today)
-                            nakupDialog = false
-                        }
-                    ) {
-                        Text("Přidat")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = {nakupDialog = false}
-                    ) {
-                        Text("Zrušit")
-                    }
-                }
+            NakupAlert(
+                onAdd = { nakupViewModel.vlozitNakup(today) },
+                onDismiss = { nakupDialog = false }
             )
         }
 
