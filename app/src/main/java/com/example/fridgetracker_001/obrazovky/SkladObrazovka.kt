@@ -1,6 +1,9 @@
 package com.example.fridgetracker_001.obrazovky
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -410,59 +413,48 @@ fun SkladObrazovka2(
                     }
 
                     // Pokud je kategorie expanded, vykresli items
-                    if (expandedCategories[category] == true) {
-                        items(
-                            itemsInThisCategory,
-                            key = { it.id } // stabilní klíč
-                        ) { potravina ->
-                            // Zavoláme PotravinaItem
-                            // a v parametru viewType = localViewType
-                            PotravinaItem(
-                                potravina = potravina,
-                                viewType = localViewType,
-                                smazatPotravina = {
-                                    potravinaViewModel.smazatPotravinu(potravina)
-                                },
-                                pridejNaSeznam = {
-                                    /*
-                                    val polozka = PolozkyEntity(nazev = potravina.nazev, kategorie = potravina.druh)
-                                    val currentId = nakupViewModel.currentNakup.value?.id ?: 1
-                                    seznamViewModel.pridatNeboZvysitPolozku(polozka, nakupId = currentId)
-                                    seznamViewModel.onDialogClose()
-
-                                     */
-                                },
-                                editPotravina = {
-                                    navController.navigate("editPotravinu/${potravina.id}")
-                                },
-                                onTap = {
-                                    if (multiSelectMode) {
-                                        if (selectedPotraviny.contains(potravina)) {
-                                            selectedPotraviny.remove(potravina)
-                                            if (selectedPotraviny.isEmpty()) {
-                                                multiSelectMode = false
-                                                selectPotravinyForAi = false
+                    item(span = { GridItemSpan(columnsCount) }) {
+                        AnimatedVisibility(
+                            visible = expandedCategories[category] == true,
+                            enter = expandVertically(),
+                            exit = shrinkVertically()
+                        ) {
+                            Column {
+                                itemsInThisCategory.forEach { potravina ->
+                                    PotravinaItem(
+                                        potravina = potravina,
+                                        viewType = localViewType,
+                                        smazatPotravina = { potravinaViewModel.smazatPotravinu(potravina) },
+                                        pridejNaSeznam = { /* ... */ },
+                                        editPotravina = { navController.navigate("editPotravinu/${potravina.id}") },
+                                        onTap = {
+                                            if (multiSelectMode) {
+                                                if (selectedPotraviny.contains(potravina)) {
+                                                    selectedPotraviny.remove(potravina)
+                                                    if (selectedPotraviny.isEmpty()) {
+                                                        multiSelectMode = false
+                                                        selectPotravinyForAi = false
+                                                    }
+                                                } else {
+                                                    selectedPotraviny.add(potravina)
+                                                }
+                                            } else {
+                                                navController.navigate("editPotravinu/${potravina.id}")
                                             }
-                                        } else {
-                                            selectedPotraviny.add(potravina)
-                                        }
-                                    } else {
-                                        navController.navigate("editPotravinu/${potravina.id}")
-                                    }
-                                },
-                                onLongPress = {
-                                    if (!multiSelectMode) {
-                                        multiSelectMode = true
-                                    }
-                                    if (!selectedPotraviny.contains(potravina)) {
-                                        selectedPotraviny.add(potravina)
-                                    }
-                                },
-                                getDaysLeft = {
-                                    potravinaViewModel.getDaysLeft(potravina)
-                                },
-                                isSelected = selectedPotraviny.contains(potravina),
-                            )
+                                        },
+                                        onLongPress = {
+                                            if (!multiSelectMode) {
+                                                multiSelectMode = true
+                                            }
+                                            if (!selectedPotraviny.contains(potravina)) {
+                                                selectedPotraviny.add(potravina)
+                                            }
+                                        },
+                                        getDaysLeft = { potravinaViewModel.getDaysLeft(potravina) },
+                                        isSelected = selectedPotraviny.contains(potravina),
+                                    )
+                                }
+                            }
                         }
                     }
                 }

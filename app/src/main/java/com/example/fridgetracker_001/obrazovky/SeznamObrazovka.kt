@@ -1,6 +1,13 @@
 package com.example.fridgetracker_001.obrazovky
 
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -98,6 +105,7 @@ import com.example.fridgetracker_001.ui.theme.inversePrimaryLightMediumContrast
 import com.example.fridgetracker_001.ui.theme.onPrimaryLightMediumContrast
 import com.example.fridgetracker_001.ui.theme.primaryLight
 import com.example.fridgetracker_001.ui.theme.primaryLightMediumContrast
+import com.example.fridgetracker_001.ui.theme.topmenu12
 import com.example.fridgetracker_001.viewmodel.NakupViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
@@ -136,8 +144,59 @@ fun SeznamObrazovka2(
         listForCurrentNakup.groupBy { it.kategorie }
     }
 
+    val allCategories = listOf(
+        R.string.kind_frozen,
+        R.string.kind_nonperishable,
+        R.string.kind_fruit_veg,
+        R.string.kind_dairy,
+        R.string.kind_meat_fish,
+        R.string.kind_bakery,
+        R.string.kind_eggs,
+        R.string.kind_grains_legumes,
+        R.string.kind_deli,
+        R.string.kind_drinks,
+        R.string.kind_ready_meals,
+        R.string.kind_other
+    )
+
     val vseOdskrtnuto by remember(listForCurrentNakup) {
         mutableStateOf(listForCurrentNakup.isNotEmpty() && listForCurrentNakup.all { it.checked })
+    }
+
+    // Vytvoříme stavovou mapu, která si pamatuje, které kategorie jsou rozbalené
+    val expandedCategories = remember(currentNakup) {
+
+        // Pomocná mapka, do které si připravíme výchozí stav kategorií
+        val initialMap: MutableMap<Int, Boolean> = mutableMapOf()
+
+        // Pokud existuje currentNakup a má uložený expandovaný stav v JSONu
+        if (currentNakup != null && currentNakup!!.categoryExpansionState.isNotBlank()) {
+
+            // Převod uloženého JSONu na Map<String, Boolean>, pak převedeme klíče na Int
+            val parsed = currentNakup!!.categoryExpansionState
+                .toCategoryExpansionMap() // Map<String, Boolean>
+                .mapKeys { it.key.toIntOrNull() ?: 0 } // převede klíče na Int, fallback 0
+                .toMutableMap()
+
+            // Pokud máme nějaké nové kategorie, které nejsou v JSONu (např. nově přidané), přidáme je jako rozbalené
+            allCategories.forEach { categoryResId ->
+                if (!parsed.containsKey(categoryResId)) {
+                    parsed[categoryResId] = true
+                }
+            }
+
+            // Zkopírujeme zpracovanou mapu do initialMap
+            initialMap.putAll(parsed)
+
+        } else {
+            // Pokud není žádný uložený stav (nový nákup), nastavíme všechny kategorie jako rozbalené
+            allCategories.forEach { categoryResId ->
+                initialMap[categoryResId] = true
+            }
+        }
+
+        // Vrátíme stavovou mapu, se kterou může UI pracovat a která se bude automaticky přepínat
+        mutableStateMapOf<Int, Boolean>().apply { putAll(initialMap) }
     }
 
     Scaffold(
@@ -163,68 +222,128 @@ fun SeznamObrazovka2(
             polozkyByCategory.forEach { (kategorie, polozkyVKategorii) ->
                 // Heading kategorie
                 item {
-                    Text(
-                        text = kategorie?.let { stringResource(it) } ?: "",
-                        fontSize = 20.sp,
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color.LightGray)
-                            .padding(8.dp)
-                    )
-                }
-            // Pro každou reálně existující kategorii
-                items(polozkyVKategorii) { item ->
-                // Získáme seznam položek v dané kategorii
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp)
-                            .background(if (item.checked) Color.Green else Color.White)
-                    ) {
+                            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Color(0xFFF4D35E))
+                            .clickable { // Přepneme stav pro tuto kategorii
+                                if (kategorie != null) {
+                                    val newState = !(expandedCategories[kategorie] ?: true)
+                                    expandedCategories[kategorie] = newState
 
-                        Checkbox(
-                            checked = item.checked,
-                            onCheckedChange = { isChecked ->
-                                // vytvoříme nové "item" se změnou checked
-                                val updatedItem = item.copy(checked = isChecked)
-                                // zavoláme viewModel, aby uložil změnu do DB
-                                seznamViewModel.updatePolozku(updatedItem)
+                                    currentNakup?.let { it ->
+                                        val newMap = expandedCategories.toMap()
+                                        nakupViewModel.updateCategoryExpansionState(
+                                            it.id,
+                                            newMap
+                                        )
+                                    }
+                                }
                             }
-                        )
-
-                        // Přidání do skladu (jen pokud je odškrtnuto)
-                        IconButton(
-                            onClick = {
-                                skladDialog = true
-                                selectedItem = item.nazev
-                            },
-                            enabled = item.checked
+                            .animateContentSize()
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.lednicenakup),
-                                contentDescription = null,
-                                tint = if (item.checked) Color.Black else Color.Gray
+                            Text(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(2.dp),
+                                text = "${kategorie?.let { stringResource(it) } ?: ""} (${polozkyVKategorii.size})",
+                                style = MaterialTheme.typography.bodyLarge,
                             )
+                            IconButton(
+                                onClick = {
+                                    if (kategorie != null) {
+                                        val newState = !(expandedCategories[kategorie] ?: true)
+                                        expandedCategories[kategorie] = newState
+
+                                        currentNakup?.let { it ->
+                                            val newMap = expandedCategories.toMap()
+                                            nakupViewModel.updateCategoryExpansionState(
+                                                it.id,
+                                                newMap
+                                            )
+                                        }
+                                    }
+                                },
+                                modifier = Modifier.size(30.dp)
+                            ) {
+                                Icon(
+                                    imageVector = if (expandedCategories[kategorie] == true)
+                                        Icons.Default.KeyboardArrowUp
+                                    else
+                                        Icons.Default.KeyboardArrowDown,
+                                    contentDescription = if (expandedCategories[kategorie] == true)
+                                        "Sbalit" else "Rozbalit",
+                                )
+                            }
                         }
+                    }
+                }
 
-                        Text(
-                            text = "${item.nazev} (x${item.quantity})",
-                            modifier = Modifier.weight(1f),
-                            textDecoration = if (item.checked) TextDecoration.LineThrough
-                            else TextDecoration.None
-                        )
+                item {
+                    AnimatedVisibility(
+                        visible = expandedCategories[kategorie] == true,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        Column {
+                            polozkyVKategorii.forEach { item ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 2.dp, start = 4.dp, end = 4.dp, bottom = 2.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(if (item.checked) Color(0xFF4CAF50) else Color(0xFFF5F5DC))
+                                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                                ) {
+                                    Checkbox(
+                                        checked = item.checked,
+                                        onCheckedChange = { isChecked ->
+                                            val updatedItem = item.copy(checked = isChecked)
+                                            seznamViewModel.updatePolozku(updatedItem)
+                                        }
+                                    )
 
-                        IconButton(onClick = {
-                            seznamViewModel.setEditItem(item)
-                        }) {
-                            Icon(Icons.Default.Edit, contentDescription = "edit")
-                        }
+                                    IconButton(
+                                        onClick = {
+                                            skladDialog = true
+                                            selectedItem = item.nazev
+                                        },
+                                        enabled = item.checked
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.lednicenakup),
+                                            contentDescription = null,
+                                            tint = if (item.checked) Color.Black else Color.Gray
+                                        )
+                                    }
 
-                        IconButton(onClick = {
-                            seznamViewModel.smazatPolozku(item)
-                        }) {
-                            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                                    Text(
+                                        text = "${item.nazev} (x${item.quantity})",
+                                        modifier = Modifier.weight(1f),
+                                        textDecoration = if (item.checked) TextDecoration.LineThrough
+                                        else TextDecoration.None
+                                    )
+
+                                    IconButton(onClick = {
+                                        seznamViewModel.setEditItem(item)
+                                    }) {
+                                        Icon(Icons.Default.Edit, contentDescription = "edit")
+                                    }
+
+                                    IconButton(onClick = {
+                                        seznamViewModel.smazatPolozku(item)
+                                    }) {
+                                        Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                                    }
+                                }
+                            }
                         }
                     }
                 }

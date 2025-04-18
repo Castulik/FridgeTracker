@@ -26,4 +26,7 @@
     <!-- NakupAlert -->
     <string name="as_alert_new_nakup_title">Nový nákupní seznam</string>
     <string name="as_alert_new_nakup_text">Přidejte nový nákupní seznam</string>
+
+    <string name="as_dialog_delete_item">Odebrat položku z katalogu:</string>
+
 </resources>

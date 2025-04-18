@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -44,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
+import com.example.fridgetracker_001.ui.theme.buttoncolor
 import com.example.fridgetracker_001.ui.theme.cardGradient3
 import com.example.fridgetracker_001.ui.theme.cardPozadi
 import com.example.fridgetracker_001.ui.theme.primaryLight
@@ -142,55 +145,75 @@ fun AddItemDialog(
                         )
                     )
 
-                if (isDelete){
-                    IconButton(onClick = {
-                        onDelete()
-                    }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete from katalog")
-                    }
-                }
-
                 if(option) {
 
                     Column {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.fillMaxWidth()
+                            horizontalArrangement = Arrangement.Center, // zarovná středově
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
                         ) {
-                            Text(text = "$quantity", fontSize = 25.sp, color = Color.Black)
-                            Spacer(Modifier.width(8.dp))
-
                             Button(
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BCD4)),
                                 onClick = {
-                                    if (quantity > 1)
-                                        quantity--
+                                    if (quantity > 1) quantity--
                                 },
                                 enabled = quantity > 1,
-                                colors = ButtonDefaults.buttonColors(cardGradient3),
-                                shape = RoundedCornerShape(18.dp)
-                            )  {
-                                Text("-",fontSize = 25.sp, color = Color.White)
+                                modifier = Modifier
+                                    .height(45.dp)
+                                    .padding(horizontal = 5.dp)
+                                    .border(2.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
+                                contentPadding = PaddingValues(0.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.minus), // Ikona ruky (můžete změnit)
+                                    contentDescription = "Click Icon",
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.Black
+                                )
                             }
-                            Spacer(Modifier.width(4.dp))
+
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            Text(
+                                text = "$quantity",
+                                fontSize = 30.sp,
+                                color = Color.Black,
+                                modifier = Modifier.width(40.dp),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Spacer(modifier = Modifier.width(16.dp))
 
                             Button(
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BCD4)),
                                 onClick = {
                                     quantity++
                                 },
-                                colors = ButtonDefaults.buttonColors(cardGradient3),
-                                shape = RoundedCornerShape(18.dp)
+                                modifier = Modifier
+                                    .height(45.dp)
+                                    .padding(horizontal = 5.dp)
+                                    .border(2.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
+                                contentPadding = PaddingValues(0.dp)
                             ) {
-                                Text("+",fontSize = 25.sp, color = Color.White)
+                                Icon(
+                                    imageVector = Icons.Default.Add, // Ikona ruky (můžete změnit)
+                                    contentDescription = "Click Icon",
+                                    modifier = Modifier.size(25.dp),
+                                    tint = Color.Black
+                                )
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
                         Row {
                         Button(
                             onClick = { onNavigate();onDismiss() },
                             // Tady si nastavíte design tlačítka
-                            shape = RoundedCornerShape(12.dp),   // zaoblené rohy
+                            shape = RoundedCornerShape(10.dp),   // zaoblené rohy
                             elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF00BCD4), // tyrkysová
@@ -200,6 +223,7 @@ fun AddItemDialog(
                                 .fillMaxWidth()
                                 .height(50.dp)
                                 .padding(horizontal = 2.dp, vertical = 2.dp)
+                                .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp))
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -254,6 +278,20 @@ fun AddItemDialog(
                                 color = Color.Black
                             )
                         }
+                    }
+                }
+
+                if (isDelete){
+                    Text(text = stringResource(R.string.as_dialog_delete_item))
+                    IconButton(onClick = {
+                        onDelete()
+                    }) {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "Delete from katalog",
+                            tint = Color.Red,
+                            modifier = Modifier.size(30.dp)
+                        )
                     }
                 }
 

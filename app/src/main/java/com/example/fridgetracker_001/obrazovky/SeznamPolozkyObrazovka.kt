@@ -1,8 +1,10 @@
 package com.example.fridgetracker_001.obrazovky
 
 import android.net.Uri
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +23,8 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -28,6 +32,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -111,14 +117,43 @@ fun SeznamPolozkyObrazovka(
             polozkyByCategory.forEach { (kategorie, polozkyVKategorii) ->
                 // Heading kategorie
                 item {
-                    Text(
-                        text = kategorie?.let { stringResource(it) } ?: "",
-                        fontSize = 20.sp,
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color.LightGray)
-                            .padding(8.dp)
-                    )
+                            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Color(0xFFF6BE3D))
+                            .clickable { // Přepneme stav pro tuto kategorii
+
+                            }
+                            .animateContentSize()
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(2.dp),
+                                text = "${kategorie?.let { stringResource(it) } ?: ""} (${polozkyVKategorii.size})",
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                            IconButton(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.size(30.dp)
+                            ) {
+                                Icon(
+                                    imageVector =
+                                        Icons.Default.KeyboardArrowDown,
+                                    contentDescription =
+                                        "Sbalit",
+                                )
+                            }
+                        }
+                    }
                 }
 
                 // Samotné položky v dané kategorii
@@ -127,21 +162,23 @@ fun SeznamPolozkyObrazovka(
                     val isInCurrentNakup = aktualniNakupItems.any {
                         it.nazev == polozka.nazev && it.kategorie == polozka.kategorie
                     }
-                    val rowColor = if (isInCurrentNakup) Color(0xFFE5FFCC) else Color.White
+                    val rowColor = if (isInCurrentNakup) Color(0xFF66C268) else Color(0xFFF5F5DC)
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .background(rowColor)
                             .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .padding(top = 2.dp, start = 4.dp, end = 4.dp, bottom = 2.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(rowColor)
+                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                     ) {
                         val existingItem = aktualniNakupItems.find {
                             it.nazev == polozka.nazev && it.kategorie == polozka.kategorie
                         }
                         Text(
                             text = if (existingItem?.quantity == null) "${polozka.nazev} (-)" else "${polozka.nazev} (x${existingItem.quantity})",
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f).padding(start = 5.dp)
                         )
                         // Plus tlačítko -> přidat do "SeznamEntity"
                         IconButton(onClick = {

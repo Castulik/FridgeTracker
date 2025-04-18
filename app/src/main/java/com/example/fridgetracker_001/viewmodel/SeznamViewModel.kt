@@ -136,4 +136,5 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
             }
         }
     }
+
 }

@@ -78,6 +78,23 @@ class NakupViewModel(
             _currentNakup.value = nalezeny
         }
     }
+
+    fun updateCategoryExpansionState(nakupId: Int, newState: Map<Int, Boolean>) {
+        viewModelScope.launch {
+            val nakup = repository.getNakupById(nakupId) ?: return@launch
+
+            // převedeme klíče Int na String kvůli JSON
+            val newStateJson = newState.mapKeys { it.key.toString() }.toJsonString()
+
+            val updateNakup = nakup.copy(categoryExpansionState = newStateJson)
+
+            repository.aktualizovatNakup(updateNakup)
+
+            if (_currentNakup.value?.id == nakupId) {
+                _currentNakup.value = updateNakup
+            }
+        }
+    }
 }
 
 

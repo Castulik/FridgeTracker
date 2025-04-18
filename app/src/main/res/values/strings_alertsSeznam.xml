@@ -26,4 +26,7 @@
     <!-- NakupAlert -->
     <string name="as_alert_new_nakup_title">New Shopping List</string>
     <string name="as_alert_new_nakup_text">Please add a new shopping list</string>
+
+    <string name="as_dialog_delete_item">Remove from catalog:</string>
+
 </resources>
