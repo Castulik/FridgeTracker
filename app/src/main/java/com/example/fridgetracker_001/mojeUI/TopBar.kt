@@ -322,10 +322,11 @@ fun SkladFormTopBar(
 @Composable
 fun SeznamTopBar(
     onPridatNakup: () -> Unit,
-    onNastaveni: () -> Unit,
-    onHistoryClick: () -> Unit,
+    onHistoryClick: () -> Unit = {},
     menuExpanded: Boolean,
-    onMenuExpandedChange: (Boolean) -> Unit
+    onMenuExpandedChange: (Boolean) -> Unit,
+    onSortClicked: () -> Unit,
+    onViewTypeClicked: () -> Unit,
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -338,11 +339,14 @@ fun SeznamTopBar(
                 Icon(painter = painterResource(id = R.drawable.ecommerce), contentDescription = "add", modifier = Modifier.size(30.dp), tint = Color.Black)
             }
 
+            /*
             IconButton(onClick = onHistoryClick) {
                 Icon(painter = painterResource(id = R.drawable.history), contentDescription = "history",tint = Color.Black)
             }
 
-            IconButton(onClick = onNastaveni) {
+             */
+
+            IconButton(onClick = {onMenuExpandedChange(true)}) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = "nastaveni",
@@ -361,20 +365,26 @@ fun SeznamTopBar(
                     text = { Text(stringResource(R.string.tb_sort)) },
                     onClick = {
                         onMenuExpandedChange(false)
+                        onSortClicked()
                     }
                 )
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.tb_view)) },
                     onClick = {
                         onMenuExpandedChange(false)
+                        onViewTypeClicked()
                     }
                 )
+                /*
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.tb_settings)) },
                     onClick = {
                         onMenuExpandedChange(false)
                     }
                 )
+
+                 */
+
             }
         }
     )

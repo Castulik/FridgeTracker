@@ -45,7 +45,7 @@ class PolozkyViewModel(
     }
 
     // Přidat novou položku do katalogu
-    fun pridatPolozkaDoKatalogu(nazev: String, kategorie: Int) {
+    fun pridatPolozkaDoKatalogu(nazev: String, kategorie: String) {
         viewModelScope.launch {
 
             val existujici = repository.getPolozkaEntity(nazev, kategorie)
@@ -83,7 +83,7 @@ class PolozkyViewModel(
     fun updatePolozka(polozka: PolozkyEntity) {
         viewModelScope.launch {
 
-            val existujici = polozka.kategorie?.let { repository.getPolozkaEntity(polozka.nazev, it) }
+            val existujici = polozka.kategorie.let { repository.getPolozkaEntity(polozka.nazev, it) }
 
             if (existujici != null && existujici.id != polozka.id) {
                 _errorMsg.value = true

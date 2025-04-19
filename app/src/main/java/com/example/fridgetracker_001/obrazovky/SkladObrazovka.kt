@@ -49,11 +49,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.IconRegistry
+import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
@@ -73,9 +76,12 @@ import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.delay
+
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 
 enum class ViewType {
     LIST,
@@ -149,48 +155,35 @@ fun SkladObrazovka2(
     }
 
     // Všechny možné kategorie (Int resource ID)
-    val allCategories = listOf(
-        R.string.kind_frozen,
-        R.string.kind_nonperishable,
-        R.string.kind_fruit_veg,
-        R.string.kind_dairy,
-        R.string.kind_meat_fish,
-        R.string.kind_bakery,
-        R.string.kind_eggs,
-        R.string.kind_grains_legumes,
-        R.string.kind_deli,
-        R.string.kind_drinks,
-        R.string.kind_ready_meals,
-        R.string.kind_other
-    )
+    val allCategories = KindOptionEnum.entries
 
 // Rozdělení potravin dle druhu (teď už přímo dle resource ID)
     val mapByCategory = potravinaList.groupBy { it.druh }
 
 // Upravený stav rozbalení kategorií, kde klíčem je Int (resId), nikoli String
     val expandedCategories = remember(sklad) {
-        val initialMap: MutableMap<Int, Boolean> = mutableMapOf()
+        val initialMap: MutableMap<String, Boolean> = mutableMapOf()
 
         if (sklad != null && sklad.categoryExpansionState.isNotBlank()) {
-            val parsed = sklad.categoryExpansionState.toCategoryExpansionMap().mapKeys {
-                it.key.toIntOrNull() ?: 0
-            }.toMutableMap()
+            val parsed = sklad.categoryExpansionState
+                .toCategoryExpansionMap()
+                .toMutableMap()
 
-            allCategories.forEach { categoryResId ->
-                if (!parsed.containsKey(categoryResId)) {
-                    parsed[categoryResId] = true
+            allCategories.forEach { enum ->
+                if (!parsed.containsKey(enum.name)) {
+                    parsed[enum.name] = true
                 }
             }
+
             initialMap.putAll(parsed)
         } else {
-            allCategories.forEach { categoryResId ->
-                initialMap[categoryResId] = true
+            allCategories.forEach { enum ->
+                initialMap[enum.name] = true
             }
         }
 
-        mutableStateMapOf<Int, Boolean>().apply { putAll(initialMap) }
+        mutableStateMapOf<String, Boolean>().apply { putAll(initialMap) }
     }
-
 
     // Stav a vybraná položka pro zobrazení akcí v dolním panelu
     var multiSelectMode by remember { mutableStateOf(false) }
@@ -201,6 +194,7 @@ fun SkladObrazovka2(
     var aiPotravinyText by remember { mutableStateOf("") }
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold(
         snackbarHost = {
@@ -271,13 +265,10 @@ fun SkladObrazovka2(
                             potravinaViewModel.nactiPotravinyPodleIdSkladu(skladId)
                         },
                         pridejNaSeznam = {
-                            selectedPotraviny.forEach{
-                                /*
-                                val polozka = PolozkyEntity(nazev = it.nazev, kategorie = it.druh)
+                            selectedPotraviny.forEach{ potravina ->
+                                val polozka = PolozkyEntity(nazev = potravina.nazev, kategorie = potravina.druh)
                                 val currentId = nakupViewModel.currentNakup.value?.id ?: 1
-                                seznamViewModel.pridatNeboZvysitPolozku(polozka, nakupId = currentId)
-                                seznamViewModel.onDialogClose()
-                                 */
+                                seznamViewModel.pridatZKatalogu(polozka, nakupId = currentId)
                             }
                         },
                         ai = selectPotravinyForAi,
@@ -313,15 +304,16 @@ fun SkladObrazovka2(
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
+
             val sortedCategories = when (sklad?.sortKategorie) {
-                "ALPHABETICAL" -> allCategories.sorted()
-                "COUNT" -> allCategories.sortedByDescending { mapByCategory[it]?.size ?: 0 }
+                "ALPHABETICAL" -> allCategories.sortedBy { context.getString(it.stringRes) }
+                "COUNT" -> allCategories.sortedByDescending { mapByCategory[it.name]?.size ?: 0 }
                 else -> allCategories // "DEFAULT"
             }
 
             sortedCategories.forEach { category ->
 
-                val rawItems = mapByCategory[category].orEmpty()
+                val rawItems = mapByCategory[category.name].orEmpty()
                 val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
                 val itemsInThisCategory = when (sklad?.sortPotraviny) {
                     "DATE_EXPIRY" -> {
@@ -360,8 +352,8 @@ fun SkladObrazovka2(
                                 .clip(RoundedCornerShape(5.dp))
                                 .background(topmenu12)
                                 .clickable { // Přepneme stav pro tuto kategorii
-                                    val newState = !(expandedCategories[category] ?: true)
-                                    expandedCategories[category] = newState
+                                    val newState = !(expandedCategories[category.name] ?: true)
+                                    expandedCategories[category.name] = newState
                                     // Aktualizujeme stav v databázi
                                     sklad?.let { currentSklad ->
                                         val newMap = expandedCategories.toMap()
@@ -380,14 +372,14 @@ fun SkladObrazovka2(
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(2.dp),
-                                    text = "${stringResource(category)} (${itemsInThisCategory.size})",
+                                    text = "${stringResource(category.stringRes)} (${itemsInThisCategory.size})",
                                     style = MaterialTheme.typography.bodyLarge,
                                 )
                                 IconButton(
                                     onClick = {
                                         // Přepneme stav pro tuto kategorii
-                                        val newState = !(expandedCategories[category] ?: true)
-                                        expandedCategories[category] = newState
+                                        val newState = !(expandedCategories[category.name] ?: true)
+                                        expandedCategories[category.name] = newState
                                         // Aktualizujeme stav v databázi
                                         sklad?.let { currentSklad ->
                                             val newMap = expandedCategories.toMap()
@@ -400,11 +392,11 @@ fun SkladObrazovka2(
                                     modifier = Modifier.size(30.dp)
                                 ) {
                                     Icon(
-                                        imageVector = if (expandedCategories[category] == true)
+                                        imageVector = if (expandedCategories[category.name] == true)
                                             Icons.Default.KeyboardArrowUp
                                         else
                                             Icons.Default.KeyboardArrowDown,
-                                        contentDescription = if (expandedCategories[category] == true)
+                                        contentDescription = if (expandedCategories[category.name] == true)
                                             "Sbalit" else "Rozbalit",
                                     )
                                 }
@@ -413,48 +405,48 @@ fun SkladObrazovka2(
                     }
 
                     // Pokud je kategorie expanded, vykresli items
-                    item(span = { GridItemSpan(columnsCount) }) {
+                    items(itemsInThisCategory, key = { it.id }) { potravina ->
                         AnimatedVisibility(
-                            visible = expandedCategories[category] == true,
+                            visible = expandedCategories[category.name] == true,
                             enter = expandVertically(),
                             exit = shrinkVertically()
                         ) {
-                            Column {
-                                itemsInThisCategory.forEach { potravina ->
-                                    PotravinaItem(
-                                        potravina = potravina,
-                                        viewType = localViewType,
-                                        smazatPotravina = { potravinaViewModel.smazatPotravinu(potravina) },
-                                        pridejNaSeznam = { /* ... */ },
-                                        editPotravina = { navController.navigate("editPotravinu/${potravina.id}") },
-                                        onTap = {
-                                            if (multiSelectMode) {
-                                                if (selectedPotraviny.contains(potravina)) {
-                                                    selectedPotraviny.remove(potravina)
-                                                    if (selectedPotraviny.isEmpty()) {
-                                                        multiSelectMode = false
-                                                        selectPotravinyForAi = false
-                                                    }
-                                                } else {
-                                                    selectedPotraviny.add(potravina)
-                                                }
-                                            } else {
-                                                navController.navigate("editPotravinu/${potravina.id}")
+                            PotravinaItem(
+                                potravina = potravina,
+                                viewType = localViewType,
+                                smazatPotravina = { potravinaViewModel.smazatPotravinu(potravina) },
+                                pridejNaSeznam = {
+                                    val polozka = PolozkyEntity(nazev = potravina.nazev, kategorie = potravina.druh)
+                                    val currentId = nakupViewModel.currentNakup.value?.id ?: 1
+                                    seznamViewModel.pridatZKatalogu(polozka, nakupId = currentId)
+                                },
+                                editPotravina = { navController.navigate("editPotravinu/${potravina.id}") },
+                                onTap = {
+                                    if (multiSelectMode) {
+                                        if (selectedPotraviny.contains(potravina)) {
+                                            selectedPotraviny.remove(potravina)
+                                            if (selectedPotraviny.isEmpty()) {
+                                                multiSelectMode = false
+                                                selectPotravinyForAi = false
                                             }
-                                        },
-                                        onLongPress = {
-                                            if (!multiSelectMode) {
-                                                multiSelectMode = true
-                                            }
-                                            if (!selectedPotraviny.contains(potravina)) {
-                                                selectedPotraviny.add(potravina)
-                                            }
-                                        },
-                                        getDaysLeft = { potravinaViewModel.getDaysLeft(potravina) },
-                                        isSelected = selectedPotraviny.contains(potravina),
-                                    )
-                                }
-                            }
+                                        } else {
+                                            selectedPotraviny.add(potravina)
+                                        }
+                                    } else {
+                                        navController.navigate("editPotravinu/${potravina.id}")
+                                    }
+                                },
+                                onLongPress = {
+                                    if (!multiSelectMode) {
+                                        multiSelectMode = true
+                                    }
+                                    if (!selectedPotraviny.contains(potravina)) {
+                                        selectedPotraviny.add(potravina)
+                                    }
+                                },
+                                getDaysLeft = { potravinaViewModel.getDaysLeft(potravina) },
+                                isSelected = selectedPotraviny.contains(potravina),
+                            )
                         }
                     }
                 }
@@ -466,18 +458,19 @@ fun SkladObrazovka2(
             ViewTypeDialog(
                 viewTypeDialogVisible = { viewTypeDialogVisible = false },
                 listChange = {
-                    localViewType = ViewType.LIST
+                    //localViewType = ViewType.LIST
                     skladViewModel.nastavViewType(skladId, ViewType.LIST.name)
                 },
                 smallListChange = {
-                    localViewType = ViewType.SMALL_LIST
+                    //localViewType = ViewType.SMALL_LIST
                     skladViewModel.nastavViewType(skladId, ViewType.SMALL_LIST.name)
                 },
                 gridChange = {
-                    localViewType = ViewType.GRID
+                    //localViewType = ViewType.GRID
                     skladViewModel.nastavViewType(skladId, ViewType.GRID.name)
                 },
-                localViewType = localViewType.name
+                localViewType = localViewType.name,
+                nakupSeznam = false,
             )
         }
 
@@ -507,7 +500,8 @@ fun SkladObrazovka2(
                 defaultChange = { skladViewModel.nastavSortKategorie(skladId, "DEFAULT") },
                 countChange = { skladViewModel.nastavSortKategorie(skladId, "COUNT") },
                 kategorie = sklad?.sortKategorie,
-                potraviny = sklad?.sortPotraviny
+                potraviny = sklad?.sortPotraviny,
+                nakupSeznam = false
             )
         }
 

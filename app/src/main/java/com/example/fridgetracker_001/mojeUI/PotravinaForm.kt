@@ -81,7 +81,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.IconRegistry
-import com.example.fridgetracker_001.data.IconRegistry.kindOptions
+import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import com.example.fridgetracker_001.ui.theme.bilaback
 import com.example.fridgetracker_001.ui.theme.buttonPodtvrdit
@@ -225,8 +225,8 @@ fun PotravinaFormBoxWithConstraints(
                                 horizontalAlignment = Alignment.Start
                             ) {
                                 UnderlinedTextSelector(
-                                    selectedOption = potravina.druh,
-                                    onOptionSelected = { onPotravinaChange(potravina.copy(druh = it)) },
+                                    selectedOption = KindOptionEnum.fromString(potravina.druh),
+                                    onOptionSelected = { onPotravinaChange(potravina.copy(druh = it.name)) },
                                     dialogChange = isAdd,
                                     onDialogChange = { onDialogChange(it) }
                                 )
@@ -960,8 +960,8 @@ fun VyberObrazku(
 
 @Composable
 fun UnderlinedTextSelector(
-    @StringRes selectedOption: Int?,
-    onOptionSelected: (Int) -> Unit,
+    selectedOption: KindOptionEnum,
+    onOptionSelected: (KindOptionEnum) -> Unit,
     dialogChange: Boolean,
     onDialogChange: (Boolean) -> Unit
 ) {
@@ -978,7 +978,7 @@ fun UnderlinedTextSelector(
             .clickable { onDialogChange(true) }
     ) {
         Text(
-            text = selectedOption?.let { stringResource(it) } ?: "",
+            text = stringResource(selectedOption.stringRes),
             fontSize = 25.sp,
             color = Color.Black,
             modifier = Modifier
@@ -996,16 +996,17 @@ fun UnderlinedTextSelector(
 
     if (dialogChange) {
         AlertDialog(
+            containerColor = Color.White,
             onDismissRequest = {},
-            title = { Text(stringResource(R.string.pf_kindChoice)) },
+            title = { Text(stringResource(R.string.pf_kindChoice),color = Color.Black,) },
             text = {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        items(kindOptions) { option ->
-                            val optionSelected  = option.nameRes == selectedOption
+                        items(KindOptionEnum.entries.filter { it != KindOptionEnum.UNKNOWN }) { option ->
+                        val optionSelected  = option == selectedOption
 
                             Column(
                                 modifier = Modifier
@@ -1016,7 +1017,7 @@ fun UnderlinedTextSelector(
                                         shape = RoundedCornerShape(16.dp)
                                     )
                                     .clickable {
-                                        onOptionSelected(option.nameRes)
+                                        onOptionSelected(option)
                                         onDialogChange(false)
                                     }
                                     // 1) Celá buňka má daný poměr stran (šířka : výška = 1 : 0.8)
@@ -1032,7 +1033,7 @@ fun UnderlinedTextSelector(
                                 ) {
                                     Image(
                                         painter = painterResource(id = option.imageRes),
-                                        contentDescription = stringResource(option.nameRes),
+                                        contentDescription = stringResource(option.stringRes),
                                         contentScale = ContentScale.Fit,
                                         modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp))
                                     )
@@ -1044,7 +1045,7 @@ fun UnderlinedTextSelector(
                                         .fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = stringResource(option.nameRes),
+                                        text = stringResource(option.stringRes),
                                         textAlign = TextAlign.Center,
                                         fontSize = 14.sp,
                                         minLines = 2,                       // dovolíme až 2 řádky

@@ -41,6 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.SortCategoryOption
+import com.example.fridgetracker_001.data.SortOption
+import com.example.fridgetracker_001.data.ViewTypeNakup
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.ui.theme.backgroundAlers
@@ -54,10 +57,15 @@ import com.example.fridgetracker_001.ui.theme.primaryLight
 @Composable
 fun ViewTypeDialog(
     viewTypeDialogVisible: () -> Unit,
-    listChange: () -> Unit,
-    smallListChange: () -> Unit,
-    gridChange: () -> Unit,
-    localViewType: String
+    listChange: () -> Unit = {},
+    smallListChange: () -> Unit = {},
+    gridChange: () -> Unit = {},
+    yellowChange: () -> Unit = {},
+    redChange: () -> Unit = {},
+    blueChange: () -> Unit = {},
+    localViewType: String? = null,
+    localViewType2: ViewTypeNakup? = null,
+    nakupSeznam: Boolean,
 ) {
     AlertDialog(
         containerColor = Color.White,
@@ -65,61 +73,119 @@ fun ViewTypeDialog(
         title = { Text(text = stringResource(R.string.view_type_dialog_title), color = Color.Black) },
         text = {
             Column {
-                // Seznam
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            listChange()
-                            viewTypeDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = localViewType == "LIST",
-                        onClick = null // nechceme duplikovat klikání
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.list), color = Color.Black)
+
+                if (!nakupSeznam) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                listChange()
+                                viewTypeDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = localViewType == "LIST",
+                            onClick = null // nechceme duplikovat klikání
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.list), color = Color.Black)
+                    }
+
+                    // Kompaktní seznam
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                smallListChange()
+                                viewTypeDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = localViewType == "SMALL_LIST",
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.compact_list), color = Color.Black)
+                    }
+
+                    // Dlaždice
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                gridChange()
+                                viewTypeDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = localViewType == "GRID",
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.grid), color = Color.Black)
+                    }
                 }
 
-                // Kompaktní seznam
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            smallListChange()
-                            viewTypeDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = localViewType == "SMALL_LIST",
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.compact_list), color = Color.Black)
-                }
+                if (nakupSeznam) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                yellowChange()
+                                viewTypeDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = localViewType2 == ViewTypeNakup.YELLOW,
+                            onClick = null // nechceme duplikovat klikání
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.yellow), color = Color.Black)
+                    }
 
-                // Dlaždice
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            gridChange()
-                            viewTypeDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = localViewType == "GRID",
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.grid), color = Color.Black)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                redChange()
+                                viewTypeDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = localViewType2 == ViewTypeNakup.ORANGE,
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.orange), color = Color.Black)
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                blueChange()
+                                viewTypeDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = localViewType2 == ViewTypeNakup.BLUE,
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.blue), color = Color.Black)
+                    }
                 }
             }
         },
@@ -135,14 +201,20 @@ fun ViewTypeDialog(
 @Composable
 fun SortDialog(
     sortDialogVisible: () -> Unit,
-    nameChange: () -> Unit,
-    dateExpiryChange: () -> Unit,
-    dateAddedChange: () -> Unit,
-    alphabetChange: () -> Unit,
-    defaultChange: () -> Unit,
-    countChange: () -> Unit,
-    kategorie: String?,
-    potraviny: String?,
+    nameChange: () -> Unit = {},
+    dateExpiryChange: () -> Unit = {},
+    dateAddedChange: () -> Unit = {},
+    alphabetChange: () -> Unit = {},
+    defaultChange: () -> Unit = {},
+    countChange: () -> Unit = {},
+
+    nameChange2: () -> Unit = {},
+    quantityChange: () -> Unit = {},
+    kategorie: String? = null,
+    potraviny: String? = null,
+    potraviny2: SortOption? = null,
+    kategorie2: SortCategoryOption? = null,
+    nakupSeznam: Boolean,
 ) {
     AlertDialog(
         containerColor = Color.White,
@@ -152,116 +224,215 @@ fun SortDialog(
             Column {
                 Text(stringResource(R.string.sort_food), fontSize = 20.sp, color = Color.Black)
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            nameChange()
-                            sortDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = potraviny == "NAME",
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.name), color = Color.Black)
+
+                if (!nakupSeznam) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                nameChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = potraviny == "NAME",
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.name), color = Color.Black)
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                dateExpiryChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = potraviny == "DATE_EXPIRY",
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.expiry_date), color = Color.Black)
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                dateAddedChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = potraviny == "DATE_ADDED",
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.added_date), color = Color.Black)
+                    }
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            dateExpiryChange()
-                            sortDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = potraviny == "DATE_EXPIRY",
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.expiry_date), color = Color.Black)
-                }
+                if (nakupSeznam){
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                nameChange2()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = potraviny2 == SortOption.NAME,
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.name), color = Color.Black)
+                    }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            dateAddedChange()
-                            sortDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = potraviny == "DATE_ADDED",
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.added_date), color = Color.Black)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                quantityChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = potraviny2 == SortOption.QUANTITY,
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.sort_by_quantity), color = Color.Black)
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(stringResource(R.string.sort_categories), fontSize = 20.sp, color = Color.Black)
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            alphabetChange()
-                            sortDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = kategorie == "ALPHABETICAL",
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.alphabetical), color = Color.Black)
+                if (!nakupSeznam) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                alphabetChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = kategorie == "ALPHABETICAL",
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.alphabetical), color = Color.Black)
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                defaultChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = kategorie == "DEFAULT",
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.defaults), color = Color.Black)
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                countChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = kategorie == "COUNT",
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.count), color = Color.Black)
+                    }
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            defaultChange()
-                            sortDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = kategorie == "DEFAULT",
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.defaults), color = Color.Black)
-                }
+                if (nakupSeznam) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                alphabetChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = kategorie2 == SortCategoryOption.ALPHABETICAL,
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.alphabetical), color = Color.Black)
+                    }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            countChange()
-                            sortDialogVisible()
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = kategorie == "COUNT",
-                        onClick = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.count), color = Color.Black)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                defaultChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = kategorie2 == SortCategoryOption.DEFAULT,
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.defaults), color = Color.Black)
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                countChange()
+                                sortDialogVisible()
+                            }
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = kategorie2 == SortCategoryOption.COUNT,
+                            onClick = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.count), color = Color.Black)
+                    }
                 }
             }
         },
@@ -669,11 +840,12 @@ fun DeleteAlert2(
     var isChecked by remember { mutableStateOf(false) } // Stav pro zaškrtávací políčko
 
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = { change() },
-        title = { Text(stringResource(R.string.confirm_delete_title)) },
+        title = { Text(stringResource(R.string.confirm_delete_title),color = Color.Black) },
         text = {
             Column {
-                Text(stringResource(R.string.confirm_delete_text))
+                Text(stringResource(R.string.confirm_delete_text),color = Color.Black)
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -682,7 +854,7 @@ fun DeleteAlert2(
                         checked = isChecked,
                         onCheckedChange = { isChecked = it }
                     )
-                    Text(stringResource(R.string.add_to_shopping_list))
+                    Text(stringResource(R.string.add_to_shopping_list),color = Color.Black)
                 }
             }
         },
@@ -700,7 +872,7 @@ fun DeleteAlert2(
             TextButton(
                 onClick = { change() }
             ) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(R.string.cancel),color = primaryLight)
             }
         }
     )

@@ -3,6 +3,9 @@ package com.example.fridgetracker_001.data.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.fridgetracker_001.data.DEFAULT_CATEGORY_STATE
+import com.example.fridgetracker_001.data.SortCategoryOption
+import com.example.fridgetracker_001.data.SortOption
+import com.example.fridgetracker_001.data.ViewTypeNakup
 
 @Entity(tableName = "nakup_table")
 data class NakupEntity(
@@ -11,10 +14,10 @@ data class NakupEntity(
 
     // Tady si ukládáš, jaké kategorie jsou rozbalené/sbalené
     var categoryExpansionState: String = DEFAULT_CATEGORY_STATE,
-
-    // Třídění kategorií
-    var sortKategorie: String = "DEFAULT",
-
     // Třídění položek
-    var sortPolozky: String = "NAME",
+    var sortPolozky: SortOption = SortOption.QUANTITY,
+    // Třídění kategorií
+    var sortKategorie: SortCategoryOption = SortCategoryOption.COUNT,
+
+    var viewType: ViewTypeNakup = ViewTypeNakup.YELLOW,
 )

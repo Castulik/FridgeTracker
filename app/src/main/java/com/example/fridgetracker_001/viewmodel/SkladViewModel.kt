@@ -101,12 +101,12 @@ class  SkladViewModel(application: Application, private val repository: SkladRep
         }
     }
 
-    fun updateCategoryExpansionState(skladId: Int, newState: Map<Int, Boolean>) {
+    fun updateCategoryExpansionState(skladId: Int, newState: Map<String, Boolean>) {
         viewModelScope.launch {
             val sklad = repository.ziskejSkladPodleId(skladId) ?: return@launch
 
             // převedeme klíče Int na String kvůli JSON
-            val newStateJson = newState.mapKeys { it.key.toString() }.toJsonString()
+            val newStateJson = newState.mapKeys { it.key }.toJsonString()
 
             val updatedSklad = sklad.copy(categoryExpansionState = newStateJson)
 

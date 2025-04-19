@@ -22,7 +22,7 @@ class SeznamRepository(private val seznamDao: SeznamDao) {
         seznamDao.updatePolozku(item)
     }
 
-    suspend fun getSeznamEntity(nazev: String, kategorie: Int, nakupId: Int): SeznamEntity? {
+    suspend fun getSeznamEntity(nazev: String, kategorie: String, nakupId: Int): SeznamEntity? {
         return seznamDao.getSeznamEntity(nazev, kategorie, nakupId)
     }
 }

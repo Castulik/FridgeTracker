@@ -26,6 +26,7 @@
     <string name="kind_drinks">Nápoje</string>
     <string name="kind_ready_meals">Hotová jídla</string>
     <string name="kind_other">Ostatní</string>
+    <string name="kind_unknown">Neznámé</string>
 
     <!-- kind options -->
     <string name="pf_kindChoice">Vyberte druh potraviny</string>

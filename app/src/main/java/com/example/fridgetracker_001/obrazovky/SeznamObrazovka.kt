@@ -45,6 +45,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -88,6 +89,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.DEFAULT_CATEGORY_STATE
+import com.example.fridgetracker_001.data.IconRegistry
+import com.example.fridgetracker_001.data.KindOptionEnum
+import com.example.fridgetracker_001.data.SortCategoryOption
+import com.example.fridgetracker_001.data.SortOption
+import com.example.fridgetracker_001.data.ViewTypeNakup
 import com.example.fridgetracker_001.data.entities.NakupEntity
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
@@ -98,6 +104,8 @@ import com.example.fridgetracker_001.mojeUI.NakupAlert
 import com.example.fridgetracker_001.mojeUI.NavigationIcon
 import com.example.fridgetracker_001.mojeUI.SeznamTopBar
 import com.example.fridgetracker_001.mojeUI.SkladDialog
+import com.example.fridgetracker_001.mojeUI.SortDialog
+import com.example.fridgetracker_001.mojeUI.ViewTypeDialog
 import com.example.fridgetracker_001.ui.theme.cardGradient1
 import com.example.fridgetracker_001.ui.theme.cardGradient22
 import com.example.fridgetracker_001.ui.theme.cardPozadi
@@ -122,6 +130,10 @@ fun SeznamObrazovka2(
 ) {
     var skladDialog by remember { mutableStateOf(false) }
     var nakupDialog by remember { mutableStateOf(false) }
+    var nastaveniDialog by remember { mutableStateOf(false) }
+    var sortDialog by remember { mutableStateOf(false) }
+    var viewTypeDialog by remember { mutableStateOf(false) }
+
     var selectedItem by remember { mutableStateOf("") }
     val skladList by skladViewModel.skladList.collectAsState()
     val isOnNakup by seznamViewModel.errorMsg.collectAsState()
@@ -133,103 +145,90 @@ fun SeznamObrazovka2(
     // Vezmeme si "aktuální" nákup z NakupViewModel
     val currentNakup by nakupViewModel.currentNakup.collectAsState()
 
-    // Vyfiltrujeme jen ty položky, které patří k currentNakup (podle .nakupId)
-    val listForCurrentNakup = remember(allSeznamItems, currentNakup) {
-        currentNakup?.let { nakup ->
-            allSeznamItems.filter { it.nakupId == nakup.id }
-        } ?: emptyList()
-    }
+    if (currentNakup == null) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator()
+        }
+        return
+    } else {
+        // Vyfiltrujeme jen ty položky, které patří k currentNakup (podle .nakupId)
+        val listForCurrentNakup = remember(allSeznamItems, currentNakup) {
+            currentNakup?.let { nakup ->
+                allSeznamItems.filter { it.nakupId == nakup.id }
+            } ?: emptyList()
+        }
 
-    val polozkyByCategory = remember(listForCurrentNakup) {
-        listForCurrentNakup.groupBy { it.kategorie }
-    }
+        val sortedList = currentNakup?.sortPolozky?.sortFunction?.invoke(listForCurrentNakup)
+            ?: listForCurrentNakup
+        val grouped = sortedList.groupBy { it.kategorie }
+        val sortedGrouped = currentNakup?.sortKategorie?.sortFunction?.invoke(grouped) ?: grouped
 
-    val allCategories = listOf(
-        R.string.kind_frozen,
-        R.string.kind_nonperishable,
-        R.string.kind_fruit_veg,
-        R.string.kind_dairy,
-        R.string.kind_meat_fish,
-        R.string.kind_bakery,
-        R.string.kind_eggs,
-        R.string.kind_grains_legumes,
-        R.string.kind_deli,
-        R.string.kind_drinks,
-        R.string.kind_ready_meals,
-        R.string.kind_other
-    )
+        val allCategories = KindOptionEnum.entries
 
-    val vseOdskrtnuto by remember(listForCurrentNakup) {
-        mutableStateOf(listForCurrentNakup.isNotEmpty() && listForCurrentNakup.all { it.checked })
-    }
+        val expandedCategories = remember(currentNakup) {
+            val initialMap: MutableMap<String, Boolean> = mutableMapOf()
 
-    // Vytvoříme stavovou mapu, která si pamatuje, které kategorie jsou rozbalené
-    val expandedCategories = remember(currentNakup) {
+            if (currentNakup!!.categoryExpansionState.isNotBlank()) {
+                val parsed = currentNakup!!.categoryExpansionState
+                    .toCategoryExpansionMap()
+                    .toMutableMap()
 
-        // Pomocná mapka, do které si připravíme výchozí stav kategorií
-        val initialMap: MutableMap<Int, Boolean> = mutableMapOf()
+                // Doplň případně nové kategorie (např. po aktualizaci aplikace)
+                allCategories.forEach { category ->
+                    if (!parsed.containsKey(category.name)) {
+                        parsed[category.name] = true
+                    }
+                }
 
-        // Pokud existuje currentNakup a má uložený expandovaný stav v JSONu
-        if (currentNakup != null && currentNakup!!.categoryExpansionState.isNotBlank()) {
+                initialMap.putAll(parsed)
 
-            // Převod uloženého JSONu na Map<String, Boolean>, pak převedeme klíče na Int
-            val parsed = currentNakup!!.categoryExpansionState
-                .toCategoryExpansionMap() // Map<String, Boolean>
-                .mapKeys { it.key.toIntOrNull() ?: 0 } // převede klíče na Int, fallback 0
-                .toMutableMap()
-
-            // Pokud máme nějaké nové kategorie, které nejsou v JSONu (např. nově přidané), přidáme je jako rozbalené
-            allCategories.forEach { categoryResId ->
-                if (!parsed.containsKey(categoryResId)) {
-                    parsed[categoryResId] = true
+            } else {
+                allCategories.forEach { category ->
+                    initialMap[category.name] = true
                 }
             }
 
-            // Zkopírujeme zpracovanou mapu do initialMap
-            initialMap.putAll(parsed)
-
-        } else {
-            // Pokud není žádný uložený stav (nový nákup), nastavíme všechny kategorie jako rozbalené
-            allCategories.forEach { categoryResId ->
-                initialMap[categoryResId] = true
-            }
+            mutableStateMapOf<String, Boolean>().apply { putAll(initialMap) }
         }
 
-        // Vrátíme stavovou mapu, se kterou může UI pracovat a která se bude automaticky přepínat
-        mutableStateMapOf<Int, Boolean>().apply { putAll(initialMap) }
-    }
+        val vseOdskrtnuto by remember(listForCurrentNakup) {
+            mutableStateOf(listForCurrentNakup.isNotEmpty() && listForCurrentNakup.all { it.checked })
+        }
 
-    Scaffold(
-        containerColor = Color.Transparent,
-        topBar = {
-            SeznamTopBar(
-                onHistoryClick = { navController.navigate("seznamhistorie") },
-                onPridatNakup = { nakupDialog = true },
-                onNastaveni = { },
-                menuExpanded = false,
-                onMenuExpandedChange = { },
-            )
-        },
-    ) { paddingValues ->
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                SeznamTopBar(
+                    //onHistoryClick = { /*navController.navigate("seznamhistorie")*/ },
+                    onPridatNakup = { nakupDialog = true },
+                    menuExpanded = nastaveniDialog,
+                    onMenuExpandedChange = { nastaveniDialog = it },
+                    onSortClicked = { sortDialog = true },
+                    onViewTypeClicked = { viewTypeDialog = true },
+                )
+            },
+        ) { paddingValues ->
 
-        // 7) Vykreslení
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
+            // 7) Vykreslení
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = paddingValues.calculateTopPadding(),
+                        bottom = 4.dp
+                    )
+            ) {
 
-            polozkyByCategory.forEach { (kategorie, polozkyVKategorii) ->
-                // Heading kategorie
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFFF4D35E))
-                            .clickable { // Přepneme stav pro tuto kategorii
-                                if (kategorie != null) {
+                sortedGrouped.forEach { (kategorie, polozkyVKategorii) ->
+
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp, start = 4.dp, end = 4.dp)
+                                .clip(RoundedCornerShape(5.dp))
+                                .background(currentNakup?.viewType!!.colors.x)
+                                .clickable { // Přepneme stav pro tuto kategorii
                                     val newState = !(expandedCategories[kategorie] ?: true)
                                     expandedCategories[kategorie] = newState
 
@@ -241,23 +240,21 @@ fun SeznamObrazovka2(
                                         )
                                     }
                                 }
-                            }
-                            .animateContentSize()
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                                .animateContentSize()
                         ) {
-                            Text(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(2.dp),
-                                text = "${kategorie?.let { stringResource(it) } ?: ""} (${polozkyVKategorii.size})",
-                                style = MaterialTheme.typography.bodyLarge,
-                            )
-                            IconButton(
-                                onClick = {
-                                    if (kategorie != null) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(2.dp),
+                                    text = "${stringResource(KindOptionEnum.valueOf(kategorie).stringRes)} (${polozkyVKategorii.size})",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                                IconButton(
+                                    onClick = {
                                         val newState = !(expandedCategories[kategorie] ?: true)
                                         expandedCategories[kategorie] = newState
 
@@ -268,79 +265,87 @@ fun SeznamObrazovka2(
                                                 newMap
                                             )
                                         }
-                                    }
-                                },
-                                modifier = Modifier.size(30.dp)
-                            ) {
-                                Icon(
-                                    imageVector = if (expandedCategories[kategorie] == true)
-                                        Icons.Default.KeyboardArrowUp
-                                    else
-                                        Icons.Default.KeyboardArrowDown,
-                                    contentDescription = if (expandedCategories[kategorie] == true)
-                                        "Sbalit" else "Rozbalit",
-                                )
+                                    },
+                                    modifier = Modifier.size(30.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = if (expandedCategories[kategorie] == true)
+                                            Icons.Default.KeyboardArrowUp
+                                        else
+                                            Icons.Default.KeyboardArrowDown,
+                                        contentDescription = if (expandedCategories[kategorie] == true)
+                                            "Sbalit" else "Rozbalit",
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                item {
-                    AnimatedVisibility(
-                        visible = expandedCategories[kategorie] == true,
-                        enter = expandVertically(),
-                        exit = shrinkVertically()
-                    ) {
-                        Column {
-                            polozkyVKategorii.forEach { item ->
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 2.dp, start = 4.dp, end = 4.dp, bottom = 2.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(if (item.checked) Color(0xFF4CAF50) else Color(0xFFF5F5DC))
-                                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
-                                ) {
-                                    Checkbox(
-                                        checked = item.checked,
-                                        onCheckedChange = { isChecked ->
-                                            val updatedItem = item.copy(checked = isChecked)
-                                            seznamViewModel.updatePolozku(updatedItem)
-                                        }
-                                    )
-
-                                    IconButton(
-                                        onClick = {
-                                            skladDialog = true
-                                            selectedItem = item.nazev
-                                        },
-                                        enabled = item.checked
+                    item {
+                        AnimatedVisibility(
+                            visible = expandedCategories[kategorie] == true,
+                            enter = expandVertically(),
+                            exit = shrinkVertically()
+                        ) {
+                            Column {
+                                polozkyVKategorii.forEach { item ->
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(
+                                                top = 2.dp,
+                                                start = 4.dp,
+                                                end = 4.dp,
+                                                bottom = 2.dp
+                                            )
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(if (item.checked) Color(0xFF4CAF50) else currentNakup?.viewType!!.colors.y)
+                                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                                     ) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.lednicenakup),
-                                            contentDescription = null,
-                                            tint = if (item.checked) Color.Black else Color.Gray
+                                        Checkbox(
+                                            checked = item.checked,
+                                            onCheckedChange = { isChecked ->
+                                                val updatedItem = item.copy(checked = isChecked)
+                                                seznamViewModel.updatePolozku(updatedItem)
+                                            }
                                         )
-                                    }
 
-                                    Text(
-                                        text = "${item.nazev} (x${item.quantity})",
-                                        modifier = Modifier.weight(1f),
-                                        textDecoration = if (item.checked) TextDecoration.LineThrough
-                                        else TextDecoration.None
-                                    )
+                                        IconButton(
+                                            onClick = {
+                                                skladDialog = true
+                                                selectedItem = item.nazev
+                                            },
+                                            enabled = item.checked
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.lednicenakup),
+                                                contentDescription = null,
+                                                tint = if (item.checked) Color.Black else Color.Gray
+                                            )
+                                        }
 
-                                    IconButton(onClick = {
-                                        seznamViewModel.setEditItem(item)
-                                    }) {
-                                        Icon(Icons.Default.Edit, contentDescription = "edit")
-                                    }
+                                        Text(
+                                            text = "${item.nazev} (x${item.quantity})",
+                                            modifier = Modifier.weight(1f),
+                                            textDecoration = if (item.checked) TextDecoration.LineThrough
+                                            else TextDecoration.None
+                                        )
 
-                                    IconButton(onClick = {
-                                        seznamViewModel.smazatPolozku(item)
-                                    }) {
-                                        Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                                        IconButton(onClick = {
+                                            seznamViewModel.setEditItem(item)
+                                        }) {
+                                            Icon(Icons.Default.Edit, contentDescription = "edit")
+                                        }
+
+                                        IconButton(onClick = {
+                                            seznamViewModel.smazatPolozku(item)
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = null
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -348,70 +353,157 @@ fun SeznamObrazovka2(
                     }
                 }
             }
-        }
 
-        // Dialog pro přidání nakupu
-        if (nakupDialog) {
-            val today = getCurrentDate()
-            NakupAlert(
-                onAdd = { nakupViewModel.vlozitNakup(today) },
-                onDismiss = { nakupDialog = false }
-            )
-        }
+            // Dialog pro přidání nakupu
+            if (nakupDialog) {
+                val today = getCurrentDate()
+                NakupAlert(
+                    onAdd = { nakupViewModel.vlozitNakup(today) },
+                    onDismiss = { nakupDialog = false }
+                )
+            }
 
-        if (seznamViewModel.showAddDialog) {
-            AddItemDialog(
-                onDismiss = {
-                    seznamViewModel.clearErrorMsg()
-                    seznamViewModel.onDialogClose()
-                },
-                onConfirm = { nazev, kategorie, mnozstvi ->
-                    val currentId = nakupViewModel.currentNakup.value?.id ?: 1
-                    seznamViewModel.pridavaniRucne(nazev, kategorie, mnozstvi, currentId)
-                },
-                option = true,
-                onNavigate = { navController.navigate("seznampolozky") },
-                isEdit = false,
-                isOnNakup = isOnNakup,
-            )
-        }
+            if (seznamViewModel.showAddDialog) {
+                AddItemDialog(
+                    onDismiss = {
+                        seznamViewModel.clearErrorMsg()
+                        seznamViewModel.onDialogClose()
+                    },
+                    onConfirm = { nazev, kategorie, mnozstvi ->
+                        val currentId = nakupViewModel.currentNakup.value?.id ?: 1
+                        seznamViewModel.pridavaniRucne(nazev, kategorie.name, mnozstvi, currentId)
+                    },
+                    option = true,
+                    onNavigate = { navController.navigate("seznampolozky") },
+                    isEdit = false,
+                    isOnNakup = isOnNakup,
+                )
+            }
 
-        if (itemEdit != null) {
-            AddItemDialog(
-                onDismiss = {
-                    seznamViewModel.setEditItem(null)
-                    seznamViewModel.clearErrorMsg()
-                },
-                onConfirm = { nazev, kategorie, mnozstvi ->
-                    val updatedSeznam = itemEdit!!.copy(nazev = nazev, kategorie = kategorie, quantity = mnozstvi)
-                    seznamViewModel.updatePolozku(updatedSeznam)
-                },
-                option = true,
-                onNavigate = { navController.navigate("seznampolozky") },
-                isEdit = true,
-                isOnNakup = isOnNakup,
-                nazev = itemEdit!!.nazev,
-                kategorie = itemEdit!!.kategorie,
-                mnozstvi = itemEdit!!.quantity
-            )
-        }
+            if (itemEdit != null) {
+                AddItemDialog(
+                    onDismiss = {
+                        seznamViewModel.setEditItem(null)
+                        seznamViewModel.clearErrorMsg()
+                    },
+                    onConfirm = { nazev, kategorie, mnozstvi ->
+                        val updatedSeznam = itemEdit!!.copy(
+                            nazev = nazev,
+                            kategorie = kategorie.name,
+                            quantity = mnozstvi
+                        )
+                        seznamViewModel.updatePolozku(updatedSeznam)
+                    },
+                    option = true,
+                    onNavigate = { navController.navigate("seznampolozky") },
+                    isEdit = true,
+                    isOnNakup = isOnNakup,
+                    nazev = itemEdit!!.nazev,
+                    kategorie = KindOptionEnum.valueOf(itemEdit!!.kategorie),
+                    mnozstvi = itemEdit!!.quantity
+                )
+            }
 
-        // Dialog pro přidání do vybraného skladu
-        if (skladDialog) {
-            SkladDialog(
-                item = selectedItem,
-                skladList = skladList,
-                onDismiss = {
-                    skladDialog = false
-                    selectedItem = ""
-                },
-                onConfirm = { skladId ->
-                    skladDialog = false
-                    val encodedNazev = Uri.encode(selectedItem)
-                    navController.navigate("pridatPotravinu/$skladId?nazev=$encodedNazev")
-                    selectedItem = ""
-                }
-            )
+            // Dialog pro přidání do vybraného skladu
+            if (skladDialog) {
+                SkladDialog(
+                    item = selectedItem,
+                    skladList = skladList,
+                    onDismiss = {
+                        skladDialog = false
+                        selectedItem = ""
+                    },
+                    onConfirm = { skladId ->
+                        skladDialog = false
+                        val encodedNazev = Uri.encode(selectedItem)
+                        navController.navigate("pridatPotravinu/$skladId?nazev=$encodedNazev")
+                        selectedItem = ""
+                    }
+                )
+            }
+
+            if (sortDialog) {
+                SortDialog(
+                    sortDialogVisible = { sortDialog = false },
+                    nakupSeznam = true,
+                    nameChange2 = {
+                        currentNakup?.id?.let {
+                            nakupViewModel.nastavSortPolozky(
+                                it,
+                                SortOption.NAME
+                            )
+                        }
+                    },
+                    quantityChange = {
+                        currentNakup?.id?.let {
+                            nakupViewModel.nastavSortPolozky(
+                                it,
+                                SortOption.QUANTITY
+                            )
+                        }
+                    },
+
+                    alphabetChange = {
+                        currentNakup?.id?.let {
+                            nakupViewModel.nastavSortKategorie(
+                                it,
+                                SortCategoryOption.ALPHABETICAL
+                            )
+                        }
+                    },
+                    defaultChange = {
+                        currentNakup?.id?.let {
+                            nakupViewModel.nastavSortKategorie(
+                                it,
+                                SortCategoryOption.DEFAULT
+                            )
+                        }
+                    },
+                    countChange = {
+                        currentNakup?.id?.let {
+                            nakupViewModel.nastavSortKategorie(
+                                it,
+                                SortCategoryOption.COUNT
+                            )
+                        }
+                    },
+
+                    potraviny2 = currentNakup?.sortPolozky,
+                    kategorie2 = currentNakup?.sortKategorie
+                )
+            }
+
+            if (viewTypeDialog) {
+                ViewTypeDialog(
+                    viewTypeDialogVisible = { viewTypeDialog = false },
+                    nakupSeznam = true,
+                    yellowChange = {
+                        currentNakup?.id?.let {
+                            nakupViewModel.nastavViewType(
+                                it,
+                                ViewTypeNakup.YELLOW
+                            )
+                        }
+                    },
+                    redChange = {
+                        currentNakup?.id?.let {
+                            nakupViewModel.nastavViewType(
+                                it,
+                                ViewTypeNakup.ORANGE
+                            )
+                        }
+                    },
+                    blueChange = {
+                        currentNakup?.id?.let {
+                            nakupViewModel.nastavViewType(
+                                it,
+                                ViewTypeNakup.BLUE
+                            )
+                        }
+                    },
+                    localViewType2 = currentNakup?.viewType
+                )
+            }
         }
     }
 }

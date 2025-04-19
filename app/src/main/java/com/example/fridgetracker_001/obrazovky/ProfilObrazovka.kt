@@ -1,27 +1,39 @@
 package com.example.fridgetracker_001.obrazovky
 
+import android.Manifest
 import android.app.Activity
-import android.util.Log
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.LocalActivity
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.ui.theme.cardGradient12
+import com.example.fridgetracker_001.ui.theme.cardGradient22
+import com.example.fridgetracker_001.ui.theme.cardPozadi
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.isGranted
 
-/**
- *  tag = "en"  → vynutí angličtinu
- *  tag = ""    → zruší override → appka zase používá default (= češtinu)
- */
 fun switchAppLocale(tag: String, activity: Activity?) {
     val locales = if (tag.isBlank()) {
         LocaleListCompat.getEmptyLocaleList()
@@ -30,48 +42,191 @@ fun switchAppLocale(tag: String, activity: Activity?) {
     }
     AppCompatDelegate.setApplicationLocales(locales)
 
-    // od Androidu 13 (API 33) už není potřeba restart
-    if (android.os.Build.VERSION.SDK_INT < 33 && activity != null) {
-        // potlač animace → žádné černé bliknutí
+    if (Build.VERSION.SDK_INT < 33 && activity != null) {
         activity.recreate()
-    }                         // refresh UI
+    }
 }
 
-// ---------- 2) samotná obrazovka ----------
-
+@OptIn(ExperimentalPermissionsApi::class)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun ProfilObrazovka(navController: NavController) {
-
-    // hoď kamkoli do Composable (třeba do ProfilObrazovka)
-
     val activity = LocalActivity.current
+    val gra = Brush.verticalGradient(
+        colorStops = arrayOf(
+            0.6f to cardGradient12,
+            0.9f to cardGradient22,
+        )
+    )
+    val arg = Brush.verticalGradient(
+        colorStops = arrayOf(
+            0.1f to cardGradient22,
+            0.4f to cardGradient12,
+        )
+    )
 
-    Scaffold (
+    val cameraPermission = rememberPermissionState(Manifest.permission.CAMERA)
+    val notificationPermission = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+
+    val cameraGranted = cameraPermission.status is PermissionStatus.Granted
+    val notifGranted = notificationPermission.status is PermissionStatus.Granted
+
+    Scaffold(
         containerColor = Color.Transparent
-    ){ padding ->
-        Box(
-            Modifier
+    ) { padding ->
+
+        Column(
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
+                .padding(padding)
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-
-                Button(
-                    onClick = { switchAppLocale("cs", activity) },
-                    modifier = Modifier.fillMaxWidth(0.6f)
-                ) {
-                    Text(stringResource(R.string.czech_btn))
+            // 1
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small)
+                    .background(gra)
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("O aplikaci")
+                    Text("Novinky které jsou v plánu: statistiky nákupů, sdílené sklady napříč rodinou, skenování pomocí čárových kódů napojit na API")
                 }
+            }
 
-                Button(
-                    onClick = { switchAppLocale("", activity) },
-                    modifier = Modifier.fillMaxWidth(0.6f)
-                ) {
-                    Text(stringResource(R.string.english_btn))
+            // 2
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small)
+                    .background(arg)
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Vyber Lokalizaci")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Button(
+                            onClick = { switchAppLocale("cs", activity) },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF104588)
+                        ),) {
+                            Text(stringResource(R.string.czech_btn))
+                        }
+                        Button(
+                            onClick = { switchAppLocale("", activity) },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF104588)
+                            ),
+                            ) {
+                            Text(stringResource(R.string.english_btn))
+                        }
+                    }
                 }
+            }
+
+            // 3
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small)
+                    .background(gra)
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Nahlédni do své databáze čárových kódů")
+            }
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small)
+                    .background(
+                        Brush.verticalGradient(
+                            colorStops = arrayOf(
+                                0.1f to cardGradient22,
+                                0.4f to cardGradient12,
+                            )
+                        )
+                    )
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Přístup k oprávněním")
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Kamera")
+                            Spacer(Modifier.width(8.dp))
+                            val context = LocalContext.current
+                            Switch(
+                                checked = cameraGranted,
+                                onCheckedChange = {
+                                    if (!cameraGranted) {
+                                        cameraPermission.launchPermissionRequest()
+                                    } else {
+                                        openAppSettings(context)
+                                    }
+                                }
+                            )
+                        }
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Notifikace")
+                            Spacer(Modifier.width(8.dp))
+                            Switch(
+                                checked = notifGranted,
+                                onCheckedChange = { notificationPermission.launchPermissionRequest() }
+                            )
+                        }
+                    }
+                }
+            }
+
+            // 5
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small)
+                    .background(gra)
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Stáhni PDF návod na aplikaci")
             }
         }
     }
 }
 
+
+fun openAppSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        data = Uri.fromParts("package", context.packageName, null)
+    }
+    context.startActivity(intent)
+}

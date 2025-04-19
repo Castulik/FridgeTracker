@@ -7,8 +7,8 @@
     <string name="as_dialog_category_edit">Změňte kategorii potraviny:</string>
     <string name="as_dialog_error_no_category">Pro přidání potraviny je nutné vybrat kategorii.</string>
     <string name="as_dialog_already_in_list">Tato položka je již součástí seznamu.</string>
-    <string name="as_button_edit_from_catalog">Upravit prostřednictvím katalogu</string>
-    <string name="as_button_add_from_catalog">Přidat prostřednictvím katalogu</string>
+    <string name="as_button_edit_from_catalog">Upravit podle katalogu</string>
+    <string name="as_button_add_from_catalog">Přidat z katalogu</string>
     <string name="as_button_add">Přidat</string>
     <string name="as_button_save">Uložit</string>
     <string name="as_button_cancel">Zrušit</string>

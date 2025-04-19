@@ -162,7 +162,6 @@ fun EditPotravinaObrazovka2(
         }
     } else {
 
-
         BackHandler {
             // Stejné jako onCancel:
             potravinaViewModel.discardEditedPotravina()
@@ -206,13 +205,9 @@ fun EditPotravinaObrazovka2(
                 navController.navigate("SkladObrazovka/${potravinaState.skladId}")
             },
             pridejNaSeznam = {
-                /*
                 val polozka = PolozkyEntity(nazev = potravinaState.nazev, kategorie = potravinaState.druh)
                 val currentId = nakupViewModel.currentNakup.value?.id ?: 1
-                seznamViewModel.pridatNeboZvysitPolozku(polozka, nakupId = currentId)
-                seznamViewModel.onDialogClose()
-
-                 */
+                seznamViewModel.pridatZKatalogu(polozka, nakupId = currentId)
             },
             onScanBarcodeClick = {
                 // Navigujeme na skener

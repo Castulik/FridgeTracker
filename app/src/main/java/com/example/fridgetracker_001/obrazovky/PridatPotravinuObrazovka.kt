@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -16,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
@@ -152,38 +155,45 @@ fun PridatPotravinuObrazovka2(
 
     val isAdd = potravinaViewModel.shouldShowDialog()
 
-    // 4) Teď vykreslete formulář (TextFieldy) a reagujte na změny
-    PotravinaFormBoxWithConstraints(
-        potravina = potravinaState,        // čteme z VM
-        onPotravinaChange = { updated ->   // při editaci userem
-            potravinaViewModel.updatePridavanaPotravina(updated)
-        },
-        isEdit = false,
-        isAdd = isAdd,
-        onDialogChange = { value ->
-            if (value) {
-                potravinaViewModel.openDruhDialog()
-            } else {
+    if (potravinaState == null) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator()
+        }
+    } else {
+
+        // 4) Teď vykreslete formulář (TextFieldy) a reagujte na změny
+        PotravinaFormBoxWithConstraints(
+            potravina = potravinaState,        // čteme z VM
+            onPotravinaChange = { updated ->   // při editaci userem
+                potravinaViewModel.updatePridavanaPotravina(updated)
+            },
+            isEdit = false,
+            isAdd = isAdd,
+            onDialogChange = { value ->
+                if (value) {
+                    potravinaViewModel.openDruhDialog()
+                } else {
+                    potravinaViewModel.closeDruhDialog()
+                }
+            },
+            onSubmit = {
                 potravinaViewModel.closeDruhDialog()
-            }
-        },
-        onSubmit = {
-            potravinaViewModel.closeDruhDialog()
-            // 5) Uložení do DB + resetPridavanePotraviny
-            potravinaViewModel.ulozitPridavanouPotravinu()
-            // a návrat
-            navController.navigate("SkladObrazovka/$skladId")
-        },
-        onCancel = {
-            potravinaViewModel.resetPridavanaPotravina()
-            navController.navigate("SkladObrazovka/$skladId")
-        },
-        onDelete = {}, // nepotřebujete
-        onScanBarcodeClick = {
-            // Otevřít skener
-            val newRouteAfterScan = "pridatPotravinu/$skladId?barcode="
-            navController.navigate("scanner?returnRoute=$newRouteAfterScan")
-        },
-        snackbarHostState = snackbarHostState
-    )
+                // 5) Uložení do DB + resetPridavanePotraviny
+                potravinaViewModel.ulozitPridavanouPotravinu()
+                // a návrat
+                navController.navigate("SkladObrazovka/$skladId")
+            },
+            onCancel = {
+                potravinaViewModel.resetPridavanaPotravina()
+                navController.navigate("SkladObrazovka/$skladId")
+            },
+            onDelete = {}, // nepotřebujete
+            onScanBarcodeClick = {
+                // Otevřít skener
+                val newRouteAfterScan = "pridatPotravinu/$skladId?barcode="
+                navController.navigate("scanner?returnRoute=$newRouteAfterScan")
+            },
+            snackbarHostState = snackbarHostState
+        )
+    }
 }

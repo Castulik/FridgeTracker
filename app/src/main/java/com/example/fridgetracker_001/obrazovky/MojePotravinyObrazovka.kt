@@ -16,14 +16,15 @@ import androidx.navigation.NavController
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import com.example.fridgetracker_001.mojeUI.GlobalSearchBar
 import com.example.fridgetracker_001.mojeUI.SkladItem
 import com.example.fridgetracker_001.viewmodel.PotravinaViewModel
 import com.example.fridgetracker_001.R
-
-
+import com.example.fridgetracker_001.data.IconRegistry
+import com.example.fridgetracker_001.data.KindOptionEnum
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,21 +36,6 @@ fun MojePotravinyObrazovka(
     barcode: String = ""
 ) {
     val skladList by skladViewModel.skladList.collectAsState()
-
-    val druhTranslations = mapOf(
-        R.string.kind_frozen to listOf(stringResource(R.string.kind_frozen), "frozen", "mražené"),
-        R.string.kind_nonperishable to listOf(stringResource(R.string.kind_nonperishable), "nonperishable", "trvanlivé"),
-        R.string.kind_fruit_veg to listOf(stringResource(R.string.kind_fruit_veg), "fruit", "vegetables", "ovoce", "zelenina"),
-        R.string.kind_dairy to listOf(stringResource(R.string.kind_dairy), "dairy", "mléčné výrobky"),
-        R.string.kind_meat_fish to listOf(stringResource(R.string.kind_meat_fish), "meat", "fish", "maso", "ryby"),
-        R.string.kind_bakery to listOf(stringResource(R.string.kind_bakery), "bakery", "pečivo"),
-        R.string.kind_eggs to listOf(stringResource(R.string.kind_eggs), "eggs", "vejce"),
-        R.string.kind_grains_legumes to listOf(stringResource(R.string.kind_grains_legumes), "grains", "legumes", "obiloviny", "luštěniny"),
-        R.string.kind_deli to listOf(stringResource(R.string.kind_deli), "deli", "uzeniny", "lahůdky"),
-        R.string.kind_drinks to listOf(stringResource(R.string.kind_drinks), "drinks", "nápoje"),
-        R.string.kind_ready_meals to listOf(stringResource(R.string.kind_ready_meals), "ready meals", "hotová jídla"),
-        R.string.kind_other to listOf(stringResource(R.string.kind_other), "other", "ostatní")
-    )
 
     // --- LOGIKA SEARCH BARU (stav + reakce na sken) ---
     var query by remember { mutableStateOf("") }
@@ -67,19 +53,28 @@ fun MojePotravinyObrazovka(
     val allPotraviny = potravinaViewModel.allPotravinyFlow.collectAsState().value
     val allSklady = skladViewModel.skladList.collectAsState().value
 
-    val filteredPotraviny = remember(query, allPotraviny, druhTranslations) {
-        if (query.isBlank()) {
-            emptyList()
-        } else {
-            allPotraviny.filter { potravina ->
-                val druhKeywords = potravina.druh?.let { druhTranslations[it] }.orEmpty()
+    val context = LocalContext.current
 
-                potravina.nazev.contains(query, ignoreCase = true) ||
-                        potravina.code.contains(query, ignoreCase = true) ||
-                        druhKeywords.any { it.contains(query, ignoreCase = true) }
+    val filteredPotraviny by remember(query, allPotraviny) {
+        derivedStateOf {
+            if (query.isBlank()) {
+                emptyList()
+            } else {
+                allPotraviny.filter { potravina ->
+                    val enumName = KindOptionEnum.entries.find { it.name == potravina.druh }
+
+                    val localizedCategory = enumName?.let {
+                        context.getString(it.stringRes)
+                    } ?: ""
+
+                    potravina.nazev.contains(query, ignoreCase = true) ||
+                            potravina.code.contains(query, ignoreCase = true) ||
+                            localizedCategory.contains(query, ignoreCase = true)
+                }
             }
         }
     }
+
 
 
     Scaffold(

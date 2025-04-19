@@ -12,6 +12,8 @@
     <string name="alphabetical">Alphabetical</string>
     <string name="defaults">Default</string>
     <string name="count">Count in category</string>
+    <string name="sort_by_quantity">By quantity</string>
+
     <string name="notification_settings">Notification settings</string>
     <string name="check_to_enable_notifications">Check to enable expiry date notifications.</string>
     <string name="first_warning">First warning:</string>
@@ -29,4 +31,9 @@
     <string name="confirm_delete_title">Are you sure you want to delete this food?</string>
     <string name="confirm_delete_text">This action is irreversible.</string>
     <string name="add_to_shopping_list">Add food to shopping list</string>
+
+    <string name="yellow">Yellow</string>
+    <string name="orange">Orange</string>
+    <string name="blue">Blue</string>
+
 </resources>

@@ -13,6 +13,7 @@
     <string name="alphabetical">Abecedně</string>
     <string name="defaults">Výchozí stav</string>
     <string name="count">Počet v kategorii</string>
+    <string name="sort_by_quantity">Podle množství</string>
 
     <string name="notification_settings">Nastavení upozornění</string>
     <string name="check_to_enable_notifications">Zaškrni pro nastavení upozornění na datum spotřeby.</string>
@@ -33,4 +34,8 @@
     <string name="confirm_delete_title">Opravdu chcete odstranit tuto potravinu?</string>
     <string name="confirm_delete_text">Tato akce je nevratná.</string>
     <string name="add_to_shopping_list">Přidat potravinu do nákupního seznamu</string>
+
+    <string name="yellow">Žlutá</string>
+    <string name="orange">Oranžová</string>
+    <string name="blue">Modrá</string>
 </resources>

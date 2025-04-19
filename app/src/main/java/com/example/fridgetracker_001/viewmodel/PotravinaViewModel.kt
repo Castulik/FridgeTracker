@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.entities.CodeEntity
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
@@ -146,7 +147,9 @@ class PotravinaViewModel(
      * - buď je `showDruhDialog == true`,
      * - anebo je `druh` prázdný.
      */
-    fun shouldShowDialog(): Boolean { return showDruhDialog /*|| pridavanaPotravina.druh.isBlank() */ }
+    fun shouldShowDialog(): Boolean {
+        return showDruhDialog || KindOptionEnum.fromString(pridavanaPotravina.druh) == KindOptionEnum.UNKNOWN
+    }
 
     // C) Funkce pro návrat "výchozí" potraviny
     private fun defaultPotravina(): PotravinaEntity {
@@ -160,7 +163,7 @@ class PotravinaViewModel(
             jednotky = "g",
             skladId = 0,
             poznamka = "",
-            druh = null,
+            druh = "",
             code = ""
         )
     }
@@ -221,8 +224,9 @@ class PotravinaViewModel(
                 closeDruhDialog()
             } else {
                 _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nenalezen, vyplňte ručně."))
-                if (pridavanaPotravina.druh == null)
+                if (KindOptionEnum.fromString(pridavanaPotravina.druh) == KindOptionEnum.UNKNOWN) {
                     openDruhDialog()
+                }
             }
         }
     }
@@ -303,14 +307,13 @@ class PotravinaViewModel(
                 codeRepository.vlozitAktualizovatCode(codeEntity)
 
                 // + update všech potravin se stejným code
-                potravina.druh?.let {
-                    repository.aktualizovatVsechnySDanymKodem(
-                        kod = potravina.code,
-                        newNazev = potravina.nazev,
-                        newDruh = it,
-                        newIcon = potravina.potravinaIconaId
-                    )
-                }
+                repository.aktualizovatVsechnySDanymKodem(
+                    kod = potravina.code,
+                    newNazev = potravina.nazev,
+                    newDruh = potravina.druh,
+                    newIcon = potravina.potravinaIconaId
+                )
+
             }
 
             // 3) Přečteme seznam potravin pro daný sklad
@@ -381,8 +384,10 @@ class PotravinaViewModel(
                 _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nalezen – parametry doplněny."))
             } else {
                 _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nenalezen, vyplňte ručně."))
-                if (editedPotravina?.druh == null)
+
+                if (KindOptionEnum.fromString(editedPotravina!!.druh) == KindOptionEnum.UNKNOWN) {
                     openDruhDialog()
+                }
             }
         }
     }
@@ -452,14 +457,14 @@ class PotravinaViewModel(
                 codeRepository.vlozitAktualizovatCode(codeEntity)
 
                 // A hromadně update potravin se stejným code
-                potravinaToUpdate.druh?.let {
-                    repository.aktualizovatVsechnySDanymKodem(
-                        kod = potravinaToUpdate.code,
-                        newNazev = potravinaToUpdate.nazev,
-                        newDruh = it,
-                        newIcon = potravinaToUpdate.potravinaIconaId
-                    )
-                }
+
+                repository.aktualizovatVsechnySDanymKodem(
+                    kod = potravinaToUpdate.code,
+                    newNazev = potravinaToUpdate.nazev,
+                    newDruh = potravinaToUpdate.druh,
+                    newIcon = potravinaToUpdate.potravinaIconaId
+                )
+
             }
             // 3) Možná bude lepší i refresh potravinaList (pokud se jedná o stejný sklad)
             nactiPotravinyPodleIdSkladu(skladId)

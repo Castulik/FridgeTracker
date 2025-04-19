@@ -52,6 +52,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.IconRegistry
+import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.ui.theme.buttoncolor
@@ -62,8 +64,8 @@ import com.example.fridgetracker_001.ui.theme.primaryLight
 @Composable
 fun AddItemDialog(
     onDismiss: () -> Unit,
-    onConfirm: (String, Int, Int) -> Unit = { _, _, _ -> },
-    onConfirm2: (String, Int) -> Unit = { _, _ -> },
+    onConfirm: (String, KindOptionEnum, Int) -> Unit = { _, _, _ -> },
+    onConfirm2: (String, KindOptionEnum) -> Unit = { _, _ -> },
     onNavigate: () -> Unit = {},
     option: Boolean = false,
     isEdit: Boolean = false,
@@ -71,7 +73,7 @@ fun AddItemDialog(
     isDelete: Boolean = false,
     onDelete: () -> Unit = {},
     nazev: String = "",
-    kategorie: Int? = null,
+    kategorie: KindOptionEnum? = null,
     mnozstvi: Int = 1,
 ) {
     var text by remember { mutableStateOf(nazev) }
@@ -87,24 +89,9 @@ fun AddItemDialog(
     )
  */
 
-    val options2 = listOf(
-        R.string.kind_frozen,
-        R.string.kind_nonperishable,
-        R.string.kind_fruit_veg,
-        R.string.kind_dairy,
-        R.string.kind_meat_fish,
-        R.string.kind_bakery,
-        R.string.kind_eggs,
-        R.string.kind_grains_legumes,
-        R.string.kind_deli,
-        R.string.kind_drinks,
-        R.string.kind_ready_meals,
-        R.string.kind_other
-    )
-
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = {  Text(text = stringResource(id = if (isEdit) R.string.as_dialog_title_edit else R.string.as_dialog_title_add)) },
+        title = {  Text(text = stringResource(id = if (isEdit) R.string.as_dialog_title_edit else R.string.as_dialog_title_add), color = Color.Black) },
         containerColor = Color.White,
         text = {
             Column {
@@ -253,7 +240,7 @@ fun AddItemDialog(
                     columns = GridCells.Fixed(3),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(options2) { category ->
+                    items(KindOptionEnum.entries.filter { it != KindOptionEnum.UNKNOWN }) { category ->
                         Box(
                             modifier = Modifier
                                 .padding(2.dp)
@@ -272,7 +259,7 @@ fun AddItemDialog(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = stringResource(id = category),
+                                text = stringResource(id = category.stringRes),
                                 textAlign = TextAlign.Center,
                                 fontSize = 13.sp,
                                 color = Color.Black
@@ -282,7 +269,7 @@ fun AddItemDialog(
                 }
 
                 if (isDelete){
-                    Text(text = stringResource(R.string.as_dialog_delete_item))
+                    Text(text = stringResource(R.string.as_dialog_delete_item), color = Color.Black)
                     IconButton(onClick = {
                         onDelete()
                     }) {
@@ -405,11 +392,12 @@ fun SmazatAlert(
 ) {
 
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = { change() },
-        title = { Text(stringResource(R.string.as_alert_delete_title)) },
+        title = { Text(stringResource(R.string.as_alert_delete_title), color = Color.Black) },
         text = {
             Column {
-                Text(stringResource(R.string.as_alert_delete_text))
+                Text(stringResource(R.string.as_alert_delete_text), color = Color.Black)
                 Spacer(modifier = Modifier.height(16.dp))
             }
         },
@@ -427,7 +415,7 @@ fun SmazatAlert(
             TextButton(
                 onClick = { change() }
             ) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(R.string.cancel), color = primaryLight)
             }
         }
     )
@@ -439,10 +427,11 @@ fun NakupAlert(
     onDismiss: () -> Unit
 ){
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = { onDismiss() },
-        title = { Text(stringResource(R.string.as_alert_new_nakup_title)) },
+        title = { Text(stringResource(R.string.as_alert_new_nakup_title), color = Color.Black) },
         text = {
-            Text(stringResource(R.string.as_alert_new_nakup_text))
+            Text(stringResource(R.string.as_alert_new_nakup_text), color = Color.Black)
         },
         confirmButton = {
             TextButton(
@@ -451,13 +440,13 @@ fun NakupAlert(
                     onDismiss()
                 }
             ) {
-                Text(stringResource(R.string.as_button_add))
+                Text(stringResource(R.string.as_button_add), color = primaryLight)
             }
         },
         dismissButton = {
             TextButton(onClick = {onDismiss()}
             ) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(R.string.cancel), color = primaryLight)
             }
         }
     )

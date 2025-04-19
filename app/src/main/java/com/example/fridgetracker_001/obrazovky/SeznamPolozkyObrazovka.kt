@@ -1,21 +1,33 @@
 package com.example.fridgetracker_001.obrazovky
 
 import android.net.Uri
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -39,6 +51,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,6 +59,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -53,6 +67,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.IconRegistry
+import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.mojeUI.AddItemDialog
@@ -60,11 +76,14 @@ import com.example.fridgetracker_001.mojeUI.BottomBarPolozky
 import com.example.fridgetracker_001.mojeUI.SeznamTopBar
 import com.example.fridgetracker_001.mojeUI.SmazatAlert
 import com.example.fridgetracker_001.ui.theme.buttonPodtvrdit
+import com.example.fridgetracker_001.ui.theme.cardGradient22
 import com.example.fridgetracker_001.viewmodel.NakupViewModel
 import com.example.fridgetracker_001.viewmodel.PolozkyViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
+import kotlin.math.ceil
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SeznamPolozkyObrazovka(
     seznamViewModel: SeznamViewModel,
@@ -85,11 +104,12 @@ fun SeznamPolozkyObrazovka(
         } ?: emptyList()
     }
 
+    val allCategories = KindOptionEnum.entries
+
     val polozkyList by polozkyViewModel.polozkyFlow.collectAsState()
-    // 2) Seskupíme podle kategorie
-    val polozkyByCategory = remember(polozkyList) {
-        polozkyList.groupBy { it.kategorie }
-    }
+    var vyber by remember { mutableStateOf(KindOptionEnum.FROZEN) } // nebo jiný default
+
+    val polozkyVyber = polozkyList.filter { it.kategorie == vyber.name }
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -107,57 +127,32 @@ fun SeznamPolozkyObrazovka(
         }
     ) { paddingValues ->
 
-        // 3) Zobraz katalog
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            .fillMaxSize()
+            .padding(
+                top = paddingValues.calculateTopPadding(),
+                bottom = 4.dp
+            )
         ) {
-            // Pro každou kategorii vykresli "heading" + seznam položek
-            polozkyByCategory.forEach { (kategorie, polozkyVKategorii) ->
-                // Heading kategorie
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFFF6BE3D))
-                            .clickable { // Přepneme stav pro tuto kategorii
 
-                            }
-                            .animateContentSize()
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(2.dp),
-                                text = "${kategorie?.let { stringResource(it) } ?: ""} (${polozkyVKategorii.size})",
-                                style = MaterialTheme.typography.bodyLarge,
-                            )
-                            IconButton(
-                                onClick = {
+            KategorieGrid(
+                allCategories = allCategories,
+                vyber = vyber,
+                onVyberChange = { vyber = it }
+            )
 
-                                },
-                                modifier = Modifier.size(30.dp)
-                            ) {
-                                Icon(
-                                    imageVector =
-                                        Icons.Default.KeyboardArrowDown,
-                                    contentDescription =
-                                        "Sbalit",
-                                )
-                            }
-                        }
-                    }
-                }
-
+            // 3) Zobraz katalog
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = 5.dp,
+                        bottom = paddingValues.calculateBottomPadding()
+                    )
+            ) {
                 // Samotné položky v dané kategorii
-                items(polozkyVKategorii) { polozka ->
+                items(polozkyVyber) { polozka ->
 
                     val isInCurrentNakup = aktualniNakupItems.any {
                         it.nazev == polozka.nazev && it.kategorie == polozka.kategorie
@@ -218,7 +213,7 @@ fun SeznamPolozkyObrazovka(
                     polozkyViewModel.onDialogClose()
                 },
                 onConfirm2 = { newItemNazev, kategorie ->
-                    polozkyViewModel.pridatPolozkaDoKatalogu(newItemNazev, kategorie)
+                    polozkyViewModel.pridatPolozkaDoKatalogu(newItemNazev, kategorie.name)
                 },
                 isEdit = false,
                 isOnNakup = isOnNakup,
@@ -234,7 +229,7 @@ fun SeznamPolozkyObrazovka(
                     polozkyViewModel.setEditItem(null)
                 },
                 onConfirm2 = { newNazev, kategorie ->
-                    val updatedPolozka = itemEdit!!.copy(nazev = newNazev, kategorie = kategorie)
+                    val updatedPolozka = itemEdit!!.copy(nazev = newNazev, kategorie = kategorie.name)
                     polozkyViewModel.updatePolozka(updatedPolozka)
                 },
                 isEdit = true,
@@ -242,7 +237,7 @@ fun SeznamPolozkyObrazovka(
                 isOnNakup = isOnNakup,
                 onDelete = { smazatAlert = true },
                 nazev = itemEdit!!.nazev,
-                kategorie = itemEdit!!.kategorie
+                kategorie = KindOptionEnum.valueOf(itemEdit!!.kategorie)
             )
 
             if (smazatAlert) {
@@ -260,3 +255,67 @@ fun SeznamPolozkyObrazovka(
         }
     }
 }
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun KategorieGrid(
+    allCategories: List<KindOptionEnum>,
+    vyber: KindOptionEnum,
+    onVyberChange: (KindOptionEnum) -> Unit
+) {
+
+    val visibleCategories = allCategories.filter { it != KindOptionEnum.UNKNOWN }
+
+    Box (
+        modifier = Modifier
+            .padding(2.dp)
+            .clip(shape = RoundedCornerShape(8.dp))
+            .background(cardGradient22)
+            .border(2.dp, Color.Black, shape = RoundedCornerShape(8.dp))
+            .padding(4.dp)
+    ){
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalArrangement = Arrangement.Top
+        ) {
+            visibleCategories.forEach { category ->
+
+                val scale by animateFloatAsState(
+                    targetValue = if (vyber == category) 1.05f else 1f,
+                    animationSpec = tween(150), label = ""
+                )
+
+                Button(
+                    onClick = { onVyberChange(category) },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (vyber == category)
+                            Color(0xFF66C268)
+                        else
+                            Color(0xFF104588)
+                    ),
+                    contentPadding = PaddingValues(horizontal = 5.dp, vertical = 5.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 10.dp,
+                        disabledElevation = 0.dp
+                    ),
+                    modifier = Modifier
+                        .graphicsLayer(scaleX = scale, scaleY = scale)
+                ) {
+                    Text(
+                        text = stringResource(category.stringRes),
+                        fontSize = 13.sp,
+                        maxLines = 1,
+                        color = Color.White
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+

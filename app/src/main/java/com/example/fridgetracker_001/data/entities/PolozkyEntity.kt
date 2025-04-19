@@ -9,5 +9,5 @@ data class PolozkyEntity(
     val id: Int = 0,
 
     val nazev: String,
-    val kategorie: Int?
+    val kategorie: String
 )

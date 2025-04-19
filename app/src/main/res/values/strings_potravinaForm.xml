@@ -26,6 +26,7 @@
     <string name="kind_drinks">Drinks</string>
     <string name="kind_ready_meals">Ready meals</string>
     <string name="kind_other">Other</string>
+    <string name="kind_unknown">Unknown</string>
 
     <!-- kind options -->
     <string name="pf_kindChoice">Choose food category</string>

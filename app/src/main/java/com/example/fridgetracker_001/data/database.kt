@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.fridgetracker_001.data.dao.CodeDao
 import com.example.fridgetracker_001.data.dao.NakupDao
 import com.example.fridgetracker_001.data.dao.PolozkyDao
@@ -22,8 +23,8 @@ import com.example.fridgetracker_001.data.entities.SkladEntity
 
 //Anotace @Database označuje třídu jako databázi Room.
 //entities = databaze bude obsahovat tabulku reprezentovanou třídou SkladEntity.
-@Database(entities = [SkladEntity::class, PotravinaEntity::class, CodeEntity::class, SeznamEntity::class, NakupEntity::class, PolozkyEntity::class], version = 37, exportSchema = false)
-
+@Database(entities = [SkladEntity::class, PotravinaEntity::class, CodeEntity::class, SeznamEntity::class, NakupEntity::class, PolozkyEntity::class], version = 46, exportSchema = false)
+@TypeConverters(Converters::class)
 //Deklarace abstraktní třídy SkladDatabase, která dědí od RoomDatabase.
 //Slouží jako hlavní přístupový bod k databázi. Room z této třídy vygeneruje konkrétní implementaci.
 abstract class SkladDatabase : RoomDatabase() {

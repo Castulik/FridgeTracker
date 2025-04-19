@@ -3,6 +3,9 @@ package com.example.fridgetracker_001.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fridgetracker_001.data.SortCategoryOption
+import com.example.fridgetracker_001.data.SortOption
+import com.example.fridgetracker_001.data.ViewTypeNakup
 import com.example.fridgetracker_001.data.entities.NakupEntity
 import com.example.fridgetracker_001.obrazovky.getCurrentDate
 import com.example.fridgetracker_001.obrazovky.toJsonString
@@ -28,13 +31,13 @@ class NakupViewModel(
         viewModelScope.launch {
             repository.getAllNakupyFlow().collect { list ->
                 if (list.isEmpty()) {
-                    // První spuštění - založíme základní nakup s datumem v názvu
                     val novy = NakupEntity(nazev = getCurrentDate())
-                    repository.vlozitNakup(novy)
-
-                    // NakupList vrátí pořád empty do příští emise, tak mu zatím můžeme předat jen toho nového
-                    _nakupyList.value = listOf(novy)
-                    _currentNakup.value = novy
+                    val noveId = repository.vlozitNakup(novy) // POČKEJ až se to vloží
+                    val created = repository.getNakupById(noveId.toInt())
+                    if (created != null) {
+                        _nakupyList.value = listOf(created)
+                        _currentNakup.value = created
+                    }
                 } else {
                     // Až se objeví první neprázdný seznam, nastav ho
                     _nakupyList.value = list
@@ -79,7 +82,7 @@ class NakupViewModel(
         }
     }
 
-    fun updateCategoryExpansionState(nakupId: Int, newState: Map<Int, Boolean>) {
+    fun updateCategoryExpansionState(nakupId: Int, newState: Map<String, Boolean>) {
         viewModelScope.launch {
             val nakup = repository.getNakupById(nakupId) ?: return@launch
 
@@ -92,6 +95,43 @@ class NakupViewModel(
 
             if (_currentNakup.value?.id == nakupId) {
                 _currentNakup.value = updateNakup
+            }
+        }
+    }
+
+    fun nastavSortPolozky(nakupId: Int, newSort: SortOption) {
+        viewModelScope.launch {
+            val staryNakup = repository.getNakupById(nakupId) ?: return@launch
+            val novyNakup = staryNakup.copy(sortPolozky = newSort)
+            repository.aktualizovatNakup(novyNakup)
+
+            if (_currentNakup.value?.id == nakupId) {
+                _currentNakup.value = novyNakup
+            }
+        }
+    }
+
+    fun nastavSortKategorie(nakupId: Int, newSort: SortCategoryOption) {
+        viewModelScope.launch {
+            val staryNakup = repository.getNakupById(nakupId) ?: return@launch
+            val novyNakup = staryNakup.copy(sortKategorie = newSort)
+            repository.aktualizovatNakup(novyNakup)
+
+            if (_currentNakup.value?.id == nakupId) {
+                _currentNakup.value = novyNakup
+            }
+        }
+    }
+
+    fun nastavViewType(nakupId: Int, newViewType: ViewTypeNakup) {
+        viewModelScope.launch {
+            val staryNakup = repository.getNakupById(nakupId) ?: return@launch
+            val novyNakup = staryNakup.copy(viewType = newViewType)
+            repository.aktualizovatNakup(novyNakup)
+
+            // Lokálně aktualizujeme stav, pokud zrovna máme nahraný tento sklad
+            if (_currentNakup.value?.id == nakupId) {
+                _currentNakup.value = novyNakup
             }
         }
     }

@@ -10,14 +10,31 @@
     <string name="ostatni_scan">Skenování čárového kódu</string>
 
     <!-- potraviny v katalogu -->
-    <string name="item_apples">Jablka</string>
-    <string name="item_bananas">Banány</string>
-    <string name="item_milk">Mléko</string>
-    <string name="item_butter">Máslo</string>
-    <string name="item_chicken_breast">Kuřecí prsa</string>
+    <string name="item_frozen_pizza">Mražená pizza</string>
+    <string name="item_ice_cream">Zmrzlina</string>
+    <string name="item_canned_beans">Fazolky v konzervě</string>
     <string name="item_pasta">Těstoviny</string>
+    <string name="item_apples">Jablka</string>
+    <string name="item_carrots">Mrkev</string>
+    <string name="item_milk">Mléko</string>
+    <string name="item_cheese">Sýr</string>
+    <string name="item_chicken_breast">Kuřecí prsa</string>
+    <string name="item_salmon">Losos</string>
     <string name="item_bread">Chléb</string>
+    <string name="item_croissant">Croissant</string>
     <string name="item_eggs">Vejce</string>
+    <string name="item_quail_eggs">Křepelčí vejce</string>
+    <string name="item_lentils">Čočka</string>
+    <string name="item_rice">Rýže</string>
+    <string name="item_ham">Šunka</string>
+    <string name="item_salami">Salám</string>
+    <string name="item_water">Voda</string>
+    <string name="item_orange_juice">Pomerančový džus</string>
+    <string name="item_lasagna">Lasagne</string>
+    <string name="item_curry_rice">Kari s rýží</string>
+    <string name="item_ketchup">Kečup</string>
+    <string name="item_mayonnaise">Majonéza</string>
+
 
 
 </resources>

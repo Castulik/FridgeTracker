@@ -92,5 +92,6 @@ dependencies {
     implementation (libs.androidx.appcompat.v161)
     implementation (libs.material)   // (nebo vyšší)
     implementation (libs.androidx.core.ktx.v1120)
+    implementation (libs.accompanist.permissions)
 
 }

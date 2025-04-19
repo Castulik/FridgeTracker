@@ -22,7 +22,7 @@ data class SeznamEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val nazev: String,
     val polozkaId: Int? = null,
-    val kategorie: Int?,
+    val kategorie: String,
     val checked: Boolean = false,
     // Nově: cizí klíč, odkazující na sloupec NakupEntity.id
     val nakupId: Int,
