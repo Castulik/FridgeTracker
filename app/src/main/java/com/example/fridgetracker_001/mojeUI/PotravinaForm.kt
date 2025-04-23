@@ -1048,6 +1048,7 @@ fun UnderlinedTextSelector(
                                         text = stringResource(option.stringRes),
                                         textAlign = TextAlign.Center,
                                         fontSize = 14.sp,
+                                        color = Color.Black,
                                         minLines = 2,                       // dovolíme až 2 řádky
                                         modifier = Modifier
                                             .fillMaxWidth()

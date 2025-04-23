@@ -1,6 +1,6 @@
 <resources>
     <!-- PotravinaItem -->
-    <string name="ostatni_pcs">pcs</string>
+    <string name="ostatni_pcs"> pcs</string>
     <string name="ostatni_dateStored">Date stored: %1$s</string>
 
     <!-- global search bar -->

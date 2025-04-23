@@ -83,7 +83,7 @@ object NotificationUtils {
     fun scheduleNext(context: Context) {
         // Zjistím, kolik milisekund zbývá do příštího 12:20 (nebo dnešního, pokud ještě nenastalo)
         val now = LocalDateTime.now()
-        val targetTime = LocalTime.of(8, 0)
+        val targetTime = LocalTime.of(22, 15)
         var nextRun = LocalDateTime.of(LocalDate.now(), targetTime)
 
         // Pokud je "teď" už po 12:20, tak to posuneme o 1 den

@@ -1,6 +1,6 @@
 <resources>
     <!-- PotravinaItem -->
-    <string name="ostatni_pcs">ks</string>
+    <string name="ostatni_pcs"> ks</string>
     <string name="ostatni_dateStored">Datum uskladnění: %1$s</string>
 
     <!-- global search bar -->

@@ -25,7 +25,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.notifikace.ExpirationCheckWorker
+import com.example.fridgetracker_001.notifikace.NotificationUtils
 import com.example.fridgetracker_001.ui.theme.cardGradient12
 import com.example.fridgetracker_001.ui.theme.cardGradient22
 import com.example.fridgetracker_001.ui.theme.cardPozadi
@@ -121,7 +126,7 @@ fun ProfilObrazovka(navController: NavController) {
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF104588)
                         ),) {
-                            Text(stringResource(R.string.czech_btn))
+                            Text(stringResource(R.string.czech_btn), color = Color.White)
                         }
                         Button(
                             onClick = { switchAppLocale("", activity) },
@@ -129,7 +134,7 @@ fun ProfilObrazovka(navController: NavController) {
                                 containerColor = Color(0xFF104588)
                             ),
                             ) {
-                            Text(stringResource(R.string.english_btn))
+                            Text(stringResource(R.string.english_btn), color = Color.White)
                         }
                     }
                 }
@@ -217,7 +222,11 @@ fun ProfilObrazovka(navController: NavController) {
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Stáhni PDF návod na aplikaci")
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("Testovací obrazovka", style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SpustitNotifikaciHnedButton()
+                }
             }
         }
     }
@@ -230,3 +239,22 @@ fun openAppSettings(context: Context) {
     }
     context.startActivity(intent)
 }
+
+@Composable
+fun SpustitNotifikaciHnedButton() {
+    val context = LocalContext.current
+
+    Button(onClick = {
+        val request = OneTimeWorkRequestBuilder<ExpirationCheckWorker>()
+            .build() // bez zpoždění = hned
+
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "ManualTestExpirationWorker",
+            ExistingWorkPolicy.REPLACE,
+            request
+        )
+    }) {
+        Text("Spustit kontrolu expirací")
+    }
+}
+
