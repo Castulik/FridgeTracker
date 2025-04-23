@@ -66,6 +66,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -221,67 +222,24 @@ fun SeznamObrazovka2(
 
                 sortedGrouped.forEach { (kategorie, polozkyVKategorii) ->
 
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp, start = 4.dp, end = 4.dp)
-                                .clip(RoundedCornerShape(5.dp))
-                                .background(currentNakup?.viewType!!.colors.x)
-                                .clickable { // Přepneme stav pro tuto kategorii
-                                    val newState = !(expandedCategories[kategorie] ?: true)
-                                    expandedCategories[kategorie] = newState
-
-                                    currentNakup?.let { it ->
-                                        val newMap = expandedCategories.toMap()
-                                        nakupViewModel.updateCategoryExpansionState(
-                                            it.id,
-                                            newMap
-                                        )
-                                    }
-                                }
-                                .animateContentSize()
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .padding(2.dp),
-                                    text = "${stringResource(KindOptionEnum.valueOf(kategorie).stringRes)} (${polozkyVKategorii.size})",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
-                                IconButton(
-                                    onClick = {
-                                        val newState = !(expandedCategories[kategorie] ?: true)
-                                        expandedCategories[kategorie] = newState
-
-                                        currentNakup?.let { it ->
-                                            val newMap = expandedCategories.toMap()
-                                            nakupViewModel.updateCategoryExpansionState(
-                                                it.id,
-                                                newMap
-                                            )
-                                        }
-                                    },
-                                    modifier = Modifier.size(30.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = if (expandedCategories[kategorie] == true)
-                                            Icons.Default.KeyboardArrowUp
-                                        else
-                                            Icons.Default.KeyboardArrowDown,
-                                        contentDescription = if (expandedCategories[kategorie] == true)
-                                            "Sbalit" else "Rozbalit",
+                    item(key = "header_$kategorie") {
+                        KategorieHeader(
+                            kategorie = kategorie,
+                            polozkyVKategoriiSize = polozkyVKategorii.size,
+                            currentNakup = currentNakup!!,
+                            expandedCategories = expandedCategories,
+                            onToggleExpanded = { kat, stav ->
+                                currentNakup?.let {
+                                    nakupViewModel.updateCategoryExpansionState(
+                                        it.id,
+                                        expandedCategories.toMap()
                                     )
                                 }
                             }
-                        }
+                        )
                     }
 
-                    item {
+                    item(key = "content_$kategorie") {
                         AnimatedVisibility(
                             visible = expandedCategories[kategorie] == true,
                             enter = expandVertically(),
@@ -289,63 +247,20 @@ fun SeznamObrazovka2(
                         ) {
                             Column {
                                 polozkyVKategorii.forEach { item ->
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(
-                                                top = 2.dp,
-                                                start = 4.dp,
-                                                end = 4.dp,
-                                                bottom = 2.dp
-                                            )
-                                            .clip(RoundedCornerShape(8.dp))
-                                            .background(if (item.checked) Color(0xFF4CAF50) else currentNakup?.viewType!!.colors.y)
-                                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
-                                    ) {
-                                        Checkbox(
-                                            checked = item.checked,
+                                    key(item.id) {
+                                        PolozkaRow(
+                                            item = item,
+                                            currentNakup = currentNakup!!,
                                             onCheckedChange = { isChecked ->
-                                                val updatedItem = item.copy(checked = isChecked)
-                                                seznamViewModel.updatePolozku(updatedItem)
-                                            }
-                                        )
-
-                                        IconButton(
-                                            onClick = {
+                                                seznamViewModel.updatePolozku(item.copy(checked = isChecked))
+                                            },
+                                            onEdit = { seznamViewModel.setEditItem(item) },
+                                            onDelete = { seznamViewModel.smazatPolozku(item) },
+                                            onDoSkladu = {
                                                 skladDialog = true
                                                 selectedItem = item.nazev
-                                            },
-                                            enabled = item.checked
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.lednicenakup),
-                                                contentDescription = null,
-                                                tint = if (item.checked) Color.Black else Color.Gray
-                                            )
-                                        }
-
-                                        Text(
-                                            text = "${item.nazev} (x${item.quantity})",
-                                            modifier = Modifier.weight(1f),
-                                            textDecoration = if (item.checked) TextDecoration.LineThrough
-                                            else TextDecoration.None
+                                            }
                                         )
-
-                                        IconButton(onClick = {
-                                            seznamViewModel.setEditItem(item)
-                                        }) {
-                                            Icon(Icons.Default.Edit, contentDescription = "edit")
-                                        }
-
-                                        IconButton(onClick = {
-                                            seznamViewModel.smazatPolozku(item)
-                                        }) {
-                                            Icon(
-                                                imageVector = Icons.Default.Delete,
-                                                contentDescription = null
-                                            )
-                                        }
                                     }
                                 }
                             }
@@ -514,4 +429,99 @@ fun getCurrentDate(): String {
     val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
     return "Nákup ze dne ${currentDateTime.format(formatter)}"
 }
+
+@Composable
+fun PolozkaRow(
+    item: SeznamEntity,
+    currentNakup: NakupEntity,
+    onCheckedChange: (Boolean) -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onDoSkladu: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (item.checked) Color(0xFF4CAF50) else currentNakup.viewType.colors.y)
+            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+    ) {
+        Checkbox(
+            checked = item.checked,
+            onCheckedChange = onCheckedChange
+        )
+        IconButton(onClick = onDoSkladu, enabled = item.checked) {
+            Icon(
+                painter = painterResource(id = R.drawable.lednicenakup),
+                contentDescription = null,
+                tint = if (item.checked) Color.Black else Color.Gray
+            )
+        }
+        Text(
+            text = "${item.nazev} (x${item.quantity})",
+            modifier = Modifier.weight(1f),
+            textDecoration = if (item.checked) TextDecoration.LineThrough else TextDecoration.None
+        )
+        IconButton(onClick = onEdit) {
+            Icon(Icons.Default.Edit, contentDescription = "edit")
+        }
+        IconButton(onClick = onDelete) {
+            Icon(Icons.Default.Delete, contentDescription = null)
+        }
+    }
+}
+
+@Composable
+fun KategorieHeader(
+    kategorie: String,
+    polozkyVKategoriiSize: Int,
+    currentNakup: NakupEntity,
+    expandedCategories: MutableMap<String, Boolean>,
+    onToggleExpanded: (String, Boolean) -> Unit
+) {
+    val isExpanded = expandedCategories[kategorie] ?: true
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
+            .clip(RoundedCornerShape(5.dp))
+            .background(currentNakup.viewType.colors.x)
+            .clickable {
+                val newState = !isExpanded
+                expandedCategories[kategorie] = newState
+                onToggleExpanded(kategorie, newState)
+            }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(2.dp),
+                text = "${stringResource(KindOptionEnum.valueOf(kategorie).stringRes)} ($polozkyVKategoriiSize)",
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            IconButton(
+                onClick = {
+                    val newState = !isExpanded
+                    expandedCategories[kategorie] = newState
+                    onToggleExpanded(kategorie, newState)
+                },
+                modifier = Modifier.size(30.dp)
+            ) {
+                Icon(
+                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = if (isExpanded) "Sbalit" else "Rozbalit",
+                )
+            }
+        }
+    }
+}
+
+
 

@@ -152,7 +152,7 @@ fun ProfilObrazovka(navController: NavController) {
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Nahlédni do své databáze čárových kódů")
+                Text("Nahlédni do své databáze čárových kódů ? NEEEEEE")
             }
 
             Box(
