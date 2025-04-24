@@ -25,4 +25,11 @@ class SeznamRepository(private val seznamDao: SeznamDao) {
     suspend fun getSeznamEntity(nazev: String, kategorie: String, nakupId: Int): SeznamEntity? {
         return seznamDao.getSeznamEntity(nazev, kategorie, nakupId)
     }
+
+    fun getSeznamSorted(
+        nakupId: Int,
+        catSort: String,
+        itemSort: String
+    ): Flow<List<SeznamEntity>> =
+        seznamDao.getSeznamSorted(nakupId, catSort, itemSort)
 }

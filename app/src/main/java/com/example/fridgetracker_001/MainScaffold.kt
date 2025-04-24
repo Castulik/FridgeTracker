@@ -2,6 +2,8 @@ package com.example.fridgetracker_001
 
 import android.graphics.BitmapShader
 import android.graphics.Shader
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -48,6 +50,7 @@ import com.example.fridgetracker_001.viewmodel.PotravinaViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MainScaffold(
     skladViewModel: SkladViewModel,

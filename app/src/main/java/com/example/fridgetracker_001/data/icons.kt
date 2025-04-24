@@ -78,42 +78,18 @@ enum class KindOptionEnum(
 
 enum class SortOption(
     val displayNameResId: Int,
-    val sortFunction: (List<SeznamEntity>) -> List<SeznamEntity>
 ) {
-    NAME(
-        R.string.name,
-        { it.sortedBy { item -> item.nazev.lowercase() } }
-    ),
-    QUANTITY(
-        R.string.sort_by_quantity,
-        { it.sortedByDescending { item -> item.quantity } }
-    ),
-    DEFAULT(
-        R.string.defaults,
-        { it } // žádné řazení
-    )
+    NAME(R.string.name,),
+    QUANTITY(R.string.sort_by_quantity,),
+    DEFAULT(R.string.defaults,)
 }
 
 enum class SortCategoryOption(
     val displayNameResId: Int,
-    val sortFunction: (Map<String, List<SeznamEntity>>) -> Map<String, List<SeznamEntity>>
 ) {
-    ALPHABETICAL(
-        R.string.alphabetical,
-        { it.toSortedMap() }
-    ),
-    COUNT(
-        R.string.count,
-        {
-            it.entries
-                .sortedByDescending { entry -> entry.value.size }
-                .associate { it.toPair() }
-        }
-    ),
-    DEFAULT(
-        R.string.defaults,
-        { it }
-    )
+    ALPHABETICAL(R.string.alphabetical,),
+    COUNT(R.string.count,),
+    DEFAULT(R.string.defaults,)
 }
 
 data class DualColor(

@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fridgetracker_001.data.entities.NakupEntity
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.obrazovky.toJsonString
@@ -14,14 +15,13 @@ import com.example.fridgetracker_001.repository.SeznamRepository
 import com.example.fridgetracker_001.repository.SkladRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SeznamViewModel(application: Application, private val repository: SeznamRepository) : AndroidViewModel(application) {
-
-    // Převod Flow na LiveData, pokud chcete ve ViewModelu pozorovat data přes LiveData:
-    //val seznamy = seznamRepository.seznamy.asLiveData()
-
     // Nebo lze přímo nechat jako Flow a pozorovat ve Compose přes collectAsState:
     val seznamyFlow = repository.seznamy
 
@@ -136,5 +136,25 @@ class SeznamViewModel(application: Application, private val repository: SeznamRe
             }
         }
     }
+
+    fun seznamMapFlow(nakup: NakupEntity): StateFlow<Map<String, List<SeznamEntity>>> =
+        repository.getSeznamSorted(
+            nakup.id,
+            nakup.sortKategorie.name,
+            nakup.sortPolozky.name
+        )
+            .map { list ->
+                // vytvoříme LinkedHashMap -> zachová pořadí, v jakém přišly řádky z SQL
+                val result = LinkedHashMap<String, MutableList<SeznamEntity>>()
+                list.forEach { item ->
+                    result.getOrPut(item.kategorie) { mutableListOf() }.add(item)
+                }
+                result                    // Map<String, List<SeznamEntity>>
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = emptyMap()
+            )
 
 }
