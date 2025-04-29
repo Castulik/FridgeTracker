@@ -190,7 +190,7 @@ fun SkladObrazovka2(
     val selectedPotraviny = remember { mutableStateListOf<PotravinaEntity>() }
 
     var selectPotravinyForAi by remember { mutableStateOf(false) }
-    var aiPromptTitle by remember { mutableStateOf("Co mám uvařit z těchto potravin: ") }
+    var aiPromptTitle by remember { mutableStateOf("Navrhni mi více receptů z následujícího seznamu potravin. Pokud bude potřeba, můžeš doplnit další běžné suroviny. Seznam:") }
     var aiPotravinyText by remember { mutableStateOf("") }
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()

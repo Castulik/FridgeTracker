@@ -86,6 +86,7 @@ fun MujTextField(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     errorMessage: String = "",
+    maxLines: Int = Int.MAX_VALUE,
     maxLength: Int = Int.MAX_VALUE,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -100,7 +101,7 @@ fun MujTextField(
         unfocusedIndicatorColor = Color.Transparent
     ),
     enabled: Boolean = true,
-    singleLine: Boolean = false,
+    singleLine: Boolean = true,
 ) {
     var internalIsError by remember { mutableStateOf(isError) }
 
@@ -116,9 +117,10 @@ fun MujTextField(
                     internalIsError = true
                 }
             },
+            maxLines = maxLines,
             placeholder = { Text(placeholder,color = Color.Black) },
             isError = internalIsError,
-            singleLine = true,
+            singleLine = singleLine,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             modifier = Modifier

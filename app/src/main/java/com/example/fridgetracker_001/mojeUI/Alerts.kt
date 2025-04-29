@@ -686,6 +686,8 @@ fun AiPromptDialog(
                         isError = isError,
                         errorMessage = "",
                         maxLength = 1000,
+                        singleLine = false,
+                        maxLines = Int.MAX_VALUE,
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Done
                         ),
@@ -728,6 +730,8 @@ fun AiPromptDialog(
                         isError = isError,
                         errorMessage = "",
                         maxLength = 1000,
+                        singleLine = false,
+                        maxLines = Int.MAX_VALUE,
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Done
                         ),

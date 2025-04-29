@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -82,7 +83,7 @@ fun SeznamObrazovka2(
     val isOnNakup by seznamViewModel.errorMsg.collectAsState()
     val itemEdit by seznamViewModel.edit.collectAsState()
     val currentNakup = nakupViewModel.currentNakup.collectAsState().value ?: return
-    val USE_NEW_ROW = false
+    val USE_NEW_ROW = true
 
     val groupedFlow = remember(
         currentNakup.id,
@@ -170,32 +171,17 @@ fun SeznamObrazovka2(
                         key = { it.id },
                         contentType = { "row" }
                     ) { item ->
-
-                        if (USE_NEW_ROW) {
-                            PolozkaRow2(
-                                item,
-                                currentNakup,
-                                { isChecked -> seznamViewModel.updatePolozku(item.copy(checked = isChecked)) },
-                                { seznamViewModel.setEditItem(item) },
-                                { seznamViewModel.smazatPolozku(item) },
-                                {
-                                    skladDialog = true
-                                    selectedItem = item.nazev
-                                }
-                            )
-                        } else {
-                            PolozkaRow(
-                                item,
-                                currentNakup,
-                                { isChecked -> seznamViewModel.updatePolozku(item.copy(checked = isChecked)) },
-                                { seznamViewModel.setEditItem(item) },
-                                { seznamViewModel.smazatPolozku(item) },
-                                {
-                                    skladDialog = true
-                                    selectedItem = item.nazev
-                                }
-                            )
-                        }
+                        PolozkaRow2(
+                            item,
+                            currentNakup,
+                            { isChecked -> seznamViewModel.updatePolozku(item.copy(checked = isChecked)) },
+                            { seznamViewModel.setEditItem(item) },
+                            { seznamViewModel.smazatPolozku(item) },
+                            {
+                                skladDialog = true
+                                selectedItem = item.nazev
+                            }
+                        )
                     }
                 }
             }
@@ -421,45 +407,48 @@ fun KategorieHeader(
 ) {
     val isExpanded = expandedCategories[kategorie] ?: true
 
+    // ① - Box dostane drawBehind ⇒ nakreslíme linku AŽ po vykreslení obsahu
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, start = 4.dp, end = 4.dp)
-            .clip(RoundedCornerShape(5.dp))
-            .background(currentNakup.viewType.colors.x)
             .clickable {
                 val newState = !isExpanded
                 expandedCategories[kategorie] = newState
                 onToggleExpanded(kategorie, newState)
             }
+            .drawBehind {
+                // černá čára úplně dole pod headerem
+                val stroke = 1.dp.toPx()
+                drawLine(
+                    color = Color.Black,
+                    start = Offset(0f, size.height - stroke / 2),
+                    end   = Offset(size.width, size.height - stroke / 2),
+                    strokeWidth = stroke
+                )
+            }
+            .padding(horizontal = 8.dp, vertical = 4.dp)   // trocha vzduchu
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(2.dp),
-                text = "${stringResource(KindOptionEnum.valueOf(kategorie).stringRes)} ($polozkyVKategoriiSize)",
+                text = "${stringResource(KindOptionEnum.valueOf(kategorie).stringRes)} " +
+                        "($polozkyVKategoriiSize)",
                 style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
             )
-            IconButton(
-                onClick = {
-                    val newState = !isExpanded
-                    expandedCategories[kategorie] = newState
-                    onToggleExpanded(kategorie, newState)
-                },
-                modifier = Modifier.size(30.dp)
-            ) {
-                Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = if (isExpanded) "Sbalit" else "Rozbalit",
-                )
-            }
+
+            Icon(
+                imageVector = if (isExpanded)
+                    Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = if (isExpanded) "Sbalit" else "Rozbalit",
+                modifier = Modifier
+                    .size(30.dp)
+            )
         }
     }
 }
+
 
 @Composable
 fun PolozkaRow2(
@@ -472,14 +461,29 @@ fun PolozkaRow2(
 ) {
     val noRipple = remember { MutableInteractionSource() }
 
+    // ---- barvy pruhu --------------------------------------------------------
+    val stripeColor = if (item.checked)            // ✓ = zelený
+        Color(0xFF4CAF50)
+    else                                           // ✗ = žlutý (vezmu žlutou, kterou už v appce máš)
+        currentNakup.viewType.colors.y
+    val stripeWidth = 6.dp                         // šířka proužku
+    // ------------------------------------------------------------------------
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
             .drawWithCache {
-                // uloží se do cache při kompozici
-                val bg = if (item.checked) Color(0xFFE0F2F1) else Color.Transparent
-                onDrawBehind { drawRect(bg) }
+                val stripePx = stripeWidth.toPx()
+
+                // celé se vygeneruje JEN při kompozici; při scrollu už se jen vykresluje
+                onDrawBehind {
+                    // 1) pruh
+                    drawRect(
+                        color = stripeColor,
+                        size  = Size(stripePx, size.height)
+                    )
+                }
             }
             .clickable(indication = null, interactionSource = noRipple) {
                 onCheckedChange(!item.checked)
@@ -519,21 +523,18 @@ fun PolozkaRow2(
             contentDescription = "edit",
             modifier = Modifier
                 .size(20.dp)
-                .clickable(indication = null, interactionSource = noRipple) {
-                    onEdit()
-                }
+                .clickable(indication = null, interactionSource = noRipple) { onEdit() }
         )
         Icon(
             Icons.Default.Delete,
             contentDescription = "delete",
             modifier = Modifier
                 .size(20.dp)
-                .clickable(indication = null, interactionSource = noRipple) {
-                    onDelete()
-                }
+                .clickable(indication = null, interactionSource = noRipple) { onDelete() }
         )
     }
 }
+
 
 
 

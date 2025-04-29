@@ -20,7 +20,7 @@ object IconRegistry {
         R.drawable.spiz,
         R.drawable.spiz2,
         R.drawable.spiz3,
-        R.drawable.vlastni,
+        R.drawable.lednicekreslena,
     )
 
     val foodList = listOf(
@@ -44,6 +44,10 @@ object IconRegistry {
         R.drawable.food_vajicko,
         R.drawable.food_yogurt,
         R.drawable.food_zmrzlina,
+        R.drawable.food_brokolice,
+        R.drawable.food_jahoda,
+        R.drawable.food_olivovyolej,
+        R.drawable.food_tofu,
     )
 
     data class KindOption(@StringRes val nameRes: Int, @DrawableRes val imageRes: Int)
