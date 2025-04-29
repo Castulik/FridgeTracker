@@ -5,13 +5,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -83,7 +86,6 @@ fun SeznamObrazovka2(
     val isOnNakup by seznamViewModel.errorMsg.collectAsState()
     val itemEdit by seznamViewModel.edit.collectAsState()
     val currentNakup = nakupViewModel.currentNakup.collectAsState().value ?: return
-    val USE_NEW_ROW = true
 
     val groupedFlow = remember(
         currentNakup.id,
@@ -171,7 +173,7 @@ fun SeznamObrazovka2(
                         key = { it.id },
                         contentType = { "row" }
                     ) { item ->
-                        PolozkaRow2(
+                        PolozkaRow(
                             item,
                             currentNakup,
                             { isChecked -> seznamViewModel.updatePolozku(item.copy(checked = isChecked)) },
@@ -345,7 +347,7 @@ fun PolozkaRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 2.dp)
+            .padding(horizontal = 8.dp, vertical = 2.dp)
             .clickable { onCheckedChange(!item.checked) }
             .clip(RoundedCornerShape(8.dp))
             .background(
@@ -361,6 +363,7 @@ fun PolozkaRow(
             onCheckedChange = onCheckedChange,
             interactionSource = remember { MutableInteractionSource() }, // bez ripple
         )
+
         Icon(
             painter = painterResource(R.drawable.lednicenakup),
             contentDescription = null,
@@ -373,23 +376,27 @@ fun PolozkaRow(
                     interactionSource = remember { MutableInteractionSource() }
                 ) { onDoSkladu() }
         )
+
         Text(
             text = "${item.nazev} (x${item.quantity})",
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).padding(start = 4.dp),
             textDecoration = if (item.checked) TextDecoration.LineThrough else TextDecoration.None
         )
-        Row {                 // Edit + Delete bez Buttonů
+
+        Row {
             Icon(
                 Icons.Default.Edit,
                 contentDescription = "edit",
-                Modifier
+                modifier = Modifier
                     .size(24.dp)
                     .clickable { onEdit() }
             )
+
             Icon(
                 Icons.Default.Delete,
                 contentDescription = "delete",
-                Modifier
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 4.dp)
                     .size(24.dp)
                     .clickable { onDelete() }
             )
@@ -407,26 +414,18 @@ fun KategorieHeader(
 ) {
     val isExpanded = expandedCategories[kategorie] ?: true
 
-    // ① - Box dostane drawBehind ⇒ nakreslíme linku AŽ po vykreslení obsahu
     Box(
         modifier = Modifier
+            .padding(horizontal = 4.dp, vertical = 4.dp)
             .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
             .clickable {
                 val newState = !isExpanded
                 expandedCategories[kategorie] = newState
                 onToggleExpanded(kategorie, newState)
             }
-            .drawBehind {
-                // černá čára úplně dole pod headerem
-                val stroke = 1.dp.toPx()
-                drawLine(
-                    color = Color.Black,
-                    start = Offset(0f, size.height - stroke / 2),
-                    end   = Offset(size.width, size.height - stroke / 2),
-                    strokeWidth = stroke
-                )
-            }
-            .padding(horizontal = 8.dp, vertical = 4.dp)   // trocha vzduchu
+            .background(currentNakup.viewType.colors.x)
+            .padding(2.dp)   // trocha vzduchu
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
