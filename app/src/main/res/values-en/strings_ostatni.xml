@@ -1,0 +1,39 @@
+<resources>
+    <!-- PotravinaItem -->
+    <string name="ostatni_pcs"> pcs</string>
+    <string name="ostatni_dateStored">Date stored: %1$s</string>
+
+    <!-- global search bar -->
+    <string name="ostatni_globalPlaceHolder">Enter name, category, or barcode</string>
+
+    <!-- scan -->
+    <string name="ostatni_scan">Barcode Scanning</string>
+
+
+    <!-- potraviny v katalogu -->
+    <string name="item_frozen_pizza">Frozen Pizza</string>
+    <string name="item_ice_cream">Ice Cream</string>
+    <string name="item_canned_beans">Canned Beans</string>
+    <string name="item_pasta">Pasta</string>
+    <string name="item_apples">Apples</string>
+    <string name="item_carrots">Carrots</string>
+    <string name="item_milk">Milk</string>
+    <string name="item_cheese">Cheese</string>
+    <string name="item_chicken_breast">Chicken Breast</string>
+    <string name="item_salmon">Salmon</string>
+    <string name="item_bread">Bread</string>
+    <string name="item_croissant">Croissant</string>
+    <string name="item_eggs">Eggs</string>
+    <string name="item_quail_eggs">Quail Eggs</string>
+    <string name="item_lentils">Lentils</string>
+    <string name="item_rice">Rice</string>
+    <string name="item_ham">Ham</string>
+    <string name="item_salami">Salami</string>
+    <string name="item_water">Water</string>
+    <string name="item_orange_juice">Orange Juice</string>
+    <string name="item_lasagna">Lasagna</string>
+    <string name="item_curry_rice">Curry with Rice</string>
+    <string name="item_ketchup">Ketchup</string>
+    <string name="item_mayonnaise">Mayonnaise</string>
+
+</resources>

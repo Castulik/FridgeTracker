@@ -129,7 +129,7 @@ fun ProfilObrazovka(navController: NavController) {
                             Text(stringResource(R.string.czech_btn), color = Color.White)
                         }
                         Button(
-                            onClick = { switchAppLocale("", activity) },
+                            onClick = { switchAppLocale("en", activity) },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF104588)
                             ),

@@ -1,0 +1,32 @@
+<resources>
+    <!-- AddItemDialog -->
+    <string name="as_dialog_title_add">Add Item</string>
+    <string name="as_dialog_title_edit">Edit Item</string>
+    <string name="as_placeholder_item_name">Please enter the name of the food item</string>
+    <string name="as_dialog_category_select">Please select a food category:</string>
+    <string name="as_dialog_category_edit">Please change the food category:</string>
+    <string name="as_dialog_error_no_category">A category must be selected in order to add a food item.</string>
+    <string name="as_dialog_already_in_list">This item is already included in the list.</string>
+    <string name="as_button_edit_from_catalog">Edit via catalog</string>
+    <string name="as_button_add_from_catalog">Add via catalog</string>
+    <string name="as_button_add">Add</string>
+    <string name="as_button_save">Save</string>
+    <string name="as_button_cancel">Cancel</string>
+    <string name="as_button_delete">Delete</string>
+    <string name="as_desc_remove_item">Remove from catalog</string>
+
+    <!-- SkladDialog -->
+    <string name="as_dialog_add_item_to_sklad">Add item: %1$s</string>
+    <string name="as_select_storage">Please select a storage from the list:</string>
+
+    <!-- SmazatAlert -->
+    <string name="as_alert_delete_title">Are you sure you want to remove this item from the catalog?</string>
+    <string name="as_alert_delete_text">This action cannot be undone.</string>
+
+    <!-- NakupAlert -->
+    <string name="as_alert_new_nakup_title">New Shopping List</string>
+    <string name="as_alert_new_nakup_text">Please add a new shopping list</string>
+
+    <string name="as_dialog_delete_item">Remove from catalog:</string>
+
+</resources>
