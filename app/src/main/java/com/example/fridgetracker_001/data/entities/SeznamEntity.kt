@@ -24,7 +24,7 @@ data class SeznamEntity(
     val polozkaId: Int? = null,
     val kategorie: String,
     val checked: Boolean = false,
-    // Nově: cizí klíč, odkazující na sloupec NakupEntity.id
+
     val nakupId: Int,
     val quantity: Int = 1
 )

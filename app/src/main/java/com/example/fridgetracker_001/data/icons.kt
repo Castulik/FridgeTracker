@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 
+
 object IconRegistry {
     val iconList = listOf(
         R.drawable.lednicka,

@@ -10,8 +10,6 @@ class Converters {
     fun toSortOption(value: String): SortOption =
         SortOption.entries.firstOrNull { it.name == value } ?: SortOption.DEFAULT
 
-
-
     @TypeConverter
     fun fromViewType(value: ViewTypeNakup): String {
         return value.name

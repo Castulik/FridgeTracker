@@ -140,21 +140,6 @@ fun ProfilObrazovka(navController: NavController) {
                 }
             }
 
-            // 3
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(5.dp)
-                    .clip(MaterialTheme.shapes.small)
-                    .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small)
-                    .background(gra)
-                    .padding(8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Nahlédni do své databáze čárových kódů ? NEEEEEE")
-            }
-
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -210,6 +195,7 @@ fun ProfilObrazovka(navController: NavController) {
                 }
             }
 
+            /*
             // 5
             Box(
                 modifier = Modifier
@@ -228,6 +214,8 @@ fun ProfilObrazovka(navController: NavController) {
                     SpustitNotifikaciHnedButton()
                 }
             }
+
+             */
         }
     }
 }
