@@ -67,7 +67,66 @@ enum class FoodIcon(@DrawableRes val resId: Int) {
     SUSHI(R.drawable.food_sushi),
 
     PARKY(R.drawable.food_parky),
-    SALAM(R.drawable.food_salam);
+    SALAM(R.drawable.food_salam),
+
+    CRAB(R.drawable.food_crab),
+    KEBAB(R.drawable.food_kebab),
+    LOSOS(R.drawable.food_losos),
+    MLETEMASO(R.drawable.food_mletemaso),
+
+    COCONUTMILK(R.drawable.food_coconutmilk),
+    OATMILK(R.drawable.food_oatmilk),
+    SYR(R.drawable.food_syr),
+
+    COKOLADA(R.drawable.food_cokolada),
+    COLA(R.drawable.food_cola),
+    CUSTOM2(R.drawable.food_custom2),
+    DZUS(R.drawable.food_dzus),
+    HONEY(R.drawable.food_honey),
+    HOUBY(R.drawable.food_houby),
+    NUT(R.drawable.food_nut),
+    OMACKA(R.drawable.food_omacka),
+    SOYSAUCE(R.drawable.food_soysauce),
+    WINE(R.drawable.food_wine),
+
+    ANANAS(R.drawable.food_ananas),
+    AVOCADO(R.drawable.food_avocado),
+    BANAN(R.drawable.food_banan),
+    BRAMBORY(R.drawable.food_brambory),
+    CABBAGE(R.drawable.food_cabbage),
+    CESNEK(R.drawable.food_cesnek),
+    CIBULE(R.drawable.food_cibule),
+    CITRON(R.drawable.food_citron),
+    CORN(R.drawable.food_corn),
+    GINGER(R.drawable.food_ginger),
+    GRAPEFRUIT(R.drawable.food_grapefruit),
+    GROUPVEGE(R.drawable.food_groupvege),
+    HRUSKA(R.drawable.food_hruska),
+    CHILLI(R.drawable.food_chilli),
+    JABLKO(R.drawable.food_jablko),
+    KIWI(R.drawable.food_kiwi),
+    MANGO(R.drawable.food_mango),
+    OKURKA(R.drawable.food_okurka),
+    PAPRIKA(R.drawable.food_paprika),
+    POMERANC(R.drawable.food_pomeranc),
+    SCALLIONS(R.drawable.food_scallions),
+    TOMATOES(R.drawable.food_tomatoes),
+
+    BAGETA(R.drawable.food_bageta),
+    CROISSANT(R.drawable.food_croissant),
+    CHLEBA(R.drawable.food_chleba),
+    PECIVOOBECNE(R.drawable.food_pecivoobecne),
+    PRETZEL(R.drawable.food_pretzel),
+
+    ARASIDMASLO(R.drawable.food_arasidmaslo),
+    CEREAL(R.drawable.food_cereal),
+    SUNFLOWEROIL(R.drawable.food_sunfloweroil),
+
+    EGSSS(R.drawable.food_eggsss),
+    VOLSKE(R.drawable.food_egsvolske);
+
+
+
 
 
 
@@ -131,32 +190,32 @@ enum class KindOptionEnum(
     NONPERISHABLE(
         R.string.kind_nonperishable,
         R.drawable.kind_trvanlive,
-        listOf(FoodIcon.KONZERVA, FoodIcon.RYZE, FoodIcon.TOFU, FoodIcon.OLIVOVY_OLEJ)
+        listOf(FoodIcon.KONZERVA, FoodIcon.RYZE, FoodIcon.TOFU, FoodIcon.OLIVOVY_OLEJ, FoodIcon.CEREAL, FoodIcon.SUNFLOWEROIL)
     ),
     FRUIT_VEG(
         R.string.kind_fruit_veg,
         R.drawable.kind_ovocezelenina,
-        listOf(FoodIcon.MELOUN, FoodIcon.JAHODA, FoodIcon.BROKOLICE, FoodIcon.MRKEV)
+        listOf(FoodIcon.MELOUN, FoodIcon.JAHODA, FoodIcon.BROKOLICE, FoodIcon.MRKEV, FoodIcon.ANANAS, FoodIcon.AVOCADO, FoodIcon.BANAN, FoodIcon.BRAMBORY, FoodIcon.CABBAGE, FoodIcon.CESNEK, FoodIcon.CIBULE, FoodIcon.CITRON, FoodIcon.CORN, FoodIcon.GINGER, FoodIcon.GRAPEFRUIT, FoodIcon.GROUPVEGE, FoodIcon.HRUSKA, FoodIcon.CHILLI, FoodIcon.JABLKO, FoodIcon.KIWI, FoodIcon.MANGO, FoodIcon.OKURKA, FoodIcon.PAPRIKA, FoodIcon.POMERANC, FoodIcon.SCALLIONS, FoodIcon.TOMATOES)
     ),
     DAIRY(
         R.string.kind_dairy,
         R.drawable.kind_mlecne,
-        listOf(FoodIcon.MLEKO, FoodIcon.MLEKO2, FoodIcon.MASLO, FoodIcon.MOZZARELA, FoodIcon.YOGURT)
+        listOf(FoodIcon.MLEKO, FoodIcon.MLEKO2, FoodIcon.MASLO, FoodIcon.MOZZARELA, FoodIcon.YOGURT, FoodIcon.COCONUTMILK, FoodIcon.OATMILK, FoodIcon.SYR)
     ),
     MEAT_FISH(
         R.string.kind_meat_fish,
         R.drawable.kind_masoryba,
-        listOf(FoodIcon.BEEF, FoodIcon.STEAK, FoodIcon.SLANINA, FoodIcon.RYBA, FoodIcon.KURE)
+        listOf(FoodIcon.BEEF, FoodIcon.STEAK, FoodIcon.SLANINA, FoodIcon.RYBA, FoodIcon.KURE, FoodIcon.CRAB, FoodIcon.KEBAB, FoodIcon.LOSOS, FoodIcon.MLETEMASO)
     ),
     BAKERY(
         R.string.kind_bakery,
         R.drawable.kind_pecivo,
-        listOf(FoodIcon.SANDWICH, FoodIcon.PIZZA)
+        listOf(FoodIcon.BAGETA, FoodIcon.CROISSANT, FoodIcon.CHLEBA, FoodIcon.PECIVOOBECNE, FoodIcon.PRETZEL)
     ),
     EGGS(
         R.string.kind_eggs,
         R.drawable.kind_vejce,
-        listOf(FoodIcon.VAJICKO)
+        listOf(FoodIcon.VAJICKO, FoodIcon.EGSSS, FoodIcon.VOLSKE)
     ),
     GRAINS_LEGUMES(
         R.string.kind_grains_legumes,
@@ -176,7 +235,7 @@ enum class KindOptionEnum(
     OTHER(
         R.string.kind_other,
         R.drawable.kind_ostatni,
-        listOf(FoodIcon.CUSTOM, FoodIcon.ZMRZLINA)
+        listOf(FoodIcon.CUSTOM, FoodIcon.ZMRZLINA, FoodIcon.COKOLADA, FoodIcon.COLA, FoodIcon.CUSTOM2, FoodIcon.DZUS, FoodIcon.HONEY, FoodIcon.HOUBY, FoodIcon.NUT, FoodIcon.OMACKA, FoodIcon.SOYSAUCE, FoodIcon.WINE)
     ),
     UNKNOWN(
         R.string.kind_unknown,
