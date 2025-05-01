@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.example.fridgetracker_001.data.FoodIcon
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -39,13 +40,13 @@ interface PotravinaDao {
         UPDATE potravina_table
         SET nazev = :newNazev,
             druh = :newDruh,
-            potravinaIconaId = :newIcon
+            potravinaIkona = :newIcon
         WHERE code = :kod
     """)
     suspend fun aktualizovatVsechnySDanymKodem(
         kod: String,
         newNazev: String,
         newDruh: String,
-        newIcon: Int
+        newIcon: FoodIcon
     )
 }

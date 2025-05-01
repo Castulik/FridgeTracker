@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
@@ -137,18 +138,16 @@ fun PridatPotravinuObrazovka2(
         }
     }
     // 1) Při prvním zobrazení inicializujeme "pridavanaPotravina"
+
     LaunchedEffect(Unit) {
-        // Pokud nechcete při každém znovuvykreslení "resetovat",
-        // podmíněte to třeba na isAlreadyInited vlajku ve ViewModelu,
-        // abyste jednou nastavili a pak už to neměnili.
         potravinaViewModel.initPridavanaPotravina(skladId, nazevPolozky, barcodePolozky)
     }
+
+
     // 2) Odebíráme stav potraviny z ViewModelu:
     val potravinaState = potravinaViewModel.pridavanaPotravina
 
     BackHandler {
-        // Vaše akce, která se má stát při stisku HW tlačítka Back
-        // Třeba to samé, co onCancel:
         potravinaViewModel.resetPridavanaPotravina()
         navController.navigate("SkladObrazovka/$skladId")
     }
@@ -168,13 +167,9 @@ fun PridatPotravinuObrazovka2(
                 potravinaViewModel.updatePridavanaPotravina(updated)
             },
             isEdit = false,
-            isAdd = isAdd,
-            onDialogChange = { value ->
-                if (value) {
-                    potravinaViewModel.openDruhDialog()
-                } else {
-                    potravinaViewModel.closeDruhDialog()
-                }
+            isAdd = false,
+            onKategorieNavigate = {
+                navController.navigate("kategorieObrazovka/$skladId/form")
             },
             onSubmit = {
                 potravinaViewModel.closeDruhDialog()
@@ -193,7 +188,8 @@ fun PridatPotravinuObrazovka2(
                 val newRouteAfterScan = "pridatPotravinu/$skladId?barcode="
                 navController.navigate("scanner?returnRoute=$newRouteAfterScan")
             },
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
+            title = stringResource(R.string.tb_new_food)
         )
     }
 }

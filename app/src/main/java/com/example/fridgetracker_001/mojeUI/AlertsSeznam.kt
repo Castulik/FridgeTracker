@@ -1,5 +1,6 @@
 package com.example.fridgetracker_001.mojeUI
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -42,7 +44,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -133,15 +138,35 @@ fun AddItemDialog(
                     )
 
                 if(option) {
-
                     Column {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center, // zarovná středově
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp)
                         ) {
+
+                            Text(
+                                text = "$quantity",
+                                fontSize = 30.sp,
+                                color = Color.Black,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .weight(0.8f)
+                                    .height(50.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(cardPozadi) // jemná tyrkysová
+                                    .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+                                    .padding(8.dp),
+                                style = LocalTextStyle.current.copy(
+                                    shadow = Shadow(
+                                        color = Color.Gray,
+                                        offset = Offset(2f, 2f),
+                                        blurRadius = 4f
+                                    )
+                                )
+                            )
+
+
                             Button(
                                 shape = RoundedCornerShape(10.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BCD4)),
@@ -150,8 +175,9 @@ fun AddItemDialog(
                                 },
                                 enabled = quantity > 1,
                                 modifier = Modifier
-                                    .height(45.dp)
-                                    .padding(horizontal = 5.dp)
+                                    .weight(0.5f)
+                                    .height(50.dp)
+                                    .padding(start = 15.dp)
                                     .border(2.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
                                 contentPadding = PaddingValues(0.dp)
                             ) {
@@ -163,18 +189,6 @@ fun AddItemDialog(
                                 )
                             }
 
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Text(
-                                text = "$quantity",
-                                fontSize = 30.sp,
-                                color = Color.Black,
-                                modifier = Modifier.width(40.dp),
-                                textAlign = TextAlign.Center
-                            )
-
-                            Spacer(modifier = Modifier.width(16.dp))
-
                             Button(
                                 shape = RoundedCornerShape(10.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BCD4)),
@@ -182,8 +196,9 @@ fun AddItemDialog(
                                     quantity++
                                 },
                                 modifier = Modifier
-                                    .height(45.dp)
-                                    .padding(horizontal = 5.dp)
+                                    .weight(0.5f)
+                                    .height(50.dp)
+                                    .padding(start = 15.dp)
                                     .border(2.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
                                 contentPadding = PaddingValues(0.dp)
                             ) {
@@ -194,40 +209,6 @@ fun AddItemDialog(
                                     tint = Color.Black
                                 )
                             }
-                        }
-
-                        Row {
-                        Button(
-                            onClick = { onNavigate();onDismiss() },
-                            // Tady si nastavíte design tlačítka
-                            shape = RoundedCornerShape(10.dp),   // zaoblené rohy
-                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF00BCD4), // tyrkysová
-                                contentColor = Color.White          // barva textu
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                                .padding(horizontal = 2.dp, vertical = 2.dp)
-                                .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp))
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceEvenly
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add, // Ikona ruky (můžete změnit)
-                                    contentDescription = "Click Icon",
-                                    modifier = Modifier.size(30.dp)
-                                )
-                                Text(
-                                    text = if (isEdit) stringResource(R.string.as_button_edit_from_catalog) else stringResource(R.string.as_button_add_from_catalog),
-                                    fontSize = 17.sp,
-                                    maxLines = 1
-                                )
-                            }
-                        }
                         }
                     }
                 }
@@ -268,6 +249,46 @@ fun AddItemDialog(
                     }
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if(option) {
+                    Row {
+                        Button(
+                            onClick = { onNavigate();onDismiss() },
+                            // Tady si nastavíte design tlačítka
+                            shape = RoundedCornerShape(10.dp),   // zaoblené rohy
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF00BCD4), // tyrkysová
+                                contentColor = Color.White          // barva textu
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp)
+                                .padding(horizontal = 2.dp, vertical = 2.dp)
+                                .border(2.dp, Color.Black, shape = RoundedCornerShape(10.dp))
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add, // Ikona ruky (můžete změnit)
+                                    contentDescription = "Click Icon",
+                                    modifier = Modifier.size(30.dp)
+                                )
+                                Text(
+                                    text = if (isEdit) stringResource(R.string.as_button_edit_from_catalog) else stringResource(
+                                        R.string.as_button_add_from_catalog
+                                    ),
+                                    fontSize = 17.sp,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    }
+                }
+
                 if (isDelete){
                     Text(text = stringResource(R.string.as_dialog_delete_item), color = Color.Black)
                     IconButton(onClick = {
@@ -299,8 +320,6 @@ fun AddItemDialog(
                         fontSize = 15.sp
                     )
                 }
-
-
             }
         },
         confirmButton = {

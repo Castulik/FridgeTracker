@@ -8,6 +8,77 @@ import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 
 
+enum class SkladIcon(@DrawableRes val resId: Int) {
+    LEDNICKA(R.drawable.lednicka),
+    LEDNICE(R.drawable.lednice),
+    LEDNICE2(R.drawable.lednice2),
+    LEDNICE3(R.drawable.lednice3),
+    LEDNICE4(R.drawable.lednice4),
+    LEDNICE5(R.drawable.lednice5),
+    MRAZAK(R.drawable.mrazak),
+    MRAZAK2(R.drawable.mrazak2),
+    SPIZ(R.drawable.spiz),
+    SPIZ2(R.drawable.spiz2),
+    SPIZ3(R.drawable.spiz3),
+    LEDNICE_KRESLENA(R.drawable.lednicekreslena);
+
+    companion object {
+        fun fromName(name: String): SkladIcon =
+            entries.find { it.name == name } ?: LEDNICKA  // fallback na výchozí ikonu
+    }
+}
+
+enum class FoodIcon(@DrawableRes val resId: Int) {
+    BEEF(R.drawable.food_beef),
+    CUSTOM(R.drawable.food_custom),
+    HRANOLKY(R.drawable.food_hranolky),
+    KONZERVA(R.drawable.food_konzerva),
+    KURE(R.drawable.food_kure),
+    MASLO(R.drawable.food_maslo),
+    MELOUN(R.drawable.food_meloun),
+    MLEKO(R.drawable.food_mleko),
+    MLEKO2(R.drawable.food_mleko2),
+    MOZZARELA(R.drawable.food_mozzarela),
+    MRKEV(R.drawable.food_mrkev),
+    PIZZA(R.drawable.food_pizza),
+    RYBA(R.drawable.food_ryba),
+    RYZE(R.drawable.food_ryze),
+    SANDWICH(R.drawable.food_sandwich),
+    SLANINA(R.drawable.food_slanina),
+    STEAK(R.drawable.food_steak),
+    VAJICKO(R.drawable.food_vajicko),
+    YOGURT(R.drawable.food_yogurt),
+    ZMRZLINA(R.drawable.food_zmrzlina),
+    BROKOLICE(R.drawable.food_brokolice),
+    JAHODA(R.drawable.food_jahoda),
+    OLIVOVY_OLEJ(R.drawable.food_olivovyolej),
+    TOFU(R.drawable.food_tofu),
+    FROZEN(R.drawable.food_frozen),
+
+    GREEKSALAD(R.drawable.food_greeksalad),
+    HAMBURGER(R.drawable.food_hamburger),
+    HOTDOG(R.drawable.food_hotdog),
+    LASAGNA(R.drawable.food_lasagna),
+    NOODLES(R.drawable.food_noodles),
+    OMELETTE(R.drawable.food_omelete),
+    PALACINKY(R.drawable.food_palacinky),
+    SALAD(R.drawable.food_salad),
+    SPAGHETTI(R.drawable.food_spaghetti),
+    SUSHI(R.drawable.food_sushi),
+
+    PARKY(R.drawable.food_parky),
+    SALAM(R.drawable.food_salam);
+
+
+
+
+
+    companion object {
+        fun fromName(name: String): FoodIcon =
+            entries.find { it.name == name } ?: CUSTOM
+    }
+}
+
 object IconRegistry {
     val iconList = listOf(
         R.drawable.lednicka,
@@ -50,28 +121,67 @@ object IconRegistry {
         R.drawable.food_olivovyolej,
         R.drawable.food_tofu,
     )
-
-    data class KindOption(@StringRes val nameRes: Int, @DrawableRes val imageRes: Int)
-
 }
 
 enum class KindOptionEnum(
     val stringRes: Int,
-    val imageRes: Int
+    val imageRes: Int,
+    val icons: List<FoodIcon> = emptyList()
 ) {
-    FROZEN(R.string.kind_frozen, R.drawable.kind_mrazene),
-    NONPERISHABLE(R.string.kind_nonperishable, R.drawable.kind_trvanlive),
-    FRUIT_VEG(R.string.kind_fruit_veg, R.drawable.kind_ovocezelenina),
-    DAIRY(R.string.kind_dairy, R.drawable.kind_mlecne),
-    MEAT_FISH(R.string.kind_meat_fish, R.drawable.kind_masoryba),
-    BAKERY(R.string.kind_bakery, R.drawable.kind_pecivo),
-    EGGS(R.string.kind_eggs, R.drawable.kind_vejce),
-    GRAINS_LEGUMES(R.string.kind_grains_legumes, R.drawable.kind_lusteniny),
-    DELI(R.string.kind_deli, R.drawable.kind_lahudky),
-    DRINKS(R.string.kind_drinks, R.drawable.kind_napoje),
-    READY_MEALS(R.string.kind_ready_meals, R.drawable.kind_hotovajidla),
-    OTHER(R.string.kind_other, R.drawable.kind_ostatni),
-    UNKNOWN(R.string.kind_unknown, R.drawable.minus);
+    NONPERISHABLE(
+        R.string.kind_nonperishable,
+        R.drawable.kind_trvanlive,
+        listOf(FoodIcon.KONZERVA, FoodIcon.RYZE, FoodIcon.TOFU, FoodIcon.OLIVOVY_OLEJ)
+    ),
+    FRUIT_VEG(
+        R.string.kind_fruit_veg,
+        R.drawable.kind_ovocezelenina,
+        listOf(FoodIcon.MELOUN, FoodIcon.JAHODA, FoodIcon.BROKOLICE, FoodIcon.MRKEV)
+    ),
+    DAIRY(
+        R.string.kind_dairy,
+        R.drawable.kind_mlecne,
+        listOf(FoodIcon.MLEKO, FoodIcon.MLEKO2, FoodIcon.MASLO, FoodIcon.MOZZARELA, FoodIcon.YOGURT)
+    ),
+    MEAT_FISH(
+        R.string.kind_meat_fish,
+        R.drawable.kind_masoryba,
+        listOf(FoodIcon.BEEF, FoodIcon.STEAK, FoodIcon.SLANINA, FoodIcon.RYBA, FoodIcon.KURE)
+    ),
+    BAKERY(
+        R.string.kind_bakery,
+        R.drawable.kind_pecivo,
+        listOf(FoodIcon.SANDWICH, FoodIcon.PIZZA)
+    ),
+    EGGS(
+        R.string.kind_eggs,
+        R.drawable.kind_vejce,
+        listOf(FoodIcon.VAJICKO)
+    ),
+    GRAINS_LEGUMES(
+        R.string.kind_grains_legumes,
+        R.drawable.kind_lusteniny,
+        listOf(FoodIcon.RYZE, FoodIcon.TOFU)
+    ),
+    DELI(
+        R.string.kind_deli,
+        R.drawable.kind_lahudky,
+        listOf(FoodIcon.SLANINA, FoodIcon.PARKY, FoodIcon.SALAM)
+    ),
+    READY_MEALS(
+        R.string.kind_ready_meals,
+        R.drawable.kind_hotovajidla,
+        listOf(FoodIcon.PIZZA, FoodIcon.SANDWICH, FoodIcon.HRANOLKY, FoodIcon.LASAGNA, FoodIcon.NOODLES, FoodIcon.OMELETTE, FoodIcon.PALACINKY, FoodIcon.SALAD, FoodIcon.SPAGHETTI, FoodIcon.SUSHI, FoodIcon.GREEKSALAD, FoodIcon.HAMBURGER, FoodIcon.HOTDOG)
+    ),
+    OTHER(
+        R.string.kind_other,
+        R.drawable.kind_ostatni,
+        listOf(FoodIcon.CUSTOM, FoodIcon.ZMRZLINA)
+    ),
+    UNKNOWN(
+        R.string.kind_unknown,
+        R.drawable.minus
+    );
 
     companion object {
         fun fromString(value: String): KindOptionEnum =

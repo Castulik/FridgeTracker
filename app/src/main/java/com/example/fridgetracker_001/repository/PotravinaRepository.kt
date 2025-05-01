@@ -1,5 +1,6 @@
 package com.example.fridgetracker_001.repository
 
+import com.example.fridgetracker_001.data.FoodIcon
 import com.example.fridgetracker_001.data.dao.PotravinaDao
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
 import kotlinx.coroutines.flow.Flow
@@ -49,7 +50,7 @@ class PotravinaRepository(private val potravinaDao: PotravinaDao) {
         kod: String,
         newNazev: String,
         newDruh: String,
-        newIcon: Int
+        newIcon: FoodIcon
     ) {
         potravinaDao.aktualizovatVsechnySDanymKodem(kod, newNazev, newDruh, newIcon)
     }

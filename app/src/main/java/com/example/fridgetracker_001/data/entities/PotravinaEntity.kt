@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.fridgetracker_001.data.FoodIcon
 
 @Entity(
     tableName = "potravina_table",
@@ -24,7 +25,7 @@ data class PotravinaEntity(
     var mnozstvi: String,                               // mnozstvi potraviny
     var datumSpotreby: String,                       // Datum spotřeby ve formátu "YYYY-MM-DD"
     var datumPridani: String,                           // Datum přidání do skladu ve formátu "YYYY-MM-DD"
-    var potravinaIconaId: Int,                          // ID ikony potraviny
+    var potravinaIkona: FoodIcon,                          // ID ikony potraviny
     var vaha: String,
     var jednotky: String,
     var poznamka: String,

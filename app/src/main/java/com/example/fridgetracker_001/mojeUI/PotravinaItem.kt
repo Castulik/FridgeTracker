@@ -106,7 +106,7 @@ fun PotravinaItem(
                 ) {
                     // Obrázek
                     Image(
-                        painter = painterResource(id = potravina.potravinaIconaId),
+                        painter = painterResource(id = potravina.potravinaIkona.resId),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
@@ -279,7 +279,7 @@ fun PotravinaItem(
             ) {
                 // Obrázek
                 Image(
-                    painter = painterResource(id = potravina.potravinaIconaId),
+                    painter = painterResource(id = potravina.potravinaIkona.resId),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
@@ -437,7 +437,7 @@ fun PotravinaItem(
                             contentAlignment = Alignment.BottomCenter
                         ) {
                             Image(
-                                painter = painterResource(id = potravina.potravinaIconaId),
+                                painter = painterResource(id = potravina.potravinaIkona.resId),
                                 contentDescription = "obrazek potraviny",
                                 modifier = Modifier
                                     .size(60.dp),

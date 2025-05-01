@@ -3,6 +3,7 @@ package com.example.fridgetracker_001.data.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.fridgetracker_001.data.DEFAULT_CATEGORY_STATE
+import com.example.fridgetracker_001.data.SkladIcon
 
 //Entity je třída, která definuje strukturu tabulky v databázi. Každá instance entity odpovídá jednomu řádku v tabulce.
 @Entity(tableName = "sklad_table")  //@Entity: Označuje, že tato třída je tabulkou v databázi.
@@ -12,7 +13,7 @@ data class SkladEntity(
     var nazev: String,                                  // Sloupec názvu skladu
     var expirace1: String = "7",                             // Sloupec expirace
     var expirace2: String = "3",                           // Sloupec expirace
-    var iconResourceId: Int,                                // volitelné
+    var icon: SkladIcon,                                // volitelné
     var iconPath: String? = null,                       // volitelné - pokud ukládáme do souboru
     var preferovane: Boolean = false,
     val poradi: Int = 1,

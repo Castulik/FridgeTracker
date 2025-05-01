@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import com.example.fridgetracker_001.data.SkladIcon
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.mojeUI.SkladFormBoxWithConstraints
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
@@ -33,7 +34,7 @@ fun PridatSkladObrazovka2(
     // Výchozí "prázdný" sklad
     val defaultSklad = SkladEntity(
         nazev = "",
-        iconResourceId = R.drawable.lednicka,
+        icon = SkladIcon.LEDNICKA,
         poradi = maxPoradi + 1,
         preferovane = false
     )

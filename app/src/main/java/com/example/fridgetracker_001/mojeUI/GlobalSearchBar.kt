@@ -196,7 +196,7 @@ fun GlobalSearchBar(
                             .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                     ) {
                         Image(
-                            painter = painterResource(id = potravina.potravinaIconaId),
+                            painter = painterResource(id = potravina.potravinaIkona.resId),
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
@@ -402,7 +402,7 @@ fun GlobalSearchBar2(
                                 .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                         ) {
                             Image(
-                                painter = painterResource(id = potravina.potravinaIconaId),
+                                painter = painterResource(id = potravina.potravinaIkona.resId),
                                 contentDescription = null,
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier

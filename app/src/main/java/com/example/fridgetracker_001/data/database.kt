@@ -23,7 +23,7 @@ import com.example.fridgetracker_001.data.entities.SkladEntity
 
 //Anotace @Database označuje třídu jako databázi Room.
 //entities = databaze bude obsahovat tabulku reprezentovanou třídou SkladEntity.
-@Database(entities = [SkladEntity::class, PotravinaEntity::class, CodeEntity::class, SeznamEntity::class, NakupEntity::class, PolozkyEntity::class], version = 48, exportSchema = false)
+@Database(entities = [SkladEntity::class, PotravinaEntity::class, CodeEntity::class, SeznamEntity::class, NakupEntity::class, PolozkyEntity::class], version = 50, exportSchema = false)
 @TypeConverters(Converters::class)
 //Deklarace abstraktní třídy SkladDatabase, která dědí od RoomDatabase.
 //Slouží jako hlavní přístupový bod k databázi. Room z této třídy vygeneruje konkrétní implementaci.

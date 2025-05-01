@@ -29,6 +29,8 @@ import androidx.navigation.navArgument
 import com.example.fridgetracker_001.mojeUI.CustomBottomBar
 import com.example.fridgetracker_001.obrazovky.EditPotravinaObrazovka2
 import com.example.fridgetracker_001.obrazovky.EditSkladObrazovka2
+import com.example.fridgetracker_001.obrazovky.KategorieObrazovka
+import com.example.fridgetracker_001.obrazovky.KategorieObrazovkaEdit
 import com.example.fridgetracker_001.viewmodel.SkladViewModel
 import com.example.fridgetracker_001.obrazovky.MojePotravinyObrazovka
 import com.example.fridgetracker_001.obrazovky.PridatPotravinuObrazovka2
@@ -50,7 +52,6 @@ import com.example.fridgetracker_001.viewmodel.PotravinaViewModel
 import com.example.fridgetracker_001.viewmodel.SeznamViewModel
 
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MainScaffold(
     skladViewModel: SkladViewModel,
@@ -104,7 +105,9 @@ fun MainScaffold(
                     "editPotravinu/{potravinaId}?barcode={barcode}" -> drawRect(brush = gradient2, size = size)
                     "nastaveniskladu/{skladId}" -> drawRect(brush = gradient3, size = size)
                     "skladpridat" -> drawRect(brush = gradient3, size = size)
-                    "scanner?returnRoute={returnRoute}&param={param}" -> drawRect(brush = gradient2, size = size)
+                    "scanner?returnRoute={returnRoute}&skladId={skladId}" -> drawRect(brush = gradient2, size = size)
+                    "KategorieObrazovka/{skladId}/{fromScreen}?nazev={nazev}&barcode={barcode}" -> drawRect(brush = gradient2, size = size)
+                    "KategorieObrazovkaEdit/{potravinaId}" -> drawRect(brush = gradient2, size = size)
                     else -> drawRect(brush = shaderBrush, size = size)
                 }
                 // Pak vykreslíme vlastní obsah
@@ -249,6 +252,50 @@ fun MainScaffold(
                 }
 
                 composable(
+                    route = "KategorieObrazovka/{skladId}/{fromScreen}?nazev={nazev}&barcode={barcode}",
+                    arguments = listOf(
+                        navArgument("skladId") { type = NavType.IntType },
+                        navArgument("nazev") {
+                            type = NavType.StringType
+                            defaultValue = ""           // Pokud param nepřijde, použije se ""
+                            nullable = true
+                        },
+                        navArgument("barcode") {
+                            type = NavType.StringType
+                            defaultValue = ""           // Pokud param nepřijde, použije se ""
+                            nullable = true
+                        }
+                    )
+                ) { backStackEntry ->
+                    val skladId = backStackEntry.arguments?.getInt("skladId") ?: 0
+                    val fromScreen = backStackEntry.arguments?.getString("fromScreen") ?: "fromForm"
+                    val nazev = backStackEntry.arguments?.getString("nazev") ?: ""
+                    val barcode  = backStackEntry.arguments?.getString("barcode") ?: ""
+
+                    KategorieObrazovka(
+                        skladId = skladId,
+                        potravinaViewModel = potravinaViewModel,
+                        navController = controler,
+                        fromScreen = fromScreen,
+                        nazevPolozky = nazev,
+                        barcodePolozky = barcode
+                    )
+                }
+
+                composable(
+                    route = "KategorieObrazovkaEdit/{potravinaId}",
+                    arguments = listOf(navArgument("potravinaId") { type = NavType.IntType })
+                ) { backStackEntry ->
+                    val potravinaId = backStackEntry.arguments?.getInt("potravinaId") ?: 0
+
+                    KategorieObrazovkaEdit(
+                        potravinaId = potravinaId,
+                        potravinaViewModel = potravinaViewModel,
+                        navController = controler
+                    )
+                }
+
+                composable(
                     route = "pridatPotravinu/{skladId}?nazev={nazev}&barcode={barcode}",
                     arguments = listOf(
                         navArgument("skladId") { type = NavType.IntType },
@@ -321,25 +368,26 @@ fun MainScaffold(
                 }
 
                 composable(
-                    route = "scanner?returnRoute={returnRoute}&param={param}",
+                    route = "scanner?returnRoute={returnRoute}&skladId={skladId}",
                     arguments = listOf(
                         navArgument("returnRoute") {
                             type = NavType.StringType
                             defaultValue = ""
                         },
-                        navArgument("param") {
+                        navArgument("skladId") {
                             type = NavType.IntType
-                            defaultValue = -1
+                            defaultValue = 0
                         }
                     )
                 ) { backStackEntry ->
                     val returnRoute = backStackEntry.arguments?.getString("returnRoute") ?: ""
-                    val param = backStackEntry.arguments?.getInt("param") ?: -1
+                    val skladId = backStackEntry.arguments?.getInt("skladId") ?: 0
 
                     ScannerObrazovkaRoute(
                         navController = controler, // nebo jakkoli se jmenuje tvůj navController
                         returnRoute = returnRoute,
-                        param = param
+                        skladId = skladId,
+                        codeViewModel = codeViewModel
                     )
                 }
             }

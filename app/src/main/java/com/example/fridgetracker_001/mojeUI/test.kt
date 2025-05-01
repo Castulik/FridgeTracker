@@ -5,6 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -15,10 +19,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.ui.theme.backSearchItem
 import com.example.fridgetracker_001.ui.theme.bilaback
 import com.example.fridgetracker_001.ui.theme.potravinaback
@@ -244,11 +251,130 @@ fun MyButton() {
 
 @Composable
 fun PotravinaItemGrid2(
-    nazev: String = "Steak",
-    daysLeft: Int = 56,
-    iconRes: Int = R.drawable.food_hranolky
+    onOptionSelected: (KindOptionEnum) -> Unit = {},
+    onNavigate: () -> Unit = {},
+    selectedOption: KindOptionEnum = KindOptionEnum.MEAT_FISH,
 ) {
 
+    val visibleOptions = remember { KindOptionEnum.entries.filter { it != KindOptionEnum.UNKNOWN } }
+
+    val selectedIcons by remember(selectedOption) {
+        derivedStateOf { selectedOption.icons }
+    }
+
+    Scaffold(
+        topBar = {
+            TopBarPotravinaForm(
+                title = "hh"
+            )
+        },
+        containerColor = Color.Transparent
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ){
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(5),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(visibleOptions) { option ->
+                    val optionSelected  = option == selectedOption
+                    Column(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .border(
+                                width = 2.dp,
+                                color = if (optionSelected) Color.Black else Color.Transparent,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .clip(RoundedCornerShape(16.dp))
+                            .clickable {
+                                onOptionSelected(option)
+                            }
+                            // 1) Celá buňka má daný poměr stran (šířka : výška = 1 : 0.8)
+                            .fillMaxWidth()
+                            .aspectRatio(0.7f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // 2) Horní část pro obrázek: zabere 75 % výšky buňky
+                        Box(
+                            modifier = Modifier
+                                .weight(1f, fill = true)
+                                .fillMaxWidth()
+                        ) {
+                            Image(
+                                painter = painterResource(id = option.imageRes),
+                                contentDescription = stringResource(option.stringRes),
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp))
+                            )
+                            if (optionSelected) {
+                                Box(
+                                    modifier = Modifier
+                                        .matchParentSize()
+                                        .background(Color(0x804CAF50)) // zelený overlay s průhledností
+                                        .clip(RoundedCornerShape(16.dp))
+                                )
+                            }
+                        }
+                        // 3) Spodní část pro text: zabere 25 % výšky buňky
+                        Box(
+                            modifier = Modifier
+                                .weight(0.5f, fill = true)
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = stringResource(option.stringRes),
+                                textAlign = TextAlign.Center,
+                                fontSize = 14.sp,
+                                color = Color.Black,
+                                minLines = 2,                       // dovolíme až 2 řádky
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                            if (optionSelected) {
+                                Box(
+                                    modifier = Modifier
+                                        .matchParentSize()
+                                        .background(Color(0x804CAF50)) // zelený overlay s průhledností
+                                        .clip(RoundedCornerShape(16.dp))
+                                )
+                            }
+                        }
+                    }
+                }
+
+                if (selectedIcons.isNotEmpty()) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        HorizontalDivider(
+                            thickness = 3.dp,
+                            modifier = Modifier
+                                .padding(vertical = 4.dp),
+                            color = Color.Black
+                        )
+                    }
+
+                    items(selectedIcons) { icon ->
+                        Image(
+                            painter = painterResource(id = icon.resId),
+                            contentDescription = icon.name,
+                            modifier = Modifier
+                                .clickable {
+                                    onNavigate()
+                                }
+                                .padding(4.dp)
+                                .size(64.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .border(1.dp, Color.Gray, RoundedCornerShape(12.dp))
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)

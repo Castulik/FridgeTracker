@@ -22,4 +22,16 @@ class Converters {
             ViewTypeNakup.YELLOW // fallback, kdyby někdo napsal nesmysl
         }
     }
+
+    @TypeConverter
+    fun fromSkladIcon(icon: SkladIcon): String = icon.name
+
+    @TypeConverter
+    fun toSkladIcon(name: String): SkladIcon = SkladIcon.fromName(name)
+
+    @TypeConverter
+    fun fromFoodIcon(icon: FoodIcon): String = icon.name
+
+    @TypeConverter
+    fun toFoodIcon(name: String): FoodIcon = FoodIcon.fromName(name)
 }

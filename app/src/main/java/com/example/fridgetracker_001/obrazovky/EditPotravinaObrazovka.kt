@@ -18,8 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
 import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.mojeUI.PotravinaFormBoxWithConstraints
@@ -147,6 +149,7 @@ fun EditPotravinaObrazovka2(
             }
         }
     }
+
     // 1) Načteme do VM, pokud to ještě není
     LaunchedEffect(potravinaId, barcodePolozky) {
         potravinaViewModel.initEditedPotravina(potravinaId, barcodePolozky)
@@ -179,12 +182,8 @@ fun EditPotravinaObrazovka2(
             },
             isEdit = true,  // Zde "Edit" = true
             isAdd = isAdd,  // Není to přidání
-            onDialogChange = { value ->
-                if (value) {
-                    potravinaViewModel.openDruhDialog()
-                } else {
-                    potravinaViewModel.closeDruhDialog()
-                }
+            onKategorieNavigate = {
+                navController.navigate("KategorieObrazovkaEdit/${potravinaState.id}")
             },
             onSubmit = {
                 // Uložíme změny do DB
@@ -214,7 +213,8 @@ fun EditPotravinaObrazovka2(
                 val newRouteAfterScan = "editPotravinu/${potravinaId}?barcode="
                 navController.navigate("scanner?returnRoute=$newRouteAfterScan")
             },
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
+            title = stringResource(R.string.tb_edit_food)
         )
     }
 }

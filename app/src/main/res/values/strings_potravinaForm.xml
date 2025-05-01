@@ -14,7 +14,7 @@
     <string name="pf_note_placeholder">Enter a note…</string>
 
     <!-- kind options -->
-    <string name="kind_frozen">Frozen</string>
+    <string name="kind_desserts">Desserts</string>">
     <string name="kind_nonperishable">Non&#8209;perishable</string>
     <string name="kind_fruit_veg">Fruit &amp; Vegetables</string>
     <string name="kind_dairy">Dairy products</string>
@@ -27,6 +27,9 @@
     <string name="kind_ready_meals">Ready meals</string>
     <string name="kind_other">Other</string>
     <string name="kind_unknown">Unknown</string>
+
+    <string name="change_category">Change category</string>
+    <string name="select_category">Select category</string>
 
     <!-- kind options -->
     <string name="pf_kindChoice">Choose food category</string>

@@ -107,7 +107,7 @@ fun SeznamPolozkyObrazovka(
     val allCategories = KindOptionEnum.entries
 
     val polozkyList by polozkyViewModel.polozkyFlow.collectAsState()
-    var vyber by remember { mutableStateOf(KindOptionEnum.FROZEN) } // nebo jiný default
+    var vyber by remember { mutableStateOf(KindOptionEnum.FRUIT_VEG) } // nebo jiný default
 
     val polozkyVyber = polozkyList.filter { it.kategorie == vyber.name }
 

@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.FoodIcon
 import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.entities.CodeEntity
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
@@ -157,7 +158,7 @@ class PotravinaViewModel(
             nazev = "",
             datumSpotreby = "",
             datumPridani = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
-            potravinaIconaId = R.drawable.kind_ostatni,
+            potravinaIkona = FoodIcon.CUSTOM,
             mnozstvi = "",
             vaha = "",
             jednotky = "g",
@@ -174,8 +175,8 @@ class PotravinaViewModel(
      */
     fun initPridavanaPotravina(
         skladId: Int,
-        nazevPolozky: String,
-        barcodePolozky: String
+        nazevPolozky: String = "",
+        barcodePolozky: String= ""
     ) {
         if (!isInitialized) {
             // Pokud rovnou chceme spustit "hledání kódu", můžete zavolat:
@@ -187,7 +188,7 @@ class PotravinaViewModel(
             )
             isInitialized = true
 
-            openDruhDialog()
+            //openDruhDialog()
 
             if (barcodePolozky.isNotEmpty()) {
                 // 1) Nastavit potravinu
@@ -218,7 +219,7 @@ class PotravinaViewModel(
                 pridavanaPotravina = pridavanaPotravina.copy(
                     nazev = codeEntity.nazev,
                     druh = codeEntity.druh,
-                    potravinaIconaId = codeEntity.potravinaIconaId
+                    potravinaIkona = codeEntity.potravinaIkona
                 )
                 _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nalezen – parametry doplněny."))
                 closeDruhDialog()
@@ -268,7 +269,7 @@ class PotravinaViewModel(
                         code = scannedCode,
                         nazev = codeEntity.nazev,
                         druh = codeEntity.druh,
-                        potravinaIconaId = codeEntity.potravinaIconaId
+                        potravinaIkona = codeEntity.potravinaIkona
                     )
                 } else {
                     // Kód nebyl v code_table -> nastavíme jen code,
@@ -294,7 +295,7 @@ class PotravinaViewModel(
 
             repository.pridatPotravinu(potravina)
 
-            showDruhDialog = false
+            //showDruhDialog = false
 
             // 2) Pokud code není prázdný, uložit/aktualizovat i do code_table
             if (potravina.code.isNotEmpty()) {
@@ -302,7 +303,7 @@ class PotravinaViewModel(
                     code = potravina.code,
                     nazev = potravina.nazev,
                     druh = potravina.druh,
-                    potravinaIconaId = potravina.potravinaIconaId
+                    potravinaIkona = potravina.potravinaIkona
                 )
                 codeRepository.vlozitAktualizovatCode(codeEntity)
 
@@ -311,7 +312,7 @@ class PotravinaViewModel(
                     kod = potravina.code,
                     newNazev = potravina.nazev,
                     newDruh = potravina.druh,
-                    newIcon = potravina.potravinaIconaId
+                    newIcon = potravina.potravinaIkona
                 )
 
             }
@@ -379,7 +380,7 @@ class PotravinaViewModel(
                 editedPotravina = editedPotravina?.copy(
                     nazev = codeEntity.nazev,
                     druh = codeEntity.druh,
-                    potravinaIconaId = codeEntity.potravinaIconaId
+                    potravinaIkona = codeEntity.potravinaIkona
                 )
                 _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nalezen – parametry doplněny."))
             } else {
@@ -421,7 +422,7 @@ class PotravinaViewModel(
                             code = scannedCode,
                             nazev = codeEntity.nazev,
                             druh = codeEntity.druh,
-                            potravinaIconaId = codeEntity.potravinaIconaId
+                            potravinaIkona = codeEntity.potravinaIkona
                         )
                     } else {
                         current.copy(
@@ -452,7 +453,7 @@ class PotravinaViewModel(
                     code = potravinaToUpdate.code,
                     nazev = potravinaToUpdate.nazev,
                     druh = potravinaToUpdate.druh,
-                    potravinaIconaId = potravinaToUpdate.potravinaIconaId
+                    potravinaIkona = potravinaToUpdate.potravinaIkona
                 )
                 codeRepository.vlozitAktualizovatCode(codeEntity)
 
@@ -462,7 +463,7 @@ class PotravinaViewModel(
                     kod = potravinaToUpdate.code,
                     newNazev = potravinaToUpdate.nazev,
                     newDruh = potravinaToUpdate.druh,
-                    newIcon = potravinaToUpdate.potravinaIconaId
+                    newIcon = potravinaToUpdate.potravinaIkona
                 )
 
             }

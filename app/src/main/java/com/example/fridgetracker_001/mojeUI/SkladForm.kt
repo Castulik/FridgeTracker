@@ -69,6 +69,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.IconRegistry.iconList
+import com.example.fridgetracker_001.data.SkladIcon
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.ui.theme.buttonPodtvrdit
 import com.example.fridgetracker_001.ui.theme.cardGradient22
@@ -193,20 +194,20 @@ fun MojeIconVyber(
             verticalArrangement = Arrangement.spacedBy(5.dp),
             horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            items(iconList) { iconResId ->
+            items(iconList) { icon ->
                 Box(
                     modifier = Modifier
-                        .clickable { onIconSelect(iconResId) }
+                        .clickable { onIconSelect(icon) }
                         .clip(RoundedCornerShape(8.dp))
                         .border(
                             width = 4.dp,
-                            color = if (skladIcona == iconResId && !preferovane) Color.Black else Color.Transparent,
+                            color = if (skladIcona == icon && !preferovane) Color.Black else Color.Transparent,
                             shape = RoundedCornerShape(8.dp)
                         )
                 ) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(iconResId)
+                            .data(icon)
                             .crossfade(true)
                             .build(),
                         contentDescription = null,
@@ -221,9 +222,9 @@ fun MojeIconVyber(
 
 @Composable
 fun MojeIconVyber2(
-    iconList: List<Int>,
-    skladIcona: Int,
-    onIconSelect: (Int) -> Unit,
+    iconList: List<SkladIcon>,
+    skladIcona: SkladIcon,
+    onIconSelect: (SkladIcon) -> Unit,
     modifier: Modifier = Modifier,
     preferovane: Boolean,
 ) {
@@ -243,7 +244,7 @@ fun MojeIconVyber2(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // Každá ikona v jednom Boxu se stejnou šířkou
-                rowIcons.forEach { iconResId ->
+                rowIcons.forEach { icon ->
                     Box(
                         modifier = Modifier
                             .weight(1f)             // rozdělí rovnoměrně místo
@@ -251,16 +252,16 @@ fun MojeIconVyber2(
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 width = 4.dp,
-                                color = if (skladIcona == iconResId && !preferovane) Color.Black
+                                color = if (skladIcona == icon && !preferovane) Color.Black
                                 else Color.Transparent,
                                 shape = RoundedCornerShape(8.dp)
                             )
-                            .clickable { onIconSelect(iconResId) },
+                            .clickable { onIconSelect(icon) },
                         contentAlignment = Alignment.Center
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(iconResId)
+                                .data(icon.resId)
                                 .crossfade(true)
                                 .build(),
                             contentDescription = null,
@@ -487,15 +488,17 @@ fun SkladFormBoxWithConstraints(
                         .fillMaxWidth()
                         .height(rowHeight(row3Weight))
                 ) {
+                    val allIcons = SkladIcon.entries.toList()
+
                     Column {
                         Text(stringResource(R.string.pick_icon))
                         MojeIconVyber2(
-                            iconList = iconList,
-                            skladIcona = sklad.iconResourceId,
+                            iconList = allIcons,
+                            skladIcona = sklad.icon,
                             onIconSelect = { picked ->
                                 onSkladChange(
                                     sklad.copy(
-                                        iconResourceId = picked,
+                                        icon = picked,
                                         preferovane = false
                                     )
                                 )

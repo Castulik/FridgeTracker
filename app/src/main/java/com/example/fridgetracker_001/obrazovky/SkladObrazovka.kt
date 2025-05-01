@@ -157,10 +157,10 @@ fun SkladObrazovka2(
     // Všechny možné kategorie (Int resource ID)
     val allCategories = KindOptionEnum.entries
 
-// Rozdělení potravin dle druhu (teď už přímo dle resource ID)
+    // Rozdělení potravin dle druhu (teď už přímo dle resource ID)
     val mapByCategory = potravinaList.groupBy { it.druh }
 
-// Upravený stav rozbalení kategorií, kde klíčem je Int (resId), nikoli String
+    // Upravený stav rozbalení kategorií, kde klíčem je Int (resId), nikoli String
     val expandedCategories = remember(sklad) {
         val initialMap: MutableMap<String, Boolean> = mutableMapOf()
 
@@ -287,10 +287,11 @@ fun SkladObrazovka2(
                 }
                 else ->{
                     BottomBarAddPotravinu (
-                        onAddClick = { navController.navigate("pridatPotravinu/$skladId") },
+                        onAddClick = { navController.navigate("KategorieObrazovka/$skladId/sklad") },
                         onQrClick = {
-                            val routeAfterScan = "pridatPotravinu/$skladId?barcode="
-                            navController.navigate("scanner?returnRoute=$routeAfterScan")
+                            if (sklad != null) {
+                                navController.navigate("scanner?skladId=${sklad.id}")
+                            }
                         },
                     )
                 }

@@ -120,7 +120,7 @@ fun SkladItem(
                     // 2) Jinak (preferované = false, nebo iconPath = null) => zobraz default ikonu
                     else -> {
                         Image(
-                            painter = painterResource(id = sklad.iconResourceId),
+                            painter = painterResource(id = sklad.icon.resId),
                             contentDescription = "Ikona skladu",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier

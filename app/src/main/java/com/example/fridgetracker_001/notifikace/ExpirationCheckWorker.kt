@@ -51,7 +51,7 @@ class ExpirationCheckWorker(
                 val nazev = sklad?.nazev ?: "Neznámý sklad"
                 // Pokud sklad není null, vezmeme z něj název, jinak text "Neznámý sklad".
 
-                val iconId = potravina.potravinaIconaId
+                val iconId = potravina.potravinaIkona.resId
                 // Z potraviny získáváme ID ikony, která se pak zobrazí v notifikaci.
 
                 val daysLeft = calculateDaysLeft(potravina.datumSpotreby)

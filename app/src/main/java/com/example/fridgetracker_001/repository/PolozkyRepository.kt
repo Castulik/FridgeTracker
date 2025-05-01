@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.ui.res.stringResource
 import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.IconRegistry
-import com.example.fridgetracker_001.data.IconRegistry.KindOption
 import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.dao.PolozkyDao
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
@@ -41,8 +40,6 @@ class PolozkyRepository(
         val count = dao.getCount()
         if (count == 0) {
             val defaultItems = listOf(
-                PolozkyEntity(nazev = context.getString(R.string.item_frozen_pizza), kategorie = KindOptionEnum.FROZEN.name),
-                PolozkyEntity(nazev = context.getString(R.string.item_ice_cream), kategorie = KindOptionEnum.FROZEN.name),
                 PolozkyEntity(nazev = context.getString(R.string.item_canned_beans), kategorie = KindOptionEnum.NONPERISHABLE.name),
                 PolozkyEntity(nazev = context.getString(R.string.item_pasta), kategorie = KindOptionEnum.NONPERISHABLE.name),
                 PolozkyEntity(nazev = context.getString(R.string.item_apples), kategorie = KindOptionEnum.FRUIT_VEG.name),
@@ -59,8 +56,6 @@ class PolozkyRepository(
                 PolozkyEntity(nazev = context.getString(R.string.item_rice), kategorie = KindOptionEnum.GRAINS_LEGUMES.name),
                 PolozkyEntity(nazev = context.getString(R.string.item_ham), kategorie = KindOptionEnum.DELI.name),
                 PolozkyEntity(nazev = context.getString(R.string.item_salami), kategorie = KindOptionEnum.DELI.name),
-                PolozkyEntity(nazev = context.getString(R.string.item_water), kategorie = KindOptionEnum.DRINKS.name),
-                PolozkyEntity(nazev = context.getString(R.string.item_orange_juice), kategorie = KindOptionEnum.DRINKS.name),
                 PolozkyEntity(nazev = context.getString(R.string.item_lasagna), kategorie = KindOptionEnum.READY_MEALS.name),
                 PolozkyEntity(nazev = context.getString(R.string.item_curry_rice), kategorie = KindOptionEnum.READY_MEALS.name),
                 PolozkyEntity(nazev = context.getString(R.string.item_ketchup), kategorie = KindOptionEnum.OTHER.name),

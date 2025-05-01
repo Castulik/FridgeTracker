@@ -53,10 +53,11 @@ fun switchAppLocale(tag: String, activity: Activity?) {
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun ProfilObrazovka(navController: NavController) {
     val activity = LocalActivity.current
+    val context = LocalContext.current
+
     val gra = Brush.verticalGradient(
         colorStops = arrayOf(
             0.6f to cardGradient12,
@@ -71,21 +72,26 @@ fun ProfilObrazovka(navController: NavController) {
     )
 
     val cameraPermission = rememberPermissionState(Manifest.permission.CAMERA)
-    val notificationPermission = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
 
-    val cameraGranted = cameraPermission.status is PermissionStatus.Granted
-    val notifGranted = notificationPermission.status is PermissionStatus.Granted
+    // 🛡️ Bezpečné ošetření POST_NOTIFICATIONS jen pro API 33+
+    val notificationPermission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+        } else null
+
+    val cameraGranted = cameraPermission.status.isGranted
+    val notifGranted = notificationPermission?.status?.isGranted == true
 
     Scaffold(
         containerColor = Color.Transparent
     ) { padding ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // 1
+
+            // 1 – O aplikaci
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -103,7 +109,7 @@ fun ProfilObrazovka(navController: NavController) {
                 }
             }
 
-            // 2
+            // 2 – Lokalizace
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -123,23 +129,21 @@ fun ProfilObrazovka(navController: NavController) {
                     ) {
                         Button(
                             onClick = { switchAppLocale("cs", activity) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF104588)
-                        ),) {
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF104588)),
+                        ) {
                             Text(stringResource(R.string.czech_btn), color = Color.White)
                         }
                         Button(
                             onClick = { switchAppLocale("en", activity) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF104588)
-                            ),
-                            ) {
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF104588)),
+                        ) {
                             Text(stringResource(R.string.english_btn), color = Color.White)
                         }
                     }
                 }
             }
 
+            // 3 – Oprávnění
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -167,10 +171,10 @@ fun ProfilObrazovka(navController: NavController) {
                         horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        // Kamera
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text("Kamera")
                             Spacer(Modifier.width(8.dp))
-                            val context = LocalContext.current
                             Switch(
                                 checked = cameraGranted,
                                 onCheckedChange = {
@@ -183,42 +187,25 @@ fun ProfilObrazovka(navController: NavController) {
                             )
                         }
 
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("Notifikace")
-                            Spacer(Modifier.width(8.dp))
-                            Switch(
-                                checked = notifGranted,
-                                onCheckedChange = { notificationPermission.launchPermissionRequest() }
-                            )
+                        notificationPermission?.let { permissionState: com.google.accompanist.permissions.PermissionState ->
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("Notifikace")
+                                Spacer(Modifier.width(8.dp))
+                                Switch(
+                                    checked = notifGranted,
+                                    onCheckedChange = {
+                                        permissionState.launchPermissionRequest()
+                                    }
+                                )
+                            }
                         }
                     }
                 }
             }
-
-            /*
-            // 5
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(5.dp)
-                    .clip(MaterialTheme.shapes.small)
-                    .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small)
-                    .background(gra)
-                    .padding(8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Testovací obrazovka", style = MaterialTheme.typography.titleLarge)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    SpustitNotifikaciHnedButton()
-                }
-            }
-
-             */
         }
     }
 }
+
 
 
 fun openAppSettings(context: Context) {

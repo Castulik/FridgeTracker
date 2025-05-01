@@ -14,7 +14,7 @@
     <string name="pf_note_placeholder">Zadejte poznámku…</string>
 
     <!-- kind options -->
-    <string name="kind_frozen">Mražené</string>
+    <string name="kind_desserts">Dezerty</string>">
     <string name="kind_nonperishable">Trvanlivé</string>
     <string name="kind_fruit_veg">Ovoce a zelenina</string>
     <string name="kind_dairy">Mléčné výrobky</string>
@@ -28,6 +28,8 @@
     <string name="kind_other">Ostatní</string>
     <string name="kind_unknown">Neznámé</string>
 
+    <string name="change_category">Změnit kategorii</string>
+    <string name="select_category">Vyber kategorii</string>
     <!-- kind options -->
     <string name="pf_kindChoice">Vyberte druh potraviny</string>
     <string name="pf_imageChoice">Vyberte obrázek:</string>

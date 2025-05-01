@@ -80,6 +80,7 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.data.FoodIcon
 import com.example.fridgetracker_001.data.IconRegistry
 import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.entities.PotravinaEntity
@@ -100,13 +101,14 @@ fun PotravinaFormBoxWithConstraints(
     onPotravinaChange: (PotravinaEntity) -> Unit,
     isEdit: Boolean,
     isAdd: Boolean,
-    onDialogChange: (Boolean) -> Unit,
+    onKategorieNavigate: () -> Unit,
     onSubmit: () -> Unit,
     onCancel: () -> Unit,
     onDelete: () -> Unit = {},
     pridejNaSeznam: () -> Unit = {},
     onScanBarcodeClick: () -> Unit,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    title: String,
 ) {
     val today = LocalDate.now()
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -127,7 +129,8 @@ fun PotravinaFormBoxWithConstraints(
                 isEdit = isEdit,
                 onCancel = onCancel,
                 onDelete = { onDelete() },
-                pridejNaSeznam = { pridejNaSeznam()  }
+                pridejNaSeznam = { pridejNaSeznam()  },
+                title = title
             )
         },
         // Tady bude pevný bottomBar, který se nescrolluje
@@ -228,7 +231,7 @@ fun PotravinaFormBoxWithConstraints(
                                     selectedOption = KindOptionEnum.fromString(potravina.druh),
                                     onOptionSelected = { onPotravinaChange(potravina.copy(druh = it.name)) },
                                     dialogChange = isAdd,
-                                    onDialogChange = { onDialogChange(it) }
+                                    onDialogChange = { onKategorieNavigate() }
                                 )
 
                                 MujTextField(
@@ -267,8 +270,8 @@ fun PotravinaFormBoxWithConstraints(
                             }
 
                             VyberObrazku(
-                                potravinaIconaId = potravina.potravinaIconaId,
-                                onIconSelect = { onPotravinaChange(potravina.copy(potravinaIconaId = it)) },
+                                icon = potravina.potravinaIkona,
+                                onNavigateKategorie = { onKategorieNavigate() },
                             )
                         }
                     }
@@ -482,8 +485,8 @@ fun PotravinaFormBoxWithConstraints(
             SnackbarHost(
                 hostState = snackbarHostState,
                 modifier = Modifier
-                    .align(Alignment.TopCenter)    // zarovnat nahoru (uprostřed)
-                    .padding(top = 8.dp)         // třeba mírný odskok
+                    .align(Alignment.BottomCenter)    // zarovnat nahoru (uprostřed)
+                    .padding(bottom = 8.dp)         // třeba mírný odskok
             )
         }
     }
@@ -854,8 +857,8 @@ fun MnozstviVyber(
 
 @Composable
 fun VyberObrazku(
-    potravinaIconaId: Int,
-    onIconSelect: (Int) -> Unit
+    icon: FoodIcon,
+    onNavigateKategorie: () -> Unit
 ) {
     var vyberObrazku by remember { mutableStateOf(false) }
 
@@ -869,11 +872,11 @@ fun VyberObrazku(
                 shape = RoundedCornerShape(8.dp)
             )
             .background(bilaback)
-            .clickable { vyberObrazku = true }
+            .clickable { onNavigateKategorie() }
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(potravinaIconaId)
+                .data(icon.resId)
                 .crossfade(true)
                 .build(),
             contentDescription = null,
@@ -881,6 +884,8 @@ fun VyberObrazku(
             modifier = Modifier.fillMaxSize()
         )
     }
+
+    /*
 
     // Dialog pro výběr obrázku POTRAVINY
     if (vyberObrazku) {
@@ -907,7 +912,7 @@ fun VyberObrazku(
                         getDrawableResourcesStartingWith("food_", context)
                     }
                      */
-                    val images = IconRegistry.foodList
+                    val images = FoodIcon.entries.toList()
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(5),
@@ -921,7 +926,7 @@ fun VyberObrazku(
                                     .clip(RoundedCornerShape(8.dp))
                                     .border(
                                         4.dp,
-                                        if (image == potravinaIconaId) Color.Black else Color.Transparent,
+                                        if (image == icon) Color.Black else Color.Transparent,
                                         RoundedCornerShape(8.dp)
                                     )
                                     .padding(1.dp)
@@ -933,7 +938,7 @@ fun VyberObrazku(
                             ) {
                                 AsyncImage(
                                     model = ImageRequest.Builder(LocalContext.current)
-                                        .data(image)
+                                        .data(image.resId)
                                         .crossfade(true)
                                         .build(),
                                     contentDescription = null,
@@ -956,6 +961,8 @@ fun VyberObrazku(
             }
         }
     }
+
+     */
 }
 
 @Composable
@@ -963,7 +970,7 @@ fun UnderlinedTextSelector(
     selectedOption: KindOptionEnum,
     onOptionSelected: (KindOptionEnum) -> Unit,
     dialogChange: Boolean,
-    onDialogChange: (Boolean) -> Unit
+    onDialogChange: () -> Unit
 ) {
     val options = listOf("Mražené potraviny", "Trvanlivé potraviny", "Ovoce", "Zelenina", "Mléčné výrobky", "Maso a Ryby", "Pečivo", "Vejce", "Obiloviny",
         "Luštěniny","Ořechy", "Nápoje", "Koření","Omáčky", "Hotová jídla", "Ostatní")
@@ -975,7 +982,7 @@ fun UnderlinedTextSelector(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.Transparent)
-            .clickable { onDialogChange(true) }
+            .clickable { onDialogChange() }
     ) {
         Text(
             text = stringResource(selectedOption.stringRes),
@@ -993,6 +1000,8 @@ fun UnderlinedTextSelector(
                 }
         )
     }
+
+    /*
 
     if (dialogChange) {
         AlertDialog(
@@ -1060,7 +1069,10 @@ fun UnderlinedTextSelector(
                     }
                 }
             },
+
+
             confirmButton = {},
         )
     }
+     */
 }

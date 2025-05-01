@@ -184,10 +184,11 @@ fun MultiSelectTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBarPotravinaForm(
-    isEdit: Boolean,
-    onCancel: () -> Unit,
-    onDelete: () -> Unit,
-    pridejNaSeznam: () -> Unit,
+    isEdit: Boolean = false,
+    onCancel: () -> Unit = {},
+    onDelete: () -> Unit = {},
+    pridejNaSeznam: () -> Unit = {},
+    title: String,
 ) {
     // Místní stav pro potvrzení mazání
     var deleteAlert by remember { mutableStateOf(false) }
@@ -208,7 +209,7 @@ fun TopBarPotravinaForm(
         TopAppBar(
             title = {
                 Text(
-                    text = if (isEdit) stringResource(R.string.tb_edit_food) else stringResource(R.string.tb_new_food),
+                    text = title,
                     fontSize = 25.sp,
                 )
             },

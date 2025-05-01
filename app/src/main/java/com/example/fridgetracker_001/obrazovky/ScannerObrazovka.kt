@@ -30,8 +30,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import com.example.fridgetracker_001.R
+import com.example.fridgetracker_001.viewmodel.CodeViewModel
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -39,25 +41,28 @@ import java.util.concurrent.Executors
 fun ScannerObrazovkaRoute(
     navController: NavController,
     returnRoute: String,
-    param: Int
+    codeViewModel: CodeViewModel,
+    skladId: Int
 ) {
+    val coroutineScope = rememberCoroutineScope()
     // V tomto composable už jen zavoláme "ScannerPovoleni"
     // a výsledek odešleme zpět:
     ScannerPovoleni(
         onScanned = { code ->
 
-            val route = if (returnRoute == "mojepotraviny") {
-                "mojepotraviny"
+            if (returnRoute == "") {
+                coroutineScope.launch {
+
+                    val codeEntity = codeViewModel.getCodeEntityByBarcode(code)
+                    if (codeEntity != null) {
+                        navController.navigate("pridatPotravinu/$skladId?barcode=$code")
+                    } else
+                        navController.navigate("KategorieObrazovka/$skladId/sklad?barcode=$code")
+                }
             } else {
-                "$returnRoute/$param"
+                val finalRoute = returnRoute + Uri.encode(code)
+                navController.navigate(finalRoute)
             }
-/*
-            val backStackEntry = navController.getBackStackEntry(route)
-            backStackEntry.savedStateHandle["scannedCode"] = code
-            navController.popBackStack(route, inclusive = false)
- */
-            val finalRoute = returnRoute + Uri.encode(code)
-            navController.navigate(finalRoute)
         },
         onCancel = {
             navController.popBackStack()
