@@ -51,5 +51,4 @@ Aplikace je ve fázi vývoje, některé funkce mohou být nedokončené nebo v t
 
 ## 🛡️ Licence
 
-Projekt je zveřejněn pouze pro demonstrační a studijní účely. (Zvaž přidání vhodné licence, např. MIT nebo Apache 2.0.)
-
+Tento projekt slouží pro demonstrační a vzdělávací účely. Je dostupný pod [MIT licencí](LICENSE).
