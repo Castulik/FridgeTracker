@@ -32,7 +32,7 @@
 ## 🖼️ UI Previews
 
 <p align="center">
-  <img src="screenshots/enMojeSklady(1).png" alt="My Storages" height="500"/>
+  <img src="screenshots/enMojeSklady (1).png" alt="My Storages" height="500"/>
   <img src="screenshots/enStorage.png" alt="Storage Detail" height="500"/>
 </p>
 
