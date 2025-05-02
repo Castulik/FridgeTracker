@@ -32,9 +32,8 @@
 
 ## 🖼️ Ukázky uživatelského rozhraní
 
-![Domácí obrazovka](screenshots/home.png)
-![Detail potraviny](screenshots/item_detail.png)
-![Nákupní seznam](screenshots/shopping_list.png)
+![Moje sklady](screenshots/czMojeSklady.png)
+![Detail skladu](screenshots/czSklad.png)
 
 ## 🏗️ Technologie
 
