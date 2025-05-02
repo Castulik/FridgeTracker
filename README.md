@@ -31,9 +31,14 @@
 
 ## 🖼️ UI Previews
 
-![Home screen](screenshots/home.png)
-![Item details](screenshots/item_detail.png)
-![Shopping list](screenshots/shopping_list.png)
+<p align="center">
+  <img src="screenshots/enMojeSklady.png" alt="My Storages" width="300"/>
+  <img src="screenshots/enStorage.png" alt="Storage Detail" width="300"/>
+</p>
+
+<p align="center">
+  <em>My Storages</em> &nbsp;&nbsp;&nbsp;&nbsp; <em>Storage Detail</em>
+</p>
 
 ## 🏗️ Technologies Used
 
