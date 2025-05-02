@@ -36,6 +36,7 @@
   <img src="screenshots/enStorage.png" alt="Storage Detail" width="300"/>
 </p>
 
+
 <p align="center">
   <em>My Storages</em> &nbsp;&nbsp;&nbsp;&nbsp; <em>Storage Detail</em>
 </p>
