@@ -37,6 +37,10 @@
   <img src="screenshots/czSklad.png" alt="Detail skladu" width="300"/>
 </p>
 
+<p align="center">
+  <em>Moje sklady</em> &nbsp;&nbsp;&nbsp;&nbsp; <em>Detail skladu</em>
+</p>
+
 ## 🏗️ Technologie
 
 - 🧠 Jetpack Compose (UI)
