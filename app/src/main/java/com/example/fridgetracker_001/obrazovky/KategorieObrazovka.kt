@@ -19,12 +19,13 @@ fun KategorieObrazovka(
     potravinaViewModel: PotravinaViewModel,
     skladId: Int,
     nazevPolozky: String = "",
+    kategoriePolozky: String = "",
     barcodePolozky: String = "",
     fromScreen: String,
     navController: NavController
 ){
     LaunchedEffect(Unit) {
-        potravinaViewModel.initPridavanaPotravina(skladId, nazevPolozky, barcodePolozky)
+        potravinaViewModel.initPridavanaPotravina(skladId, nazevPolozky, kategoriePolozky, barcodePolozky)
     }
 
     val snackbarHostState = remember { SnackbarHostState() }

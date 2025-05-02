@@ -140,7 +140,9 @@ fun PridatPotravinuObrazovka2(
     // 1) Při prvním zobrazení inicializujeme "pridavanaPotravina"
 
     LaunchedEffect(Unit) {
-        potravinaViewModel.initPridavanaPotravina(skladId, nazevPolozky, barcodePolozky)
+        potravinaViewModel.initPridavanaPotravina(
+            skladId = skladId, nazevPolozky = nazevPolozky, barcodePolozky = barcodePolozky
+        )
     }
 
 

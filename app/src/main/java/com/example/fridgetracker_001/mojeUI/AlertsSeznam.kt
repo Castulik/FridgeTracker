@@ -60,6 +60,7 @@ import com.example.fridgetracker_001.R
 import com.example.fridgetracker_001.data.IconRegistry
 import com.example.fridgetracker_001.data.KindOptionEnum
 import com.example.fridgetracker_001.data.entities.PolozkyEntity
+import com.example.fridgetracker_001.data.entities.SeznamEntity
 import com.example.fridgetracker_001.data.entities.SkladEntity
 import com.example.fridgetracker_001.ui.theme.buttoncolor
 import com.example.fridgetracker_001.ui.theme.cardGradient3
@@ -348,7 +349,7 @@ fun AddItemDialog(
 
 @Composable
 fun SkladDialog(
-    item: String,        // typ podle toho, co máte
+    item: SeznamEntity,        // typ podle toho, co máte
     skladList: List<SkladEntity>,     // typ skladů
     onDismiss: () -> Unit,
     onConfirm: (Int) -> Unit    // vracíme skladId
@@ -358,7 +359,7 @@ fun SkladDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(R.string.as_dialog_add_item_to_sklad, item))
+            Text(text = stringResource(R.string.as_dialog_add_item_to_sklad, item.nazev))
         },
         text = {
             Column {

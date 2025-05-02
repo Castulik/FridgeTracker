@@ -176,6 +176,7 @@ class PotravinaViewModel(
     fun initPridavanaPotravina(
         skladId: Int,
         nazevPolozky: String = "",
+        kategoriePolozky: String = "",
         barcodePolozky: String= ""
     ) {
         if (!isInitialized) {
@@ -184,6 +185,7 @@ class PotravinaViewModel(
             pridavanaPotravina = defaultPotravina().copy(
                 skladId = skladId,
                 nazev = nazevPolozky,
+                druh = kategoriePolozky,
                 code = barcodePolozky
             )
             isInitialized = true

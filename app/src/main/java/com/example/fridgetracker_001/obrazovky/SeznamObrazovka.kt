@@ -81,7 +81,7 @@ fun SeznamObrazovka2(
     var sortDialog by remember { mutableStateOf(false) }
     var viewTypeDialog by remember { mutableStateOf(false) }
 
-    var selectedItem by remember { mutableStateOf("") }
+    var selectedItem by remember { mutableStateOf<SeznamEntity?>(null) }
     val skladList by skladViewModel.skladList.collectAsState()
     val isOnNakup by seznamViewModel.errorMsg.collectAsState()
     val itemEdit by seznamViewModel.edit.collectAsState()
@@ -180,8 +180,8 @@ fun SeznamObrazovka2(
                             { seznamViewModel.setEditItem(item) },
                             { seznamViewModel.smazatPolozku(item) },
                             {
-                                skladDialog = true
-                                selectedItem = item.nazev
+                                //skladDialog = true
+                                selectedItem = item
                             }
                         )
                     }
@@ -240,19 +240,25 @@ fun SeznamObrazovka2(
         }
 
         // Dialog pro přidání do vybraného skladu
-        if (skladDialog) {
+        if (selectedItem != null) {
             SkladDialog(
-                item = selectedItem,
+                item = selectedItem!!,
                 skladList = skladList,
                 onDismiss = {
-                    skladDialog = false
-                    selectedItem = ""
+                    //skladDialog = false
+                    selectedItem = null
                 },
                 onConfirm = { skladId ->
-                    skladDialog = false
-                    val encodedNazev = Uri.encode(selectedItem)
-                    navController.navigate("pridatPotravinu/$skladId?nazev=$encodedNazev")
-                    selectedItem = ""
+                    //skladDialog = false
+                    val encodedNazev = Uri.encode(selectedItem!!.nazev)
+                    val encodedKategorie = Uri.encode(selectedItem!!.kategorie)
+                    val encodedBarcode = Uri.encode("")
+                    val encodedFromScreen = Uri.encode("sklad") // <- Tohle ti chybí
+                    val route = "KategorieObrazovka/$skladId/$encodedFromScreen" +
+                            "?nazev=$encodedNazev&barcode=$encodedBarcode&kategorie=$encodedKategorie"
+
+                    navController.navigate(route)
+                    selectedItem = null
                 }
             )
         }

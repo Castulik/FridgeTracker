@@ -106,7 +106,7 @@ fun MainScaffold(
                     "nastaveniskladu/{skladId}" -> drawRect(brush = gradient3, size = size)
                     "skladpridat" -> drawRect(brush = gradient3, size = size)
                     "scanner?returnRoute={returnRoute}&skladId={skladId}" -> drawRect(brush = gradient2, size = size)
-                    "KategorieObrazovka/{skladId}/{fromScreen}?nazev={nazev}&barcode={barcode}" -> drawRect(brush = gradient2, size = size)
+                    "KategorieObrazovka/{skladId}/{fromScreen}?nazev={nazev}&barcode={barcode}&kategorie={kategorie}" -> drawRect(brush = gradient2, size = size)
                     "KategorieObrazovkaEdit/{potravinaId}" -> drawRect(brush = gradient2, size = size)
                     else -> drawRect(brush = shaderBrush, size = size)
                 }
@@ -252,7 +252,7 @@ fun MainScaffold(
                 }
 
                 composable(
-                    route = "KategorieObrazovka/{skladId}/{fromScreen}?nazev={nazev}&barcode={barcode}",
+                    route = "KategorieObrazovka/{skladId}/{fromScreen}?nazev={nazev}&barcode={barcode}&kategorie={kategorie}",
                     arguments = listOf(
                         navArgument("skladId") { type = NavType.IntType },
                         navArgument("nazev") {
@@ -264,6 +264,11 @@ fun MainScaffold(
                             type = NavType.StringType
                             defaultValue = ""           // Pokud param nepřijde, použije se ""
                             nullable = true
+                        },
+                        navArgument("kategorie") {
+                            type = NavType.StringType
+                            defaultValue = ""           // Pokud param nepřijde, použije se ""
+                            nullable = true
                         }
                     )
                 ) { backStackEntry ->
@@ -271,6 +276,7 @@ fun MainScaffold(
                     val fromScreen = backStackEntry.arguments?.getString("fromScreen") ?: "fromForm"
                     val nazev = backStackEntry.arguments?.getString("nazev") ?: ""
                     val barcode  = backStackEntry.arguments?.getString("barcode") ?: ""
+                    val kategorie  = backStackEntry.arguments?.getString("kategorie") ?: ""
 
                     KategorieObrazovka(
                         skladId = skladId,
@@ -278,7 +284,8 @@ fun MainScaffold(
                         navController = controler,
                         fromScreen = fromScreen,
                         nazevPolozky = nazev,
-                        barcodePolozky = barcode
+                        barcodePolozky = barcode,
+                        kategoriePolozky = kategorie
                     )
                 }
 
