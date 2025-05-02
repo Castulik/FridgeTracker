@@ -32,8 +32,10 @@
 
 ## 🖼️ Ukázky uživatelského rozhraní
 
-![Moje sklady](screenshots/czMojeSklady.png)
-![Detail skladu](screenshots/czSklad.png)
+<p align="center">
+  <img src="screenshots/czMojeSklady.png" alt="Moje sklady" width="300"/>
+  <img src="screenshots/czSklad.png" alt="Detail skladu" width="300"/>
+</p>
 
 ## 🏗️ Technologie
 
