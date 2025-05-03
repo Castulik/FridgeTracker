@@ -33,7 +33,7 @@
 
 <p align="center">
   <img src="screenshots/ENLayout.png" alt="My Storages" width="300"/>
-  <img src="screenshots/ENDetailStorage.png" alt="Storage Detail" width="340"/>
+  <img src="screenshots/ENDetailStorage.png" alt="Storage Detail" width="300"/>
 </p>
 
 
