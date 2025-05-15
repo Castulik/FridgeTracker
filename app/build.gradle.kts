@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.fridgetracker_001"
+    namespace = "cz.filip.fridgetracker_001"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.fridgetracker_001"
+        applicationId = "cz.filip.fridgetracker_001"
         minSdk = 26
         targetSdk = 34
         versionCode = 2

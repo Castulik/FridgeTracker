@@ -1,31 +1,32 @@
 <resources>
     <!-- AddItemDialog -->
-    <string name="as_dialog_title_add">Přidání položky</string>
-    <string name="as_dialog_title_edit">Úprava položky</string>
-    <string name="as_placeholder_item_name">Název potraviny</string>
-    <string name="as_dialog_category_select">Výběr kategorie potraviny:</string>
-    <string name="as_dialog_category_edit">Změna kategorie potraviny:</string>
-    <string name="as_dialog_error_no_category">Pro přidání potraviny je nutné zvolit kategorii.</string>
-    <string name="as_dialog_already_in_list">Položka je již součástí seznamu.</string>
-    <string name="as_button_edit_from_catalog">Úprava podle katalogu</string>
-    <string name="as_button_add_from_catalog">Přidání z katalogu</string>
+    <string name="as_dialog_title_add">Přidat položku</string>
+    <string name="as_dialog_title_edit">Upravte položku</string>
+    <string name="as_placeholder_item_name">Zadejte název potraviny</string>
+    <string name="as_dialog_category_select">Vyberte kategorii potraviny:</string>
+    <string name="as_dialog_category_edit">Změňte kategorii potraviny:</string>
+    <string name="as_dialog_error_no_category">Pro přidání potraviny je nutné vybrat kategorii.</string>
+    <string name="as_dialog_already_in_list">Tato položka je již součástí seznamu.</string>
+    <string name="as_button_edit_from_catalog">Upravit podle katalogu</string>
+    <string name="as_button_add_from_catalog">Přidat z katalogu</string>
     <string name="as_button_add">Přidat</string>
     <string name="as_button_save">Uložit</string>
     <string name="as_button_cancel">Zrušit</string>
     <string name="as_button_delete">Odstranit</string>
-    <string name="as_desc_remove_item">Odstranění z katalogu</string>
+    <string name="as_desc_remove_item">Odstranit z katalogu</string>
 
     <!-- SkladDialog -->
-    <string name="as_dialog_add_item_to_sklad">Přidání položky: %1$s</string>
-    <string name="as_select_storage">Výběr skladu ze seznamu:</string>
+    <string name="as_dialog_add_item_to_sklad">Přidejte položku: %1$s</string>
+    <string name="as_select_storage">Vyberte sklad ze seznamu:</string>
 
     <!-- SmazatAlert -->
-    <string name="as_alert_delete_title">Odstranit tuto položku z katalogu?</string>
+    <string name="as_alert_delete_title">Opravdu si přejete tuto položku odstranit z katalogu?</string>
     <string name="as_alert_delete_text">Tato akce je nevratná.</string>
 
     <!-- NakupAlert -->
     <string name="as_alert_new_nakup_title">Nový nákupní seznam</string>
-    <string name="as_alert_new_nakup_text">Vytvoření nového nákupního seznamu</string>
+    <string name="as_alert_new_nakup_text">Přidejte nový nákupní seznam</string>
 
-    <string name="as_dialog_delete_item">Odebrání položky z katalogu:</string>
+    <string name="as_dialog_delete_item">Odebrat položku z katalogu:</string>
+
 </resources>

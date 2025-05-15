@@ -1,7 +1,8 @@
 <resources>
+
     <!-- buttons -->
-    <string name="pf_save_changes">Uložení změn</string>
-    <string name="pf_confirm">Přidat potravinu</string>
+    <string name="pf_save_changes">Uložit změny</string>
+    <string name="pf_confirm">Potvrdit</string>
 
     <!-- placeholders / labels -->
     <string name="pf_name_placeholder">Název potraviny</string>
@@ -10,29 +11,27 @@
     <string name="pf_weight_placeholder">Hmotnost</string>
     <string name="pf_exp_date">Datum spotřeby</string>
     <string name="pf_added_date">Datum přidání</string>
-    <string name="pf_note_placeholder">Poznámka…</string>
+    <string name="pf_note_placeholder">Zadejte poznámku…</string>
 
     <!-- kind options -->
-    <string name="kind_desserts">Dezerty</string>
+    <string name="kind_desserts">Dezerty</string>">
     <string name="kind_nonperishable">Trvanlivé</string>
-    <string name="kind_fruit_veg">Ovoce a zelenina</string>
+    <string name="kind_fruit_veg">Ovoce a zelenina</string>
     <string name="kind_dairy">Mléčné výrobky</string>
-    <string name="kind_meat_fish">Maso a ryby</string>
+    <string name="kind_meat_fish">Maso a ryby</string>
     <string name="kind_bakery">Pečivo</string>
     <string name="kind_eggs">Vejce</string>
-    <string name="kind_grains_legumes">Obiloviny a luštěniny</string>
-    <string name="kind_deli">Uzeniny a lahůdky</string>
+    <string name="kind_grains_legumes">Obiloviny a luštěniny</string>
+    <string name="kind_deli">Uzeniny a lahůdky</string>
     <string name="kind_drinks">Nápoje</string>
     <string name="kind_ready_meals">Hotová jídla</string>
     <string name="kind_other">Ostatní</string>
     <string name="kind_unknown">Neznámé</string>
 
-    <string name="change_category">Změna kategorie</string>
-    <string name="select_category">Výběr kategorie</string>
-
+    <string name="change_category">Změnit kategorii</string>
+    <string name="select_category">Vyber kategorii</string>
     <!-- kind options -->
-    <string name="pf_kindChoice">Výběr druhu potraviny</string>
-    <string name="pf_imageChoice">Výběr obrázku:</string>
-
+    <string name="pf_kindChoice">Vyberte druh potraviny</string>
+    <string name="pf_imageChoice">Vyberte obrázek:</string>
 
 </resources>

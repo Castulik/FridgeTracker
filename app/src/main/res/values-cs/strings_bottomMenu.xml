@@ -1,13 +1,12 @@
 <resources>
-    <string name="add_food">Přidání potraviny</string>
-    <string name="add_by_scan">Přidání skenem</string>
-    <string name="move">Přesun</string>
-    <string name="copy">Kopírování</string>
-    <string name="delete">Smazání</string>
-    <string name="add_to_list">Přidání položky</string>
-    <string name="done">Dokončeno</string>
+    <string name="add_food">Přidat potravinu</string>
+    <string name="add_by_scan">Přidej skenem</string>
+    <string name="move">Přesunout</string>
+    <string name="copy">Kopírovat</string>
+    <string name="delete">Smazat</string>
+    <string name="add_to_list">Přidat položku</string>
+    <string name="done">Hotovo</string>
     <string name="list">Seznam</string>
     <string name="storage">Sklad</string>
     <string name="profile">Profil</string>
-
 </resources>

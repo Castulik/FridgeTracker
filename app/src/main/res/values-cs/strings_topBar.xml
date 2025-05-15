@@ -1,28 +1,28 @@
 <resources>
     <!-- dropdown -->
-    <string name="tb_sort">Seřazení</string>
-    <string name="tb_view">Zobrazení</string>
+    <string name="tb_sort">Seřadit</string>
+    <string name="tb_view">Vzhled</string>
     <string name="tb_settings">Nastavení</string>
 
     <!-- multiselect -->
     <string name="tb_selected">Vybráno: %d</string>
 
     <!-- potravina form -->
-    <string name="tb_edit_food">Úprava potraviny</string>
+    <string name="tb_edit_food">Upravit potravinu</string>
     <string name="tb_new_food">Nová potravina</string>
 
     <!-- sklad form -->
-    <string name="tb_edit_storage">Úprava skladu</string>
-    <string name="tb_add_storage">Přidání skladu</string>
+    <string name="tb_edit_storage">Upravit skladiště</string>
+    <string name="tb_add_storage">Přidat skladiště</string>
 
     <!-- dialog -->
-    <string name="dlg_delete_storage_title">Smazat tento sklad?</string>
+    <string name="dlg_delete_storage_title">Opravdu chcete smazat tento sklad?</string>
     <string name="dlg_irreversible">Tato akce je nevratná.</string>
     <string name="dlg_delete">Smazat</string>
     <string name="dlg_cancel">Zrušit</string>
 
     <!-- seznam -->
     <string name="tb_shopping_list">Nákupní seznam</string>
-    <string name="tb_purchase_history">Historie nákupů</string>
-    <string name="tb_add_items_purchase">Přidání položek na nákup</string>
+    <string name="tb_purchase_history">Historie nákupu</string>
+    <string name="tb_add_items_purchase">Přidej položky na nákup</string>
 </resources>

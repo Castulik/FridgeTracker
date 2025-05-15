@@ -1,13 +1,17 @@
 <resources>
     <string name="app_name">FridgeTracker_0.0.1</string>
+    <string name="czech_btn">Czech 🇨🇿</string>
+    <string name="english_btn">English 🇬🇧</string>
     <string name="save_changes">Save changes</string>
-    <string name="add_storage">Add storage</string> <!-- nebo "Storage addition" pokud chceš úplně neutrální -->
+    <string name="add_storage">Add storage</string>
     <string name="order_format">Order: %d</string>
     <string name="storage_name_placeholder">Storage name</string>
-    <string name="pick_icon">Icon selection:</string>
-    <string name="delete_photo">Photo deletion</string>
-    <string name="delete_photo_q">Delete the photo?</string>
+    <string name="pick_icon">Pick an icon:</string>
+    <string name="delete_photo">Delete photo</string>
+    <string name="delete_photo_q">Really delete the photo?</string>
     <string name="irreversible">This action is irreversible.</string>
     <string name="cancel">Cancel</string>
-    <string name="take_your_icon">Custom icon – tap the camera to open</string>
+    <string name="take_your_icon">Take your own icon by tapping the camera</string>
+
+
 </resources>
