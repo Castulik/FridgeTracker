@@ -29,6 +29,10 @@ enum class SkladIcon(@DrawableRes val resId: Int) {
 }
 
 enum class FoodIcon(@DrawableRes val resId: Int) {
+    GENERIC(R.drawable.generic1),
+    GENERIC2(R.drawable.generic2),
+    GENERIC3(R.drawable.generic3),
+
     BEEF(R.drawable.food_beef),
     CUSTOM(R.drawable.food_custom),
     HRANOLKY(R.drawable.food_hranolky),
@@ -190,52 +194,52 @@ enum class KindOptionEnum(
     NONPERISHABLE(
         R.string.kind_nonperishable,
         R.drawable.kind_trvanlive,
-        listOf(FoodIcon.KONZERVA, FoodIcon.RYZE, FoodIcon.TOFU, FoodIcon.OLIVOVY_OLEJ, FoodIcon.CEREAL, FoodIcon.SUNFLOWEROIL)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.KONZERVA, FoodIcon.RYZE, FoodIcon.TOFU, FoodIcon.OLIVOVY_OLEJ, FoodIcon.CEREAL, FoodIcon.SUNFLOWEROIL)
     ),
     FRUIT_VEG(
         R.string.kind_fruit_veg,
         R.drawable.kind_ovocezelenina,
-        listOf(FoodIcon.MELOUN, FoodIcon.JAHODA, FoodIcon.BROKOLICE, FoodIcon.MRKEV, FoodIcon.ANANAS, FoodIcon.AVOCADO, FoodIcon.BANAN, FoodIcon.BRAMBORY, FoodIcon.CABBAGE, FoodIcon.CESNEK, FoodIcon.CIBULE, FoodIcon.CITRON, FoodIcon.CORN, FoodIcon.GINGER, FoodIcon.GRAPEFRUIT, FoodIcon.GROUPVEGE, FoodIcon.HRUSKA, FoodIcon.CHILLI, FoodIcon.JABLKO, FoodIcon.KIWI, FoodIcon.MANGO, FoodIcon.OKURKA, FoodIcon.PAPRIKA, FoodIcon.POMERANC, FoodIcon.SCALLIONS, FoodIcon.TOMATOES)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.MELOUN, FoodIcon.JAHODA, FoodIcon.BROKOLICE, FoodIcon.MRKEV, FoodIcon.ANANAS, FoodIcon.AVOCADO, FoodIcon.BANAN, FoodIcon.BRAMBORY, FoodIcon.CABBAGE, FoodIcon.CESNEK, FoodIcon.CIBULE, FoodIcon.CITRON, FoodIcon.CORN, FoodIcon.GINGER, FoodIcon.GRAPEFRUIT, FoodIcon.GROUPVEGE, FoodIcon.HRUSKA, FoodIcon.CHILLI, FoodIcon.JABLKO, FoodIcon.KIWI, FoodIcon.MANGO, FoodIcon.OKURKA, FoodIcon.PAPRIKA, FoodIcon.POMERANC, FoodIcon.SCALLIONS, FoodIcon.TOMATOES)
     ),
     DAIRY(
         R.string.kind_dairy,
         R.drawable.kind_mlecne,
-        listOf(FoodIcon.MLEKO, FoodIcon.MLEKO2, FoodIcon.MASLO, FoodIcon.MOZZARELA, FoodIcon.YOGURT, FoodIcon.COCONUTMILK, FoodIcon.OATMILK, FoodIcon.SYR)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.MLEKO, FoodIcon.MLEKO2, FoodIcon.MASLO, FoodIcon.MOZZARELA, FoodIcon.YOGURT, FoodIcon.COCONUTMILK, FoodIcon.OATMILK, FoodIcon.SYR)
     ),
     MEAT_FISH(
         R.string.kind_meat_fish,
         R.drawable.kind_masoryba,
-        listOf(FoodIcon.BEEF, FoodIcon.STEAK, FoodIcon.SLANINA, FoodIcon.RYBA, FoodIcon.KURE, FoodIcon.CRAB, FoodIcon.KEBAB, FoodIcon.LOSOS, FoodIcon.MLETEMASO)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.BEEF, FoodIcon.STEAK, FoodIcon.SLANINA, FoodIcon.RYBA, FoodIcon.KURE, FoodIcon.CRAB, FoodIcon.KEBAB, FoodIcon.LOSOS, FoodIcon.MLETEMASO)
     ),
     BAKERY(
         R.string.kind_bakery,
         R.drawable.kind_pecivo,
-        listOf(FoodIcon.BAGETA, FoodIcon.CROISSANT, FoodIcon.CHLEBA, FoodIcon.PECIVOOBECNE, FoodIcon.PRETZEL)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.BAGETA, FoodIcon.CROISSANT, FoodIcon.CHLEBA, FoodIcon.PECIVOOBECNE, FoodIcon.PRETZEL)
     ),
     EGGS(
         R.string.kind_eggs,
         R.drawable.kind_vejce,
-        listOf(FoodIcon.VAJICKO, FoodIcon.EGSSS, FoodIcon.VOLSKE)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.VAJICKO, FoodIcon.EGSSS, FoodIcon.VOLSKE)
     ),
     GRAINS_LEGUMES(
         R.string.kind_grains_legumes,
         R.drawable.kind_lusteniny,
-        listOf(FoodIcon.RYZE, FoodIcon.TOFU)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.RYZE, FoodIcon.TOFU)
     ),
     DELI(
         R.string.kind_deli,
         R.drawable.kind_lahudky,
-        listOf(FoodIcon.SLANINA, FoodIcon.PARKY, FoodIcon.SALAM)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.SLANINA, FoodIcon.PARKY, FoodIcon.SALAM)
     ),
     READY_MEALS(
         R.string.kind_ready_meals,
         R.drawable.kind_hotovajidla,
-        listOf(FoodIcon.PIZZA, FoodIcon.SANDWICH, FoodIcon.HRANOLKY, FoodIcon.LASAGNA, FoodIcon.NOODLES, FoodIcon.OMELETTE, FoodIcon.PALACINKY, FoodIcon.SALAD, FoodIcon.SPAGHETTI, FoodIcon.SUSHI, FoodIcon.GREEKSALAD, FoodIcon.HAMBURGER, FoodIcon.HOTDOG)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.PIZZA, FoodIcon.SANDWICH, FoodIcon.HRANOLKY, FoodIcon.LASAGNA, FoodIcon.NOODLES, FoodIcon.OMELETTE, FoodIcon.PALACINKY, FoodIcon.SALAD, FoodIcon.SPAGHETTI, FoodIcon.SUSHI, FoodIcon.GREEKSALAD, FoodIcon.HAMBURGER, FoodIcon.HOTDOG)
     ),
     OTHER(
         R.string.kind_other,
         R.drawable.kind_ostatni,
-        listOf(FoodIcon.CUSTOM, FoodIcon.ZMRZLINA, FoodIcon.COKOLADA, FoodIcon.COLA, FoodIcon.CUSTOM2, FoodIcon.DZUS, FoodIcon.HONEY, FoodIcon.HOUBY, FoodIcon.NUT, FoodIcon.OMACKA, FoodIcon.SOYSAUCE, FoodIcon.WINE)
+        listOf(FoodIcon.GENERIC3, FoodIcon.GENERIC2, FoodIcon.GENERIC, FoodIcon.CUSTOM, FoodIcon.ZMRZLINA, FoodIcon.COKOLADA, FoodIcon.COLA, FoodIcon.CUSTOM2, FoodIcon.DZUS, FoodIcon.HONEY, FoodIcon.HOUBY, FoodIcon.NUT, FoodIcon.OMACKA, FoodIcon.SOYSAUCE, FoodIcon.WINE)
     ),
     UNKNOWN(
         R.string.kind_unknown,

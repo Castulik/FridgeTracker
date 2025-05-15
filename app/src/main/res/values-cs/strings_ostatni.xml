@@ -1,7 +1,7 @@
 <resources>
     <!-- PotravinaItem -->
     <string name="ostatni_pcs"> ks</string>
-    <string name="ostatni_dateStored">Datum uskladnění: %1$s</string>
+    <string name="ostatni_dateStored">Uskladnění: %1$s</string>
 
     <!-- global search bar -->
     <string name="ostatni_globalPlaceHolder">Zadejte název, kategorii nebo čárový kód</string>
