@@ -1,22 +1,22 @@
 <resources>
     <!-- dropdown -->
-    <string name="tb_sort">Sort</string>
-    <string name="tb_view">View</string>
+    <string name="tb_sort">Sorting</string>
+    <string name="tb_view">Display</string>
     <string name="tb_settings">Settings</string>
 
     <!-- multiselect -->
     <string name="tb_selected">Selected: %d</string>
 
     <!-- food form -->
-    <string name="tb_edit_food">Edit food</string>
-    <string name="tb_new_food">New food</string>
+    <string name="tb_edit_food">Food editing</string>
+    <string name="tb_new_food">New food item</string>
 
     <!-- storage form -->
-    <string name="tb_edit_storage">Edit storage</string>
-    <string name="tb_add_storage">Add storage</string>
+    <string name="tb_edit_storage">Storage editing</string>
+    <string name="tb_add_storage">Storage addition</string>
 
     <!-- storage delete dialog -->
-    <string name="dlg_delete_storage_title">Really delete this storage?</string>
+    <string name="dlg_delete_storage_title">Delete this storage?</string>
     <string name="dlg_irreversible">This action is irreversible.</string>
     <string name="dlg_delete">Delete</string>
     <string name="dlg_cancel">Cancel</string>
@@ -24,5 +24,6 @@
     <!-- shopping list -->
     <string name="tb_shopping_list">Shopping list</string>
     <string name="tb_purchase_history">Purchase history</string>
-    <string name="tb_add_items_purchase">Add items to purchase</string>
+    <string name="tb_add_items_purchase">Item addition to shopping</string>
+
 </resources>

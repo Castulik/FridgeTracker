@@ -1,0 +1,29 @@
+<resources>
+    <string name="o_aplikaci">About the App</string>
+    <string name="o_aplikaci_popis">FridgeTracker is a simple yet smart application for managing food in a fridge or freezer. It enables expiration tracking, shopping list creation, storage organization, and an overview of available items.</string>
+
+    <string name="planovane_funkce_nadpis">Planned feature additions:</string>
+    <string name="f_statistiky">• Purchase statistics</string>
+    <string name="f_vice_ikonek">• Expanded set of food icons</string>
+    <string name="f_sdileni">• Shared storages across multiple users</string>
+    <string name="f_skenovani">• Barcode scanning with database integration</string>
+    <string name="f_historie">• Adding food from history</string>
+    <string name="f_vlastni_ikonka">• Custom food icon using a photo</string>
+    <string name="f_ai_prompt">• AI prompt builder (suggestions across storages)</string>
+    <string name="f_navod">• User guide</string>
+    <string name="f_prohlizeni_db">• Barcode database browsing</string>
+
+    <string name="vyvoj_aktualne">Development is currently focused on enabling custom food photos to be used as icons.</string>
+
+    <string name="vyber_lokalizaci">Language Selection</string>
+    <string name="czech_btn">Czech 🇨🇿</string>
+    <string name="english_btn">English 🇬🇧</string>
+
+    <string name="pristup_opravneni">Permission Access</string>
+    <string name="kamera">Camera</string>
+    <string name="notifikace">Notifications</string>
+
+    <string name="kredity_ikony">Icons by</string>
+    <string name="spustit_kontrolu">Run Expiration Check</string>
+
+</resources>

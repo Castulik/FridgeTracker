@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fridgetracker_001.R
@@ -223,10 +224,12 @@ class PotravinaViewModel(
                     druh = codeEntity.druh,
                     potravinaIkona = codeEntity.potravinaIkona
                 )
-                _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nalezen – parametry doplněny."))
+                val message = getApplication<Application>().getString(R.string.kod_nalezen)
+                _uiEvent.emit(PotravinaUiEvent.ShowSnackbar(message))
                 closeDruhDialog()
             } else {
-                _uiEvent.emit(PotravinaUiEvent.ShowSnackbar("Kód nenalezen, vyplňte ručně."))
+                val message = getApplication<Application>().getString(R.string.kod_nenalezen)
+                _uiEvent.emit(PotravinaUiEvent.ShowSnackbar(message))
                 if (KindOptionEnum.fromString(pridavanaPotravina.druh) == KindOptionEnum.UNKNOWN) {
                     openDruhDialog()
                 }

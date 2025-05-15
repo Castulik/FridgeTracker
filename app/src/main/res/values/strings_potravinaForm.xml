@@ -1,8 +1,7 @@
 <resources>
-
     <!-- buttons -->
-    <string name="pf_save_changes">Save changes</string>
-    <string name="pf_confirm">Confirm</string>
+    <string name="pf_save_changes">Saving changes</string>
+    <string name="pf_confirm">Add food</string>
 
     <!-- placeholders / labels -->
     <string name="pf_name_placeholder">Food name</string>
@@ -11,11 +10,11 @@
     <string name="pf_weight_placeholder">Weight</string>
     <string name="pf_exp_date">Expiration date</string>
     <string name="pf_added_date">Date added</string>
-    <string name="pf_note_placeholder">Enter a note…</string>
+    <string name="pf_note_placeholder">Note…</string>
 
     <!-- kind options -->
-    <string name="kind_desserts">Desserts</string>">
-    <string name="kind_nonperishable">Non&#8209;perishable</string>
+    <string name="kind_desserts">Desserts</string>
+    <string name="kind_nonperishable">Non‑perishable</string>
     <string name="kind_fruit_veg">Fruit &amp; Vegetables</string>
     <string name="kind_dairy">Dairy products</string>
     <string name="kind_meat_fish">Meat &amp; Fish</string>
@@ -28,10 +27,11 @@
     <string name="kind_other">Other</string>
     <string name="kind_unknown">Unknown</string>
 
-    <string name="change_category">Change category</string>
-    <string name="select_category">Select category</string>
+    <string name="change_category">Category change</string>
+    <string name="select_category">Category selection</string>
 
     <!-- kind options -->
-    <string name="pf_kindChoice">Choose food category</string>
-    <string name="pf_imageChoice">Select an image:</string>
+    <string name="pf_kindChoice">Food type selection</string>
+    <string name="pf_imageChoice">Image selection:</string>
+
 </resources>

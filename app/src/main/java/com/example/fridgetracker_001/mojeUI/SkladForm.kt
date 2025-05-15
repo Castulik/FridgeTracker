@@ -1,7 +1,11 @@
 package com.example.fridgetracker_001.mojeUI
 
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.ui.res.stringResource
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -32,9 +36,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -52,6 +59,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
@@ -342,11 +350,21 @@ fun SkladFormBoxWithConstraints(
             )
         },
         bottomBar = {
+            val infiniteTransition = rememberInfiniteTransition(label = "")
+            val scale by infiniteTransition.animateFloat(
+                initialValue = 1f,
+                targetValue = 1.02f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1000, easing = LinearEasing),
+                    repeatMode = RepeatMode.Reverse
+                ), label = ""
+            )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .scale(scale)
                     .background(Color.Transparent)
-                    .padding(vertical = 4.dp, horizontal = 10.dp),
+                    .padding(vertical = 5.dp, horizontal = 20.dp),
             ) {
                 Button(
                     shape = RoundedCornerShape(15.dp),
@@ -400,17 +418,9 @@ fun SkladFormBoxWithConstraints(
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
+                        horizontalArrangement = Arrangement.Center, // Zarovnání doprostřed
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = stringResource(R.string.order_format, sklad.poradi),
-                            fontSize = 25.sp,
-                            color = Color.Black
-                        )
-
-                        Spacer(Modifier.width(8.dp))
-
                         // Tlačítko pro posun o -1
                         Button(
                             onClick = {
@@ -418,11 +428,21 @@ fun SkladFormBoxWithConstraints(
                                 onSkladChange(sklad.copy(poradi = newValue))
                             },
                             colors = ButtonDefaults.buttonColors(cardGradient3),
-                            shape = RoundedCornerShape(18.dp)
-                        )  {
-                            Text("-",fontSize = 25.sp, color = Color.White)
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text("-", fontSize = 25.sp, color = Color.White)
                         }
-                        Spacer(Modifier.width(4.dp))
+
+                        Spacer(Modifier.width(20.dp))
+
+                        // Text uprostřed
+                        Text(
+                            text = stringResource(R.string.order_format, sklad.poradi),
+                            fontSize = 25.sp,
+                            color = Color.Black
+                        )
+
+                        Spacer(Modifier.width(20.dp))
 
                         // Tlačítko pro posun o +1
                         Button(
@@ -431,12 +451,13 @@ fun SkladFormBoxWithConstraints(
                                 onSkladChange(sklad.copy(poradi = newValue))
                             },
                             colors = ButtonDefaults.buttonColors(cardGradient3),
-                            shape = RoundedCornerShape(18.dp)
+                            shape = RoundedCornerShape(10.dp)
                         ) {
-                            Text("+",fontSize = 25.sp, color = Color.White)
+                            Text("+", fontSize = 25.sp, color = Color.White)
                         }
                     }
                 }
+
 
                 // -------------- Řádek 2: Název skladu --------------
                 Box(

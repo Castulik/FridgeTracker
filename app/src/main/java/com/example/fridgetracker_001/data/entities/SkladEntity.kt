@@ -6,15 +6,15 @@ import com.example.fridgetracker_001.data.DEFAULT_CATEGORY_STATE
 import com.example.fridgetracker_001.data.SkladIcon
 
 //Entity je třída, která definuje strukturu tabulky v databázi. Každá instance entity odpovídá jednomu řádku v tabulce.
-@Entity(tableName = "sklad_table")  //@Entity: Označuje, že tato třída je tabulkou v databázi.
+
+@Entity(tableName = "sklad_table")
 data class SkladEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,   // Sloupec, ktery jednoznacne identifikuje radek v tabulce, ID nam identifikuje radek v tabulce.
-    //Anotace @PrimaryKey s parametrem autoGenerate = true zajistí, že hodnota id bude automaticky generována při vložení nového záznamu, což usnadňuje správu jedinečných identifikátorů.
-    var nazev: String,                                  // Sloupec názvu skladu
-    var expirace1: String = "7",                             // Sloupec expirace
-    var expirace2: String = "3",                           // Sloupec expirace
-    var icon: SkladIcon,                                // volitelné
-    var iconPath: String? = null,                       // volitelné - pokud ukládáme do souboru
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    var nazev: String,
+    var expirace1: String = "7",
+    var expirace2: String = "3",
+    var icon: SkladIcon,
+    var iconPath: String? = null,
     var preferovane: Boolean = false,
     val poradi: Int = 1,
     var viewType: String = "LIST",

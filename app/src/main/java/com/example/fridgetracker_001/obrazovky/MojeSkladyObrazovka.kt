@@ -18,12 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import com.example.fridgetracker_001.mojeUI.GlobalSearchBar
 import com.example.fridgetracker_001.mojeUI.SkladItem
 import com.example.fridgetracker_001.viewmodel.PotravinaViewModel
-import com.example.fridgetracker_001.R
-import com.example.fridgetracker_001.data.IconRegistry
 import com.example.fridgetracker_001.data.KindOptionEnum
 
 
