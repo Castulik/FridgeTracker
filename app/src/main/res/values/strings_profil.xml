@@ -1,0 +1,20 @@
+<resources>
+    <string name="about_title">About the app</string>
+    <string name="about_description">FridgeTracker is a simple yet smart app for managing food in your fridge or freezer. It helps you track expiration dates, create shopping lists, organize your storage, and keep an overview of what you have at home.</string>
+    <string name="about_plans_title">I plan to add new features to improve the app experience:</string>
+    <string name="plan_stats">• Purchase statistics</string>
+    <string name="plan_more_icons">• More food item icons</string>
+    <string name="plan_shared_storages">• Shared storage across family members</string>
+    <string name="plan_barcode_db">• Barcode scanning connected to a database</string>
+    <string name="plan_add_from_history">• Adding items from historical lists</string>
+    <string name="plan_custom_icon">• Option to take a custom icon photo</string>
+    <string name="plan_ai_prompt">• AI prompt builder (suggestions across storages)</string>
+    <string name="plan_guide">• User guide</string>
+    <string name="plan_browse_db">• Ability to browse barcode database</string>
+    <string name="developing">Currently, I’m working on letting users take a photo of their own food and use it as an icon.</string>
+    <string name="choose_locale">Choose localization</string>
+    <string name="permissions_access">Permission access</string>
+    <string name="camera">Camera</string>
+    <string name="notifications">Notifications</string>
+    <string name="credits_icons">Icons by</string>
+</resources>

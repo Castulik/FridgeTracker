@@ -393,47 +393,47 @@ fun SkladFormBoxWithConstraints(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(rowHeight(row1Weight))
+                        .height(rowHeight(row1Weight)),
+                    contentAlignment = Alignment.Center
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
-                        modifier = Modifier.fillMaxWidth()
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(
-                            text = stringResource(R.string.order_format, sklad.poradi),
-                            fontSize = 25.sp,
-                            color = Color.Black
-                        )
-
-                        Spacer(Modifier.width(8.dp))
-
-                        // Tlačítko pro posun o -1
                         Button(
                             onClick = {
                                 val newValue = (sklad.poradi - 1).coerceAtLeast(minPos)
                                 onSkladChange(sklad.copy(poradi = newValue))
                             },
                             colors = ButtonDefaults.buttonColors(cardGradient3),
-                            shape = RoundedCornerShape(18.dp)
-                        )  {
-                            Text("-",fontSize = 25.sp, color = Color.White)
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text("-", fontSize = 25.sp, color = Color.White)
                         }
-                        Spacer(Modifier.width(4.dp))
 
-                        // Tlačítko pro posun o +1
+                        Spacer(Modifier.width(20.dp))
+
+                        Text(
+                            text = stringResource(R.string.order_format, sklad.poradi),
+                            fontSize = 25.sp,
+                            color = Color.Black
+                        )
+
+                        Spacer(Modifier.width(20.dp))
+
                         Button(
                             onClick = {
                                 val newValue = (sklad.poradi + 1).coerceAtMost(maxPosLocal)
                                 onSkladChange(sklad.copy(poradi = newValue))
                             },
                             colors = ButtonDefaults.buttonColors(cardGradient3),
-                            shape = RoundedCornerShape(18.dp)
+                            shape = RoundedCornerShape(10.dp)
                         ) {
-                            Text("+",fontSize = 25.sp, color = Color.White)
+                            Text("+", fontSize = 25.sp, color = Color.White)
                         }
                     }
                 }
+
 
                 // -------------- Řádek 2: Název skladu --------------
                 Box(

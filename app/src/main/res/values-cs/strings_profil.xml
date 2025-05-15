@@ -1,0 +1,20 @@
+<resources>
+    <string name="about_title">O aplikaci</string>
+    <string name="about_description">FridgeTracker je jednoduchá, ale chytrá aplikace pro správu potravin ve tvé lednici nebo mrazáku. Umožňuje sledovat trvanlivost potravin, vytvářet nákupní seznamy, organizovat sklad a mít přehled o tom, co máš doma.</string>
+    <string name="about_plans_title">Plánuji přidat nové funkce, které zlepší používání aplikace:</string>
+    <string name="plan_stats">• Statistiky nákupů</string>
+    <string name="plan_more_icons">• Přidání více iconek potravin</string>
+    <string name="plan_shared_storages">• Sdílené sklady napříč rodinou</string>
+    <string name="plan_barcode_db">• Skenování čárových kódů napojené na databázi</string>
+    <string name="plan_add_from_history">• Přidávání potravin z historického seznamu</string>
+    <string name="plan_custom_icon">• Možnost vyfotit si vlastní ikonku potraviny</string>
+    <string name="plan_ai_prompt">• AI prompt builder (návrhy přes všechny sklady)</string>
+    <string name="plan_guide">• Návod na použití aplikace</string>
+    <string name="plan_browse_db">• Možnost prohlížet databázi čárových kódů</string>
+    <string name="developing">Aktuálně pracuji na tom, aby si uživatel mohl vyfotit vlastní potravinu a použít ji jako ikonku.</string>
+    <string name="choose_locale">Vyber Lokalizaci</string>
+    <string name="permissions_access">Přístup k oprávněním</string>
+    <string name="camera">Kamera</string>
+    <string name="notifications">Notifikace</string>
+    <string name="credits_icons">Icons by</string>
+</resources>
