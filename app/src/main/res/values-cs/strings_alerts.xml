@@ -30,6 +30,10 @@
     <string name="food_within_14_days">Potraviny s expirací do 14 dnů</string>
     <string name="select_food_manually">Vybrat potraviny ručně</string>
     <string name="copy_to_clipboard">Kopírovat do schránky</string>
+    <string name="prompt">
+    Navrhni mi více receptů z následujícího seznamu potravin. Pokud bude potřeba, můžeš doplnit další běžné suroviny. Seznam:
+    </string>
+
 
     <string name="confirm_delete_title">Opravdu chcete odstranit tuto potravinu?</string>
     <string name="confirm_delete_text">Tato akce je nevratná.</string>

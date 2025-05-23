@@ -11,7 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class  SkladViewModel(application: Application, private val repository: SkladRepository) : AndroidViewModel(application) {
+class  SkladViewModel(
+    application: Application,
+    private val repository: SkladRepository
+) : AndroidViewModel(application) {
 
     // Stav aktuálního skladu
     private val _skladState = MutableStateFlow<SkladEntity?>(null)

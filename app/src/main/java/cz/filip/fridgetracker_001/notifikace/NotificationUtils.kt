@@ -83,7 +83,7 @@ object NotificationUtils {
         val targetTime = LocalTime.of(8,0)
         var nextRun = LocalDateTime.of(LocalDate.now(), targetTime)
 
-        // Pokud je "teď" už po 12:20, tak to posuneme o 1 den
+        // Pokud je "teď" už po 8, tak to posuneme o 1 den
         if (now.toLocalTime().isAfter(targetTime)) {
             nextRun = nextRun.plusDays(1)
         }

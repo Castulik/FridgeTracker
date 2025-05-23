@@ -36,4 +36,12 @@
     <string name="item_ketchup">Ketchup</string>
     <string name="item_mayonnaise">Mayonnaise</string>
 
+    <!-- Notifikace -->
+    <plurals name="expirace_zbyva_dni">
+        <item quantity="one">%1$s expires in %2$d day.</item>
+        <item quantity="other">%1$s expires in %2$d days.</item>
+    </plurals>
+
+    <string name="notification_title">Item in %1$s is expiring soon!</string>
+
 </resources>

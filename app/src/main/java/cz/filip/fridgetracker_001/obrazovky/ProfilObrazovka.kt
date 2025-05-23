@@ -255,6 +255,28 @@ fun ProfilObrazovka(navController: NavController) {
                     )
                 }
             }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .border(2.dp, Color.Black, shape = MaterialTheme.shapes.small)
+                        .background(
+                            Brush.verticalGradient(
+                                colorStops = arrayOf(
+                                    0.1f to cardGradient12,
+                                    0.4f to cardGradient22,
+                                )
+                            )
+                        )
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    SpustitNotifikaciHnedButton()
+                }
+            }
         }
     }
 }

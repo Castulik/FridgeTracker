@@ -21,6 +21,10 @@
     <string name="second_warning">Second warning:</string>
     <string name="confirm_changes">Confirm changes</string>
     <string name="ai_prompt_title">AI Prompt Builder</string>
+    <string name="prompt">
+    Suggest more recipes based on the following list of ingredients. If necessary, feel free to include additional common items. List:
+    </string>
+
     <string name="prompt_content">Prompt content: </string>
     <string name="prompt_placeholder">Enter prompt text</string>
     <string name="selected_food">Selected food: </string>

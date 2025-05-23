@@ -26,7 +26,7 @@ import cz.filip.fridgetracker_001.data.KindOptionEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MojePotravinyObrazovka(
+fun MojeSkladyObrazovka(
     navController: NavController,
     skladViewModel: SkladViewModel,
     potravinaViewModel: PotravinaViewModel,

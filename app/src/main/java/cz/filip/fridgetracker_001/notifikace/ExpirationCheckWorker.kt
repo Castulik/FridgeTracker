@@ -3,6 +3,7 @@ package cz.filip.fridgetracker_001.notifikace
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import cz.filip.fridgetracker_001.R
 import cz.filip.fridgetracker_001.data.SkladDatabase
 import cz.filip.fridgetracker_001.notifikace.NotificationUtils.calculateDaysLeft
 import cz.filip.fridgetracker_001.notifikace.NotificationUtils.scheduleNext
@@ -54,6 +55,17 @@ class ExpirationCheckWorker(
 
                 val daysLeft = calculateDaysLeft(potravina.datumSpotreby)
                 // Vypočítáme, kolik dní zbývá do data spotřeby (datumSpotreby).
+                val daysLeftInt = daysLeft?.toInt() ?: 0
+
+                val res = applicationContext.resources
+                val message = res.getQuantityString(
+                    R.plurals.expirace_zbyva_dni,
+                    daysLeftInt,
+                    potravina.nazev,
+                    daysLeft
+                )
+
+                val title = applicationContext.getString(R.string.notification_title, nazev)
 
                 if (daysLeft != null && (daysLeft == expirace1 || daysLeft == expirace2 || daysLeft == 0L)) {
                     // Pokud se nám podařilo spočítat daysLeft a
@@ -62,8 +74,8 @@ class ExpirationCheckWorker(
 
                     showNotification(
                         context = applicationContext,
-                        title = "Potravina v $nazev brzy expiruje!",
-                        message = "${potravina.nazev} expiruje za $daysLeft dní.",
+                        title = title,
+                        message = message,
                         iconId = iconId
                     )
                 }

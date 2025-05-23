@@ -31,7 +31,7 @@ import cz.filip.fridgetracker_001.obrazovky.EditSkladObrazovka2
 import cz.filip.fridgetracker_001.obrazovky.KategorieObrazovka
 import cz.filip.fridgetracker_001.obrazovky.KategorieObrazovkaEdit
 import cz.filip.fridgetracker_001.viewmodel.SkladViewModel
-import cz.filip.fridgetracker_001.obrazovky.MojePotravinyObrazovka
+import cz.filip.fridgetracker_001.obrazovky.MojeSkladyObrazovka
 import cz.filip.fridgetracker_001.obrazovky.PridatPotravinuObrazovka2
 import cz.filip.fridgetracker_001.obrazovky.PridatSkladObrazovka2
 import cz.filip.fridgetracker_001.obrazovky.ProfilObrazovka
@@ -155,7 +155,7 @@ fun MainScaffold(
                 modifier = Modifier
                     .padding(bottom = paddingValues.calculateBottomPadding())
             ) {
-                composable("seznam") {
+                composable(route = "seznam") {
                     /*
                     SeznamObrazovka(
                         seznamViewModel = seznamViewModel,
@@ -202,7 +202,7 @@ fun MainScaffold(
                     )
                 ) { backStackEntry ->
                     val barcode  = backStackEntry.arguments?.getString("barcode") ?: ""
-                    MojePotravinyObrazovka(
+                    MojeSkladyObrazovka(
                         navController = controler,
                         skladViewModel = skladViewModel,
                         potravinaViewModel = potravinaViewModel,
