@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.fridgetracker_001",
+  "applicationId": "cz.filip.fridgetracker_001",
   "variantName": "release",
   "elements": [
     {
