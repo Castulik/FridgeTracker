@@ -47,6 +47,7 @@ import cz.filip.fridgetracker_001.data.entities.SkladEntity
 import cz.filip.fridgetracker_001.ui.theme.cardGradient2
 import cz.filip.fridgetracker_001.ui.theme.primaryLight
 
+//Dialog pro vyber vzhledu karet potravin
 @Composable
 fun ViewTypeDialog(
     viewTypeDialogVisible: () -> Unit,
@@ -191,6 +192,7 @@ fun ViewTypeDialog(
 }
 
 
+//dialog pro vyber serazeni potravin na obrazovce
 @Composable
 fun SortDialog(
     sortDialogVisible: () -> Unit,
@@ -438,6 +440,7 @@ fun SortDialog(
 }
 
 
+//Dialog pro nastaveni, kolik dnu pred expiraci chce byt uzivatel upozornovan
 @Composable
 fun NastaveniDialog(
     sklad: SkladEntity?,
@@ -645,6 +648,7 @@ fun NastaveniDialog(
     )
 }
 
+//diaglog pro funkci AI prompt builder
 @Composable
 fun AiPromptDialog(
     aiPromptTitle: String,
@@ -829,6 +833,7 @@ fun AiPromptDialog(
     )
 }
 
+//univerzalni dialog pro mazani
 @Composable
 fun DeleteAlert2(
     change: () -> Unit,

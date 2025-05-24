@@ -52,6 +52,8 @@ import cz.filip.fridgetracker_001.ui.theme.cardGradient2
 import cz.filip.fridgetracker_001.ui.theme.cardGradient22
 import cz.filip.fridgetracker_001.ui.theme.cardGradient3
 
+
+// vzhled karty skladu
 @Composable
 fun SkladItem(
     sklad: SkladEntity,

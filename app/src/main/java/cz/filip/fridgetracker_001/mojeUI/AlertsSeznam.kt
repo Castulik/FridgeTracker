@@ -61,6 +61,7 @@ import cz.filip.fridgetracker_001.data.entities.SkladEntity
 import cz.filip.fridgetracker_001.ui.theme.cardPozadi
 import cz.filip.fridgetracker_001.ui.theme.primaryLight
 
+//Dialog pro přidání položky do nakupniho seznmu
 @Composable
 fun AddItemDialog(
     onDismiss: () -> Unit,
@@ -340,7 +341,7 @@ fun AddItemDialog(
 }
 
 
-
+//dialog pro vybrani skladu a nasledneho pridani potraviny z nakupniho seznamu
 @Composable
 fun SkladDialog(
     item: SeznamEntity,        // typ podle toho, co máte
@@ -399,6 +400,7 @@ fun SkladDialog(
     )
 }
 
+//univerzalni dialog pro smazani potraviny
 @Composable
 fun SmazatAlert(
     change: () -> Unit,
@@ -435,6 +437,7 @@ fun SmazatAlert(
     )
 }
 
+//Dialog pro pridani noveho nakupu
 @Composable
 fun NakupAlert(
     onAdd: () -> Unit,

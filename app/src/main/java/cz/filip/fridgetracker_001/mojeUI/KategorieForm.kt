@@ -37,6 +37,7 @@ import cz.filip.fridgetracker_001.data.FoodIcon
 import cz.filip.fridgetracker_001.data.KindOptionEnum
 import cz.filip.fridgetracker_001.ui.theme.buttoncolor
 
+// formular pro vyber kategorie a icony potraviny
 @Composable
 fun KategorieForm(
     onCancel: () -> Unit = {},
@@ -85,7 +86,7 @@ fun KategorieForm(
                             .background(buttoncolor),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // 🔹 Obrázek má fixní poměr stran – tedy stejnou výšku u všech
+                        // Obrázek má fixní poměr stran – tedy stejnou výšku u všech
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

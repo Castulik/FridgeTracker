@@ -135,6 +135,7 @@ fun BottomBarAddPotravinu(
     }
 }
 
+//spodni menu v hlavnich obrazovkach
 @Composable
 fun CustomBottomBar(
     onItemClick: (NavigationItem) -> Unit,

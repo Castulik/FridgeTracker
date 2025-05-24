@@ -310,6 +310,8 @@ fun MojeExpirace(
     }
 }
 
+
+//formular pro vyber a editovani skladu
 @Composable
 fun SkladFormBoxWithConstraints(
     sklad: SkladEntity,

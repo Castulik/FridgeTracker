@@ -78,6 +78,7 @@ import cz.filip.fridgetracker_001.ui.theme.topmenu22
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+//formular pro vyber potraviny
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PotravinaFormBoxWithConstraints(

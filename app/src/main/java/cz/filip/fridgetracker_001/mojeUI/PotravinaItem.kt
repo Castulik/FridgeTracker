@@ -52,6 +52,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
+
+//vzhled karet potravin, 3 druhy vzhledu
 @Composable
 fun PotravinaItem(
     potravina: PotravinaEntity,

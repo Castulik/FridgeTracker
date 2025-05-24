@@ -5,7 +5,7 @@ import cz.filip.fridgetracker_001.data.entities.SkladEntity
 import kotlinx.coroutines.flow.Flow
 
 /*
-* Repository je designový vzor, který slouží jako prostředník mezi datovou vrstvou (např. databází, API)
+* Repository  slouží jako prostředník mezi datovou vrstvou (např. databází, API)
 * a dalšími vrstvami aplikace (např. ViewModel).
 * V Kotlinu a Jetpack Compose se často používá jako místo, kde jsou definovány operace pro práci s daty.
 */
